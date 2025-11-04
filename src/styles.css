@@ -229,6 +229,21 @@ p {
   margin: 0 auto;
 }
 
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+  flex-wrap: wrap;
+}
+
+.cadeira-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 /* ===== ESTATÍSTICAS GERAIS ===== */
 .stats-overview {
   display: grid;
@@ -365,9 +380,13 @@ p {
 }
 
 .cadeira-icon {
-  font-size: 3.5rem;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
   margin-bottom: var(--space-md);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
 .completion-badge {
@@ -413,6 +432,17 @@ p {
   color: var(--text-secondary);
 }
 
+.progress-info {
+  margin-top: var(--space-md);
+}
+
+.progress-info span {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
 .cadeira-footer {
   display: flex;
   justify-content: flex-end;
@@ -439,6 +469,107 @@ p {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   outline: none;
+}
+
+/* ===== SEÇÃO DE NÍVEIS ===== */
+.levels-section {
+  margin-bottom: var(--space-3xl);
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: var(--space-xl);
+}
+
+.level-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-2xl);
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.level-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform var(--transition);
+}
+
+.level-card:hover::before,
+.level-card:focus::before {
+  transform: scaleX(1);
+}
+
+.level-card:hover,
+.level-card:focus {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-light);
+}
+
+.level-card.completed {
+  border-left: 6px solid var(--success);
+}
+
+.level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+}
+
+.level-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  margin-bottom: var(--space-md);
+}
+
+.level-content {
+  flex: 1;
+  margin-bottom: var(--space-lg);
+}
+
+.level-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+}
+
+.level-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.level-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.level-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* ===== QUIZ SCREEN ===== */
@@ -1208,30 +1339,30 @@ p {
   color: white;
 }
 
-/* ===== MODAIS ===== */
+/* ===== MODAL CORRIGIDO ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: var(--space-md);
-  backdrop-filter: blur(8px);
-  animation: overlayAppear 0.3s ease-out;
+  backdrop-filter: blur(0px);
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  visibility: hidden;
 }
 
-@keyframes overlayAppear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.modal-overlay.visible {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  opacity: 1;
+  visibility: visible;
 }
 
 .modal-content {
@@ -1242,20 +1373,16 @@ p {
   max-height: 85vh;
   overflow: hidden;
   box-shadow: var(--shadow-xl);
-  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  transform: scale(0.9) translateY(-20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.modal-content.visible {
+  transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
 .theory-modal {
@@ -1272,16 +1399,20 @@ p {
   top: 0;
   background: inherit;
   z-index: 1;
+  flex-shrink: 0;
 }
 
 .modal-title-section {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  flex: 1;
+  min-width: 0;
 }
 
 .theory-icon {
   color: var(--warning);
+  flex-shrink: 0;
 }
 
 .modal-title {
@@ -1289,6 +1420,9 @@ p {
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .modal-close-btn {
@@ -1304,6 +1438,8 @@ p {
   min-width: 44px;
   min-height: 44px;
   color: var(--text-primary);
+  flex-shrink: 0;
+  margin-left: var(--space-md);
 }
 
 .modal-close-btn:hover,
@@ -1375,6 +1511,9 @@ p {
 .keypoint-marker {
   flex-shrink: 0;
   margin-top: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .keypoint-dot {
@@ -1415,6 +1554,16 @@ p {
   font-size: 0.9rem;
   line-height: 1.5;
   color: var(--text-primary);
+}
+
+/* Garantir que o modal fique acima de tudo */
+.modal-overlay {
+  z-index: 9999;
+}
+
+/* Prevenir scroll no body quando modal estiver aberto */
+body.modal-open {
+  overflow: hidden;
 }
 
 /* ===== LOADING SCREEN ===== */
@@ -1481,15 +1630,18 @@ p {
     flex-direction: column;
   }
   
-  .cadeiras-grid {
+  .cadeiras-grid,
+  .levels-grid {
     grid-template-columns: 1fr;
   }
   
-  .cadeira-card {
+  .cadeira-card,
+  .level-card {
     padding: var(--space-xl);
   }
   
-  .cadeira-meta {
+  .cadeira-meta,
+  .level-meta {
     flex-direction: column;
     gap: var(--space-md);
   }
@@ -1567,7 +1719,8 @@ p {
     font-size: 1.5rem;
   }
   
-  .cadeira-card {
+  .cadeira-card,
+  .level-card {
     padding: var(--space-lg);
   }
   

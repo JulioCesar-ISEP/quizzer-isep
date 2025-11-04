@@ -9,6 +9,7 @@ const cadeiras = [
     description: "Fundamentos de sistemas operativos Linux, linha de comandos, gestão de processos e manipulação de ficheiros",
     icon: "Cpu",
     color: "#3b82f6",
+    xp: 100,
     levels: prcmp
   }
   // {

@@ -1,129 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import ReactDOM from 'react-dom';
 import {
   CheckCircle, XCircle, Trophy, Brain, Code, Zap, Target, FileText,
   Clock, BookOpen, ArrowRight, RotateCw, Settings, ChevronLeft,
   MessageSquare, Download, Lightbulb, Flame, Star, Award, Sparkles,
-  Menu, X, Home, TrendingUp, AlertCircle, Grid3x3, Moon, Sun
+  Menu, X, Home, TrendingUp, AlertCircle, Grid3x3, Moon, Sun, Cpu
 } from 'lucide-react';
-
-// Estrutura de dados corrigida conforme especificado
-const cadeiras = [
-  {
-    id: 1,
-    name: "Programação",
-    description: "Fundamentos de programação e algoritmos",
-    icon: "💻",
-    color: "#3b82f6",
-    xp: 100,
-    theory: {
-      title: "Introdução à Programação",
-      content: "Programação é o processo de criar um conjunto de instruções que dizem ao computador como executar uma tarefa."
-    },
-    exercises: [
-      {
-        id: 1,
-        question: "O que é uma variável em programação?",
-        code: "let x = 10;",
-        options: [
-          "Um local de armazenamento nomeado",
-          "Um tipo de loop",
-          "Uma função matemática",
-          "Um erro de sintaxe"
-        ],
-        correct: 0,
-        explanation: "Uma variável é um local de armazenamento nomeado que contém um valor que pode ser modificado durante a execução do programa.",
-        theoryPoints: {
-          title: "Variáveis em Programação",
-          content: "Variáveis são fundamentais para armazenar e manipular dados.",
-          keyPoints: [
-            "Armazenam valores temporários",
-            "Têm nome e tipo",
-            "Podem ser modificadas",
-            "Existem em diferentes escopos"
-          ],
-          examples: "let nome = 'João'; const idade = 25;"
-        },
-        hints: [
-          "Pense em como armazenamos dados",
-          "Lembre-se que valores podem mudar"
-        ]
-      },
-      {
-        id: 2,
-        question: "Qual é a função de um loop 'for'?",
-        code: "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}",
-        options: [
-          "Repetir um bloco de código um número específico de vezes",
-          "Declarar variáveis",
-          "Definir funções",
-          "Criar objetos"
-        ],
-        correct: 0,
-        explanation: "O loop 'for' é usado para repetir um bloco de código um número específico de vezes, controlando a iteração com uma variável de contador.",
-        theoryPoints: {
-          title: "Loops em Programação",
-          content: "Loops permitem executar o mesmo código múltiplas vezes.",
-          keyPoints: [
-            "For - número conhecido de iterações",
-            "While - condição de parada",
-            "Do-while - executa pelo menos uma vez",
-            "Evitam código repetitivo"
-          ],
-          examples: "for (let i = 0; i < 10; i++) { /* código */ }"
-        },
-        hints: [
-          "Pense em repetição controlada",
-          "Observe a estrutura de inicialização, condição e incremento"
-        ]
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: "Algoritmos",
-    description: "Estruturas de dados e complexidade",
-    icon: "🧠",
-    color: "#10b981",
-    xp: 150,
-    theory: {
-      title: "Introdução a Algoritmos",
-      content: "Um algoritmo é uma sequência finita de ações executáveis que visam obter uma solução para um determinado tipo de problema."
-    },
-    exercises: [
-      {
-        id: 1,
-        question: "O que é complexidade de tempo?",
-        options: [
-          "A quantidade de tempo que um algoritmo leva para executar",
-          "O número de variáveis usadas",
-          "O tamanho do código fonte",
-          "A dificuldade de entender o algoritmo"
-        ],
-        correct: 0,
-        explanation: "Complexidade de tempo refere-se à quantidade de tempo que um algoritmo leva para executar em relação ao tamanho da entrada.",
-        theoryPoints: {
-          title: "Complexidade de Algoritmos",
-          content: "A complexidade ajuda a comparar a eficiência de diferentes algoritmos.",
-          keyPoints: [
-            "Notação Big O descreve o pior caso",
-            "O(1) - tempo constante",
-            "O(n) - tempo linear",
-            "O(n²) - tempo quadrático"
-          ],
-          examples: "Busca linear: O(n), Busca binária: O(log n)"
-        },
-        hints: [
-          "Pense em como o tempo cresce com o tamanho da entrada",
-          "Considere o pior cenário possível"
-        ]
-      }
-    ]
-  }
-];
+import cadeiras from '../data/cadeiras';
 
 const QuizzerIsep = () => {
   const [currentView, setCurrentView] = useState('cadeiras');
   const [selectedCadeira, setSelectedCadeira] = useState(null);
+  const [selectedLevel, setSelectedLevel] = useState(null);
 
   // Estado do quiz
   const [currentExercise, setCurrentExercise] = useState(0);
@@ -133,7 +21,7 @@ const QuizzerIsep = () => {
   const [totalXP, setTotalXP] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [completedCadeiras, setCompletedCadeiras] = useState([]);
+  const [completedLevels, setCompletedLevels] = useState({});
   const [timeSpent, setTimeSpent] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [showTheory, setShowTheory] = useState(false);
@@ -146,7 +34,7 @@ const QuizzerIsep = () => {
   const [comments, setComments] = useState({});
   const [currentComment, setCurrentComment] = useState('');
   const [sessionStartTime] = useState(new Date());
-  const [cadeiraCompleted, setCadeiraCompleted] = useState(false);
+  const [levelCompleted, setLevelCompleted] = useState(false);
 
   // Persistência do tema
   useEffect(() => {
@@ -157,18 +45,37 @@ const QuizzerIsep = () => {
   // Timer
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!cadeiraCompleted && currentView === 'quiz') {
+      if (!levelCompleted && currentView === 'quiz') {
         setTimeSpent(Math.floor((Date.now() - startTime) / 1000));
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [startTime, cadeiraCompleted, currentView]);
+  }, [startTime, levelCompleted, currentView]);
+
+  // Controlar o scroll do body quando o modal estiver aberto
+  useEffect(() => {
+    if (showTheory) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [showTheory]);
 
   // Funções auxiliares
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
-  const getCurrentExerciseData = () => getCurrentCadeiraData()?.exercises[currentExercise];
+  const getCurrentLevelData = () => getCurrentCadeiraData()?.levels.find(l => l.id === selectedLevel);
+  const getCurrentExerciseData = () => getCurrentLevelData()?.exercises[currentExercise];
 
-  // Funções de Relatório (restauradas)
+  // Obter níveis completos da cadeira atual
+  const getCurrentCadeiraCompletedLevels = () => {
+    return completedLevels[selectedCadeira] || [];
+  };
+
+  // Funções de Relatório
   const cleanupOldReports = () => {
     const today = new Date().toISOString().slice(0, 10);
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -222,9 +129,37 @@ const QuizzerIsep = () => {
     };
   };
 
+  const startLevel = (levelId) => {
+    setSelectedLevel(levelId);
+    setCurrentView('quiz');
+    setStartTime(Date.now());
+    resetQuizState();
+  };
+
+  const goToCadeiras = () => {
+    setCurrentView('cadeiras');
+    setSelectedCadeira(null);
+    setSelectedLevel(null);
+  };
+
+  const resetQuizState = () => {
+    setCurrentExercise(0);
+    setScore(0);
+    setStreak(0);
+    setMaxStreak(0);
+    setShowSolution(false);
+    setSelectedAnswer(null);
+    setMistakes([]);
+    setComments({});
+    setCurrentComment('');
+    setQuizFinished(false);
+    setLevelCompleted(false);
+    setTimeSpent(0);
+  };
+
   const generateMarkdownReport = () => {
-    const currentCadeiraData = getCurrentCadeiraData();
-    const totalPossibleScore = currentCadeiraData?.exercises.length || 0;
+    const currentLevelData = getCurrentLevelData();
+    const totalPossibleScore = currentLevelData?.exercises.length || 0;
     const percentage = totalPossibleScore > 0 ? Math.round((score / totalPossibleScore) * 100) : 0;
     const today = new Date().toISOString().slice(0, 10);
 
@@ -253,16 +188,16 @@ const QuizzerIsep = () => {
     markdown += `## Sessão ${sessionCount} - ${sessionStartTime.toLocaleTimeString('pt-PT')}\n\n`;
     markdown += `**Início**: ${sessionStartTime.toLocaleString('pt-PT')}\n`;
     markdown += `**Tempo Total**: ${formatTime(timeSpent)}\n`;
-    markdown += `**Cadeira**: ${currentCadeiraData?.name || 'N/A'}\n`;
+    markdown += `**Nível**: ${currentLevelData?.name || 'N/A'}\n`;
     markdown += `**Pontuação**: ${score}/${totalPossibleScore} (${percentage}%)\n`;
-    markdown += `**XP Ganho**: ${currentCadeiraData?.xp || 0}\n`;
+    markdown += `**XP Ganho**: ${currentLevelData?.xp || 0}\n`;
     markdown += `**Maior Sequência**: ${maxStreak}\n\n`;
 
     if (mistakes.length > 0) {
       markdown += `### ❌ Questões com Erros\n\n`;
       mistakes.forEach((mistake, idx) => {
         markdown += `#### Erro ${idx + 1}: ${mistake.question}\n`;
-        markdown += `**Cadeira**: ${mistake.cadeiraName}\n`;
+        markdown += `**Nível**: ${mistake.levelName}\n`;
         markdown += `**Hora**: ${mistake.timestamp}\n\n`;
 
         if (mistake.code) markdown += `\`\`\`javascript\n${mistake.code}\n\`\`\`\n\n`;
@@ -315,35 +250,13 @@ const QuizzerIsep = () => {
     element.click();
   };
 
-  const startCadeira = (cadeiraId) => {
-    setSelectedCadeira(cadeiraId);
-    setCurrentView('quiz');
-    setStartTime(Date.now());
-    resetQuizState();
-  };
-
-  const resetQuizState = () => {
-    setCurrentExercise(0);
-    setScore(0);
-    setStreak(0);
-    setMaxStreak(0);
-    setShowSolution(false);
-    setSelectedAnswer(null);
-    setMistakes([]);
-    setComments({});
-    setCurrentComment('');
-    setQuizFinished(false);
-    setCadeiraCompleted(false);
-    setTimeSpent(0);
-  };
-
   const handleAnswer = (selectedIndex) => {
     if (selectedAnswer !== null) return;
 
     setSelectedAnswer(selectedIndex);
     setShowSolution(true);
 
-    const currentCadeiraData = getCurrentCadeiraData();
+    const currentLevelData = getCurrentLevelData();
     const currentExerciseData = getCurrentExerciseData();
 
     if (selectedIndex === currentExerciseData.correct) {
@@ -352,14 +265,17 @@ const QuizzerIsep = () => {
       setScore(newScore);
       setStreak(newStreak);
       setMaxStreak(Math.max(maxStreak, newStreak));
-      setTotalXP(prev => prev + currentCadeiraData.xp);
+      setTotalXP(prev => prev + currentLevelData.xp);
     } else {
       setStreak(0);
-      const commentKey = `${selectedCadeira}-${currentExercise}`;
+      const commentKey = `${selectedLevel}-${currentExercise}`;
+      const currentCadeiraData = getCurrentCadeiraData();
 
       setMistakes(prev => [...prev, {
         cadeiraId: selectedCadeira,
         cadeiraName: currentCadeiraData.name,
+        levelId: selectedLevel,
+        levelName: currentLevelData.name,
         exerciseIndex: currentExercise,
         question: currentExerciseData.question,
         code: currentExerciseData.code,
@@ -374,86 +290,120 @@ const QuizzerIsep = () => {
   };
 
   const nextExercise = () => {
+    const currentLevelData = getCurrentLevelData();
+    const totalExercisesInLevel = currentLevelData?.exercises.length || 0;
     const currentCadeiraData = getCurrentCadeiraData();
-    const totalExercises = currentCadeiraData?.exercises.length || 0;
+    const totalLevels = currentCadeiraData?.levels.length || 0;
 
     setSelectedAnswer(null);
     setShowSolution(false);
     setCurrentComment('');
 
-    if (currentExercise < totalExercises - 1) {
+    if (currentExercise < totalExercisesInLevel - 1) {
       setCurrentExercise(prev => prev + 1);
     } else {
-      if (!completedCadeiras.includes(selectedCadeira)) {
-        setCompletedCadeiras(prev => [...prev, selectedCadeira]);
+      const currentCompletedLevels = getCurrentCadeiraCompletedLevels();
+
+      if (!currentCompletedLevels.includes(selectedLevel)) {
+        setCompletedLevels(prev => ({
+          ...prev,
+          [selectedCadeira]: [...currentCompletedLevels, selectedLevel]
+        }));
       }
-      setCadeiraCompleted(true);
+
+      // Verificar se todos os níveis da cadeira atual foram completados
+      if (currentCompletedLevels.length + 1 === totalLevels) {
+        setQuizFinished(true);
+      } else {
+        setLevelCompleted(true);
+      }
+      setCurrentExercise(0);
     }
   };
 
   const saveComment = (text) => {
     setCurrentComment(text);
-    const key = `${selectedCadeira}-${currentExercise}`;
+    const key = `${selectedLevel}-${currentExercise}`;
     setComments(prev => ({ ...prev, [key]: text }));
   };
 
   const resetProgress = () => {
     if (window.confirm('⚠️ Tem a certeza? Vai perder todo o progresso!')) {
       resetQuizState();
-      setCompletedCadeiras([]);
+      setCompletedLevels({});
       setTotalXP(0);
+      setSelectedLevel(null);
       setSelectedCadeira(null);
       setCurrentView('cadeiras');
       setStartTime(Date.now());
     }
   };
 
-  // Modal de Theory melhorado
-  const TheoryModal = ({ theory, onClose }) => (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content theory-modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <div className="modal-title-section">
-            <Lightbulb size={28} className="theory-icon" />
-            <h2 className="modal-title">{theory.title}</h2>
-          </div>
-          <button onClick={onClose} className="modal-close-btn">
-            <X size={24} />
-          </button>
-        </div>
-        <div className="modal-body">
-          <div className="theory-content-card">
-            <p className="theory-content">{theory.content}</p>
-          </div>
-          {theory.keyPoints && (
-            <div className="theory-keypoints">
-              <h3 className="keypoints-title">
-                <Target size={20} /> Pontos Principais
-              </h3>
-              <ul className="keypoints-list">
-                {theory.keyPoints.map((point, i) => (
-                  <li key={i} className="keypoint-item">
-                    <div className="keypoint-marker">
-                      <div className="keypoint-dot"></div>
-                    </div>
-                    <span className="keypoint-text">{point}</span>
-                  </li>
-                ))}
-              </ul>
+  // MODAL CORRIGIDO - usando useCallback e portal
+  const TheoryModal = useCallback(({ theory, onClose }) => {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setIsVisible(true), 10);
+      return () => clearTimeout(timer);
+    }, []);
+
+    const handleClose = useCallback(() => {
+      setIsVisible(false);
+      setTimeout(onClose, 300);
+    }, [onClose]);
+
+    const modalContent = (
+      <div className={`modal-overlay ${isVisible ? 'visible' : ''}`} onClick={handleClose}>
+        <div
+          className={`modal-content theory-modal ${isVisible ? 'visible' : ''}`}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="modal-header">
+            <div className="modal-title-section">
+              <Lightbulb size={28} className="theory-icon" />
+              <h2 className="modal-title">{theory.title}</h2>
             </div>
-          )}
-          {theory.examples && (
-            <div className="theory-examples">
-              <h4 className="examples-title">📋 Exemplos</h4>
-              <pre className="examples-code">
-                <code>{theory.examples}</code>
-              </pre>
+            <button onClick={handleClose} className="modal-close-btn">
+              <X size={24} />
+            </button>
+          </div>
+          <div className="modal-body">
+            <div className="theory-content-card">
+              <p className="theory-content">{theory.content}</p>
             </div>
-          )}
+            {theory.keyPoints && (
+              <div className="theory-keypoints">
+                <h3 className="keypoints-title">
+                  <Target size={20} /> Pontos Principais
+                </h3>
+                <ul className="keypoints-list">
+                  {theory.keyPoints.map((point, i) => (
+                    <li key={i} className="keypoint-item">
+                      <div className="keypoint-marker">
+                        <div className="keypoint-dot"></div>
+                      </div>
+                      <span className="keypoint-text">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {theory.examples && (
+              <div className="theory-examples">
+                <h4 className="examples-title">📋 Exemplos</h4>
+                <pre className="examples-code">
+                  <code>{theory.examples}</code>
+                </pre>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+
+    return ReactDOM.createPortal(modalContent, document.body);
+  }, []);
 
   // VIEW: Seleção de Cadeiras
   if (currentView === 'cadeiras') {
@@ -487,8 +437,8 @@ const QuizzerIsep = () => {
             <div className="stat-item-overview">
               <Trophy className="stat-icon" />
               <div>
-                <span className="stat-number">{completedCadeiras.length}</span>
-                <span className="stat-label">Cadeiras Completas</span>
+                <span className="stat-number">{Object.values(completedLevels).flat().length}</span>
+                <span className="stat-label">Níveis Completos</span>
               </div>
             </div>
             <div className="stat-item-overview">
@@ -529,16 +479,27 @@ const QuizzerIsep = () => {
             <h3 className="section-title">Cadeiras Disponíveis</h3>
             <div className="cadeiras-grid">
               {cadeiras.map(cadeira => {
-                const isCompleted = completedCadeiras.includes(cadeira.id);
+                const completedLevelsCount = completedLevels[cadeira.id]?.length || 0;
+                const totalLevelsCount = cadeira.levels.length;
+                const isFullyCompleted = completedLevelsCount === totalLevelsCount;
+
                 return (
                   <div
                     key={cadeira.id}
-                    className={`cadeira-card ${isCompleted ? 'completed' : ''}`}
-                    onClick={() => startCadeira(cadeira.id)}
+                    className={`cadeira-card ${isFullyCompleted ? 'completed' : ''}`}
+                    onClick={() => {
+                      setSelectedCadeira(cadeira.id);
+                      setCurrentView('levels');
+                    }}
                   >
                     <div className="cadeira-header">
-                      <div className="cadeira-icon">{cadeira.icon}</div>
-                      {isCompleted && (
+                      <div className="cadeira-icon">
+                        {cadeira.icon === 'Cpu' ? <Cpu size={32} /> :
+                          cadeira.icon === 'Code' ? <Code size={32} /> :
+                            cadeira.icon === 'Brain' ? <Brain size={32} /> :
+                              <FileText size={32} />}
+                      </div>
+                      {isFullyCompleted && (
                         <div className="completion-badge">
                           <CheckCircle size={20} />
                         </div>
@@ -550,15 +511,142 @@ const QuizzerIsep = () => {
                       <div className="cadeira-meta">
                         <span className="meta-item">
                           <FileText size={16} />
-                          {cadeira.exercises.length} exercícios
+                          {totalLevelsCount} níveis
                         </span>
                         <span className="meta-item">
                           <Zap size={16} />
                           +{cadeira.xp} XP
                         </span>
                       </div>
+                      <div className="progress-info">
+                        <span>{completedLevelsCount}/{totalLevelsCount} níveis completos</span>
+                        <div className="progress-bar">
+                          <div
+                            className="progress-fill"
+                            style={{ width: `${(completedLevelsCount / totalLevelsCount) * 100}%` }}
+                          />
+                        </div>
+                      </div>
                     </div>
                     <div className="cadeira-footer">
+                      <button className="start-btn">
+                        {isFullyCompleted ? 'Ver Níveis' : 'Ver Níveis'}
+                        <ArrowRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // VIEW: Seleção de Levels
+  if (currentView === 'levels' && getCurrentCadeiraData()) {
+    const currentCadeiraData = getCurrentCadeiraData();
+    const currentCadeiraCompletedLevels = getCurrentCadeiraCompletedLevels();
+    const dailyStats = getDailyStats();
+
+    return (
+      <div className={`main-menu ${isDark ? 'dark-theme' : 'light-theme'}`}>
+        <div className="main-header">
+          <div className="header-content">
+            <div className="header-left">
+              <Sparkles size={32} className="app-logo" />
+              <h1 className="app-title">QUIZZER ISEP</h1>
+            </div>
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="theme-toggle-btn"
+              aria-label="Alternar tema"
+            >
+              {isDark ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          </div>
+        </div>
+
+        <div className="main-content">
+          <div className="breadcrumb">
+            <button onClick={goToCadeiras} className="back-btn">
+              <ChevronLeft size={20} />
+              Voltar às Cadeiras
+            </button>
+            <h2 className="cadeira-title">{currentCadeiraData.name}</h2>
+          </div>
+
+          <div className="stats-overview">
+            <div className="stat-item-overview">
+              <Zap className="stat-icon" />
+              <div>
+                <span className="stat-number">{totalXP}</span>
+                <span className="stat-label">Total XP</span>
+              </div>
+            </div>
+            <div className="stat-item-overview">
+              <Trophy className="stat-icon" />
+              <div>
+                <span className="stat-number">{currentCadeiraCompletedLevels.length}/{currentCadeiraData.levels.length}</span>
+                <span className="stat-label">Níveis Completos</span>
+              </div>
+            </div>
+            <div className="stat-item-overview">
+              <Target className="stat-icon" />
+              <div>
+                <span className="stat-number">{score}</span>
+                <span className="stat-label">Pontuação Atual</span>
+              </div>
+            </div>
+            <div className="stat-item-overview">
+              <Flame className="stat-icon" />
+              <div>
+                <span className="stat-number">{maxStreak}</span>
+                <span className="stat-label">Melhor Sequência</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="levels-section">
+            <h3 className="section-title">Seleciona um Nível</h3>
+            <div className="levels-grid">
+              {currentCadeiraData.levels.map(level => {
+                const isCompleted = currentCadeiraCompletedLevels.includes(level.id);
+                return (
+                  <div
+                    key={level.id}
+                    className={`level-card ${isCompleted ? 'completed' : ''}`}
+                    onClick={() => startLevel(level.id)}
+                  >
+                    <div className="level-header">
+                      <div className="level-icon">
+                        {level.icon === 'Code' ? <Code size={32} /> :
+                          level.icon === 'Brain' ? <Brain size={32} /> :
+                            level.icon === 'Cpu' ? <Cpu size={32} /> :
+                              <FileText size={32} />}
+                      </div>
+                      {isCompleted && (
+                        <div className="completion-badge">
+                          <CheckCircle size={20} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="level-content">
+                      <h4 className="level-name">{level.name}</h4>
+                      <p className="level-desc">{level.description}</p>
+                      <div className="level-meta">
+                        <span className="meta-item">
+                          <FileText size={16} />
+                          {level.exercises.length} exercícios
+                        </span>
+                        <span className="meta-item">
+                          <Zap size={16} />
+                          +{level.xp} XP
+                        </span>
+                      </div>
+                    </div>
+                    <div className="level-footer">
                       <button className="start-btn">
                         {isCompleted ? 'Refazer' : 'Iniciar'}
                         <ArrowRight size={16} />
@@ -576,28 +664,25 @@ const QuizzerIsep = () => {
 
   // VIEW: Quiz
   if (currentView === 'quiz' && getCurrentExerciseData()) {
-    const currentCadeiraData = getCurrentCadeiraData();
+    const currentLevelData = getCurrentLevelData();
     const currentExerciseData = getCurrentExerciseData();
-    const totalExercises = currentCadeiraData?.exercises.length || 0;
+    const totalExercisesInLevel = currentLevelData?.exercises.length || 0;
     const isCorrect = selectedAnswer === currentExerciseData?.correct;
-    const commentKey = `${selectedCadeira}-${currentExercise}`;
+    const commentKey = `${selectedLevel}-${currentExercise}`;
     const hasComment = comments[commentKey];
 
-    // Tela de Conclusão da Cadeira
-    if (cadeiraCompleted) {
-      const percentage = Math.round((score / totalExercises) * 100);
-      let medal = '🎯';
-      if (percentage === 100) medal = '🏆';
-      else if (percentage >= 80) medal = '🥇';
-      else if (percentage >= 60) medal = '🥈';
+    // Tela de Conclusão do Nível
+    if (levelCompleted) {
+      const percentage = Math.round((score / totalExercisesInLevel) * 100);
+      let medal = percentage === 100 ? '🥇' : percentage >= 80 ? '🥈' : percentage >= 60 ? '🥉' : '🎯';
 
       return (
         <div className={`completion-screen ${isDark ? 'dark-theme' : 'light-theme'}`}>
           <div className="completion-container">
             <div className="completion-header">
               <div className="medal-display">{medal}</div>
-              <h1 className="completion-title">Cadeira Concluída!</h1>
-              <p className="completion-subtitle">{currentCadeiraData.name}</p>
+              <h1 className="completion-title">Nível Concluído!</h1>
+              <p className="completion-subtitle">Completaste {currentLevelData?.name}</p>
             </div>
 
             <div className="score-summary">
@@ -607,7 +692,7 @@ const QuizzerIsep = () => {
                   <span>Pontuação Final</span>
                 </div>
                 <div className="score-value">
-                  {score}<span>/{totalExercises}</span>
+                  {score}<span>/{totalExercisesInLevel}</span>
                 </div>
                 <div className="score-percentage">{percentage}%</div>
                 <div className="progress-bar">
@@ -626,7 +711,7 @@ const QuizzerIsep = () => {
                 </div>
                 <div className="stat-mini">
                   <Zap className="stat-mini-icon" />
-                  <span className="stat-mini-value">+{currentCadeiraData.xp}</span>
+                  <span className="stat-mini-value">+{currentLevelData.xp}</span>
                   <span className="stat-mini-label">XP Ganho</span>
                 </div>
                 <div className="stat-mini">
@@ -640,20 +725,13 @@ const QuizzerIsep = () => {
             <div className="action-buttons">
               <button
                 onClick={() => {
-                  setCadeiraCompleted(false);
-                  setCurrentView('cadeiras');
+                  setLevelCompleted(false);
+                  setCurrentView('levels');
                 }}
                 className="btn btn-primary"
               >
                 <Home size={20} />
-                Menu Principal
-              </button>
-              <button
-                onClick={resetQuizState}
-                className="btn btn-secondary"
-              >
-                <RotateCw size={20} />
-                Refazer Cadeira
+                Voltar aos Níveis
               </button>
               <button onClick={downloadReport} className="btn btn-success">
                 <Download size={20} />
@@ -665,12 +743,89 @@ const QuizzerIsep = () => {
       );
     }
 
+    // Tela final (todos os níveis completos)
+    if (quizFinished) {
+      const currentCadeiraData = getCurrentCadeiraData();
+      const totalAllQuestions = currentCadeiraData.levels.reduce((acc, lvl) => acc + lvl.exercises.length, 0);
+      const percentage = Math.round((score / totalAllQuestions) * 100);
+      let medal = percentage === 100 ? '🏆' : percentage >= 80 ? '🥇' : '🎉';
+
+      return (
+        <div className={`completion-screen ${isDark ? 'dark-theme' : 'light-theme'}`}>
+          <div className="completion-container">
+            <div className="completion-header">
+              <div className="medal-display">{medal}</div>
+              <h1 className="completion-title">Parabéns!</h1>
+              <p className="completion-subtitle">Completaste todos os níveis de {currentCadeiraData.name}</p>
+            </div>
+
+            <div className="score-summary">
+              <div className="score-card">
+                <div className="score-header">
+                  <Trophy className="score-icon" />
+                  <span>Pontuação Final</span>
+                </div>
+                <div className="score-value">
+                  {score}<span>/{totalAllQuestions}</span>
+                </div>
+                <div className="score-percentage">{percentage}%</div>
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="stats-grid">
+                <div className="stat-mini">
+                  <Flame className="stat-mini-icon" />
+                  <span className="stat-mini-value">{maxStreak}</span>
+                  <span className="stat-mini-label">Melhor Sequência</span>
+                </div>
+                <div className="stat-mini">
+                  <Zap className="stat-mini-icon" />
+                  <span className="stat-mini-value">{totalXP}</span>
+                  <span className="stat-mini-label">XP Total</span>
+                </div>
+                <div className="stat-mini">
+                  <Clock className="stat-mini-icon" />
+                  <span className="stat-mini-value">{formatTime(timeSpent)}</span>
+                  <span className="stat-mini-label">Tempo</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="action-buttons">
+              <button onClick={downloadReport} className="btn btn-success">
+                <Download size={20} />
+                Relatório Diário
+              </button>
+              <button onClick={() => {
+                setQuizFinished(false);
+                setCurrentView('cadeiras');
+                resetQuizState();
+              }} className="btn btn-primary">
+                <Home size={20} />
+                Menu Principal
+              </button>
+              <button onClick={resetProgress} className="btn btn-danger">
+                <AlertCircle size={20} />
+                Resetar Tudo
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Tela de Quiz
     return (
       <div className={`quiz-screen ${isDark ? 'dark-theme' : 'light-theme'}`}>
-        {showTheory && (
+        {/* Modal renderizado condicionalmente com portal */}
+        {showTheory && currentExerciseData?.theoryPoints && (
           <TheoryModal
-            theory={currentCadeiraData.theory}
+            theory={currentExerciseData.theoryPoints}
             onClose={() => setShowTheory(false)}
           />
         )}
@@ -679,7 +834,7 @@ const QuizzerIsep = () => {
         <div className="quiz-header">
           <div className="quiz-header-content">
             <button
-              onClick={() => setCurrentView('cadeiras')}
+              onClick={() => setCurrentView('levels')}
               className="back-btn"
             >
               <ChevronLeft size={20} />
@@ -687,30 +842,32 @@ const QuizzerIsep = () => {
             </button>
 
             <div className="quiz-info">
-              <h1 className="quiz-title">{currentCadeiraData.name}</h1>
+              <h1 className="quiz-title">{currentLevelData.name}</h1>
               <div className="quiz-meta">
-                <span>Exercício {currentExercise + 1} de {totalExercises}</span>
+                <span>Exercício {currentExercise + 1} de {totalExercisesInLevel}</span>
               </div>
             </div>
 
-            <button
-              onClick={() => setShowTheory(true)}
-              className="theory-btn"
-            >
-              <BookOpen size={20} />
-              Teoria
-            </button>
+            {currentExerciseData?.theoryPoints && (
+              <button
+                onClick={() => setShowTheory(true)}
+                className="theory-btn"
+              >
+                <BookOpen size={20} />
+                Teoria
+              </button>
+            )}
           </div>
 
           <div className="progress-section">
             <div className="progress-labels">
               <span>Progresso</span>
-              <span>{currentExercise + 1}/{totalExercises}</span>
+              <span>{currentExercise + 1}/{totalExercisesInLevel}</span>
             </div>
             <div className="progress-bar">
               <div
                 className="progress-fill"
-                style={{ width: `${((currentExercise + 1) / totalExercises) * 100}%` }}
+                style={{ width: `${((currentExercise + 1) / totalExercisesInLevel) * 100}%` }}
               />
             </div>
           </div>
@@ -843,7 +1000,7 @@ const QuizzerIsep = () => {
                 </div>
 
                 <button onClick={nextExercise} className="next-btn">
-                  {currentExercise < totalExercises - 1 ? (
+                  {currentExercise < totalExercisesInLevel - 1 ? (
                     <>Próximo Exercício <ArrowRight size={20} /></>
                   ) : (
                     <>Ver Resultados <Trophy size={20} /></>
