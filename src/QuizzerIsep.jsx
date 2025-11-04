@@ -894,11 +894,7 @@ const QuizzerIsep = () => {
             <div className="question-card">
               <h2 className="question-text">{currentExerciseData.question}</h2>
 
-              {currentExerciseData.code && (
-                <pre className="code-block">
-                  <code>{currentExerciseData.code}</code>
-                </pre>
-              )}
+              
 
               <div className="options-grid">
                 {currentExerciseData.options.map((option, index) => {
@@ -971,6 +967,11 @@ const QuizzerIsep = () => {
                   <div className="explanation-section">
                     <h4>📝 Explicação</h4>
                     <p>{currentExerciseData.explanation}</p>
+                    {currentExerciseData.code && (
+                      <pre className="code-block">
+                        <code>{currentExerciseData.code}</code>
+                      </pre>
+                    )}
                   </div>
 
                   {currentExerciseData.theoryPoints && (
@@ -979,6 +980,7 @@ const QuizzerIsep = () => {
                         <Lightbulb size={18} />
                         {currentExerciseData.theoryPoints.title}
                       </h4>
+                      
                       <p>{currentExerciseData.theoryPoints.content}</p>
                       {currentExerciseData.theoryPoints.keyPoints && (
                         <ul className="keypoints-list-small">
@@ -987,7 +989,7 @@ const QuizzerIsep = () => {
                           ))}
                         </ul>
                       )}
-                    </div>
+                    </div>  
                   )}
 
                   {!isCorrect && hasComment && (
