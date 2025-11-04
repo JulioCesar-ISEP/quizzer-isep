@@ -1,4 +1,4 @@
-const APROGLevels = [
+const aprog = [
   {
     id: 1,
     name: "Introdução a Algoritmos",
@@ -334,4 +334,4 @@ const APROGLevels = [
   }
 ];
 
-export default APROGLevels;
+export default aprog;
