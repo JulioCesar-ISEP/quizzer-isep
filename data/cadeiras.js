@@ -1,4 +1,4 @@
-import prcmp from './prcmp';
+import prcmp from './prcmp/prcmp';
 // import aprog from './aprog';
 // import arqcp from './arqcp';
 
