@@ -2,7 +2,8 @@ import React from 'react';
 import { Target, Flame, Clock, CheckCircle } from 'lucide-react';
 
 const QuizStats = ({ score, streak, timeSpent, currentExercise, totalExercises, className = '' }) => {
-  const progress = totalExercises > 0 ? Math.round((currentExercise + 1) / totalExercises * 100) : 0;
+  // Garantir que timeSpent sempre tenha um valor válido
+  const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
   
   return (
     <div className={`quiz-stats-bar ${className}`}>
@@ -16,7 +17,7 @@ const QuizStats = ({ score, streak, timeSpent, currentExercise, totalExercises, 
       </div>
       <div className="stat-badge">
         <Clock size={16} />
-        <span>{timeSpent}</span>
+        <span>{displayTime}</span>
       </div>
       <div className="stat-badge">
         <CheckCircle size={16} />

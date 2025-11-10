@@ -21,10 +21,10 @@ const QuizzerIsep = () => {
   const [mistakes, setMistakes] = useState([]);
   const [sessionStartTime] = useState(new Date());
 
-  // Quiz state - CORRIGIDO
+  // Quiz state
   const [quizState, setQuizState] = useState({
     currentExercise: 0,
-    answers: [], // Array para armazenar todas as respostas
+    answers: [],
     showSolution: false,
     showResults: false,
     levelCompleted: false,
@@ -41,7 +41,7 @@ const QuizzerIsep = () => {
   const getCurrentLevelData = () => getCurrentCadeiraData()?.levels.find(l => l.id === selectedLevel);
   const getCurrentExerciseData = () => getCurrentLevelData()?.exercises[quizState.currentExercise];
 
-  // Calcular score baseado nas respostas - CORRIGIDO
+  // Calcular score baseado nas respostas
   const calculateScore = () => {
     const currentLevelData = getCurrentLevelData();
     if (!currentLevelData) return 0;
@@ -53,7 +53,7 @@ const QuizzerIsep = () => {
     }, 0);
   };
 
-  // Calcular streak - CORRIGIDO
+  // Calcular streak
   const calculateStreak = () => {
     const currentLevelData = getCurrentLevelData();
     if (!currentLevelData) return 0;
@@ -112,18 +112,23 @@ const QuizzerIsep = () => {
   };
 
   const resetQuizState = () => {
-    setQuizState({
-      currentExercise: 0,
-      answers: [],
-      showSolution: false,
-      showResults: false,
-      levelCompleted: false,
-      quizFinished: false
-    });
-    setMistakes([]);
-    setComments({});
-    setCurrentComment('');
-  };
+  setQuizState({
+    currentExercise: 0,
+    answers: [],
+    showSolution: false,
+    showResults: false,
+    levelCompleted: false,
+    quizFinished: false
+  });
+  setMistakes([]);
+  setComments({});
+  setCurrentComment('');
+  
+  // Reset mais robusto do timer
+  setTimeout(() => {
+    resetTimer();
+  }, 100);
+};
 
   const handleAnswer = (selectedIndex) => {
     const currentExerciseData = getCurrentExerciseData();
@@ -219,7 +224,8 @@ const QuizzerIsep = () => {
     setQuizState(prev => ({ 
       ...prev, 
       currentExercise: exerciseIndex,
-      showSolution: false
+      showSolution: false,
+      showResults: false // IMPORTANTE: Sair da tela de resultados quando navegar para uma questão
     }));
     setCurrentComment('');
   };

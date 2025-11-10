@@ -1,9 +1,15 @@
 export const formatTime = (totalSeconds) => {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  // Garantir que totalSeconds seja um número válido
+  const seconds = typeof totalSeconds === 'number' && !isNaN(totalSeconds) && totalSeconds >= 0 
+    ? totalSeconds 
+    : 0;
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
 export const calculatePercentage = (score, total) => {
-  return total > 0 ? Math.round((score / total) * 100) : 0;
+  if (!total || total === 0) return 0;
+  return Math.round((score / total) * 100);
 };

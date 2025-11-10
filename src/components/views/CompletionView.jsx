@@ -33,6 +33,9 @@ const CompletionView = ({
   const totalQuestions = getTotalQuestions();
   const percentage = calculatePercentage(score, totalQuestions);
   const medal = getMedal(percentage);
+  
+  // Garantir que timeSpent sempre tenha um valor válido
+  const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
 
   return (
     <div className="completion-screen">
@@ -85,7 +88,7 @@ const CompletionView = ({
             </div>
             <div className="stat-mini">
               <Clock className="stat-mini-icon" />
-              <span className="stat-mini-value">{formatTime(timeSpent)}</span>
+              <span className="stat-mini-value">{displayTime}</span>
               <span className="stat-mini-label">Tempo</span>
             </div>
           </div>

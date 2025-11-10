@@ -42,6 +42,9 @@ const QuizView = ({
   const isLastExercise = currentExerciseIndex === totalExercises - 1;
   const allQuestionsAnswered = answers.length === totalExercises && answers.every(answer => answer !== undefined);
 
+  // Garantir que timeSpent sempre tenha um valor válido
+  const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
+
   // Tela de resultados
   if (showResults) {
     return (
@@ -87,7 +90,7 @@ const QuizView = ({
               </div>
               <div className="stat-result">
                 <span className="stat-label">Tempo Total</span>
-                <span className="stat-value">{timeSpent}</span>
+                <span className="stat-value">{displayTime}</span>
               </div>
             </div>
           </div>
@@ -133,7 +136,10 @@ const QuizView = ({
           </div>
 
           <div className="results-actions">
-            <button onClick={() => onGoToExercise(0)} className="btn btn-secondary">
+            <button 
+              onClick={() => onGoToExercise(0)} 
+              className="btn btn-secondary"
+            >
               <ArrowLeft size={20} />
               Revisar Questões
             </button>
@@ -170,7 +176,7 @@ const QuizView = ({
         <QuizStats
           score={score}
           streak={maxStreak}
-          timeSpent={timeSpent}
+          timeSpent={displayTime}
           currentExercise={currentExerciseIndex}
           totalExercises={totalExercises}
         />
