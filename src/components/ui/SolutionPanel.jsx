@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, XCircle, Lightbulb, ArrowRight, Trophy } from 'lucide-react';
+import { CheckCircle, XCircle, Lightbulb, ArrowRight, Trophy, ArrowLeft } from 'lucide-react';
 
 const SolutionPanel = ({ 
   isCorrect, 
@@ -9,7 +9,9 @@ const SolutionPanel = ({
   hasComment, 
   comment, 
   onNext, 
-  isLastExercise 
+  isLastExercise,
+  allQuestionsAnswered,
+  onPrevious
 }) => {
   return (
     <div className={`solution-panel ${isCorrect ? 'correct' : 'incorrect'}`}>
@@ -66,13 +68,24 @@ const SolutionPanel = ({
         )}
       </div>
 
-      <button onClick={onNext} className="next-btn">
-        {isLastExercise ? (
-          <>Ver Resultados <Trophy size={20} /></>
-        ) : (
-          <>Próximo Exercício <ArrowRight size={20} /></>
+      <div className="solution-actions">
+        {onPrevious && (
+          <button onClick={onPrevious} className="btn btn-secondary">
+            <ArrowLeft size={20} />
+            Voltar
+          </button>
         )}
-      </button>
+        
+        <button onClick={onNext} className="btn btn-primary">
+          {allQuestionsAnswered ? (
+            <>Ver Resultados <Trophy size={20} /></>
+          ) : isLastExercise ? (
+            <>Ver Resultados <Trophy size={20} /></>
+          ) : (
+            <>Próxima Questão <ArrowRight size={20} /></>
+          )}
+        </button>
+      </div>
     </div>
   );
 };

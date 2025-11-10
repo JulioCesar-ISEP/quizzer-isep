@@ -21,20 +21,18 @@ const QuizzerIsep = () => {
   const [mistakes, setMistakes] = useState([]);
   const [sessionStartTime] = useState(new Date());
 
-  // Quiz state
+  // Quiz state - CORRIGIDO
   const [quizState, setQuizState] = useState({
     currentExercise: 0,
-    score: 0,
-    streak: 0,
-    maxStreak: 0,
+    answers: [], // Array para armazenar todas as respostas
     showSolution: false,
-    selectedAnswer: null,
+    showResults: false,
     levelCompleted: false,
     quizFinished: false
   });
 
   const { isDark, toggleTheme } = useTheme();
-  const { timeSpent, resetTimer } = useTimer(currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished);
+  const { timeSpent, resetTimer, setStartTime } = useTimer(currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished);
   const { completedLevels, totalXP, addCompletedLevel, addXP, resetProgress, getCadeiraCompletedLevels } = useProgress();
   const { dailyStats, downloadReport, initializeReports } = useReports();
 
@@ -42,6 +40,46 @@ const QuizzerIsep = () => {
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
   const getCurrentLevelData = () => getCurrentCadeiraData()?.levels.find(l => l.id === selectedLevel);
   const getCurrentExerciseData = () => getCurrentLevelData()?.exercises[quizState.currentExercise];
+
+  // Calcular score baseado nas respostas - CORRIGIDO
+  const calculateScore = () => {
+    const currentLevelData = getCurrentLevelData();
+    if (!currentLevelData) return 0;
+    
+    return quizState.answers.reduce((score, answer, index) => {
+      if (answer === undefined) return score;
+      const exercise = currentLevelData.exercises[index];
+      return score + (answer === exercise.correct ? 1 : 0);
+    }, 0);
+  };
+
+  // Calcular streak - CORRIGIDO
+  const calculateStreak = () => {
+    const currentLevelData = getCurrentLevelData();
+    if (!currentLevelData) return 0;
+    
+    let currentStreak = 0;
+    let maxStreak = 0;
+    
+    quizState.answers.forEach((answer, index) => {
+      if (answer === undefined) {
+        currentStreak = 0;
+        return;
+      }
+      const exercise = currentLevelData.exercises[index];
+      if (answer === exercise.correct) {
+        currentStreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+    });
+    
+    return maxStreak;
+  };
+
+  const score = calculateScore();
+  const maxStreak = calculateStreak();
 
   // Efeitos
   useEffect(() => {
@@ -70,16 +108,15 @@ const QuizzerIsep = () => {
     setCurrentView('quiz');
     resetTimer();
     resetQuizState();
+    setStartTime(Date.now());
   };
 
   const resetQuizState = () => {
     setQuizState({
       currentExercise: 0,
-      score: 0,
-      streak: 0,
-      maxStreak: 0,
+      answers: [],
       showSolution: false,
-      selectedAnswer: null,
+      showResults: false,
       levelCompleted: false,
       quizFinished: false
     });
@@ -89,31 +126,22 @@ const QuizzerIsep = () => {
   };
 
   const handleAnswer = (selectedIndex) => {
-    if (quizState.selectedAnswer !== null) return;
-
     const currentExerciseData = getCurrentExerciseData();
     const currentLevelData = getCurrentLevelData();
     const currentCadeiraData = getCurrentCadeiraData();
 
+    // Atualizar a resposta para a questão atual
+    const newAnswers = [...quizState.answers];
+    newAnswers[quizState.currentExercise] = selectedIndex;
+    
     setQuizState(prev => ({
       ...prev,
-      selectedAnswer: selectedIndex,
+      answers: newAnswers,
       showSolution: true
     }));
 
-    if (selectedIndex === currentExerciseData.correct) {
-      const newScore = quizState.score + 1;
-      const newStreak = quizState.streak + 1;
-      setQuizState(prev => ({
-        ...prev,
-        score: newScore,
-        streak: newStreak,
-        maxStreak: Math.max(prev.maxStreak, newStreak)
-      }));
-      addXP(currentLevelData.xp);
-    } else {
-      setQuizState(prev => ({ ...prev, streak: 0 }));
-      
+    // Registrar erro se a resposta estiver incorreta
+    if (selectedIndex !== currentExerciseData.correct) {
       const commentKey = `${selectedLevel}-${quizState.currentExercise}`;
       setMistakes(prev => [...prev, {
         cadeiraId: selectedCadeira,
@@ -135,31 +163,93 @@ const QuizzerIsep = () => {
 
   const nextExercise = () => {
     const currentLevelData = getCurrentLevelData();
-    const currentCadeiraData = getCurrentCadeiraData();
     const totalExercisesInLevel = currentLevelData?.exercises.length || 0;
-    const totalLevels = currentCadeiraData?.levels.length || 0;
-    const currentCadeiraCompletedLevels = getCadeiraCompletedLevels(selectedCadeira);
 
     setQuizState(prev => ({
       ...prev,
-      selectedAnswer: null,
       showSolution: false
     }));
     setCurrentComment('');
 
     if (quizState.currentExercise < totalExercisesInLevel - 1) {
-      setQuizState(prev => ({ ...prev, currentExercise: prev.currentExercise + 1 }));
+      setQuizState(prev => ({ 
+        ...prev, 
+        currentExercise: prev.currentExercise + 1 
+      }));
     } else {
-      if (!currentCadeiraCompletedLevels.includes(selectedLevel)) {
-        addCompletedLevel(selectedCadeira, selectedLevel);
-      }
-
-      // Verificar se todos os níveis da cadeira atual foram completados
-      if (currentCadeiraCompletedLevels.length + 1 === totalLevels) {
-        setQuizState(prev => ({ ...prev, quizFinished: true }));
+      // Verificar se todas as questões foram respondidas
+      const allAnswered = quizState.answers.length === totalExercisesInLevel && 
+                         quizState.answers.every(answer => answer !== undefined);
+      
+      if (allAnswered) {
+        setQuizState(prev => ({ 
+          ...prev, 
+          showResults: true 
+        }));
       } else {
-        setQuizState(prev => ({ ...prev, levelCompleted: true }));
+        // Se não estão todas respondidas, voltar para a primeira não respondida
+        const firstUnanswered = quizState.answers.findIndex(answer => answer === undefined);
+        if (firstUnanswered !== -1) {
+          setQuizState(prev => ({ 
+            ...prev, 
+            currentExercise: firstUnanswered 
+          }));
+        } else {
+          setQuizState(prev => ({ 
+            ...prev, 
+            showResults: true 
+          }));
+        }
       }
+    }
+  };
+
+  const previousExercise = () => {
+    if (quizState.currentExercise > 0) {
+      setQuizState(prev => ({ 
+        ...prev, 
+        currentExercise: prev.currentExercise - 1,
+        showSolution: false
+      }));
+      setCurrentComment('');
+    }
+  };
+
+  const goToExercise = (exerciseIndex) => {
+    setQuizState(prev => ({ 
+      ...prev, 
+      currentExercise: exerciseIndex,
+      showSolution: false
+    }));
+    setCurrentComment('');
+  };
+
+  const showResultsScreen = () => {
+    setQuizState(prev => ({ 
+      ...prev, 
+      showResults: true 
+    }));
+  };
+
+  const finishQuiz = () => {
+    const currentLevelData = getCurrentLevelData();
+    const currentCadeiraData = getCurrentCadeiraData();
+    const totalLevels = currentCadeiraData?.levels.length || 0;
+    const currentCadeiraCompletedLevels = getCadeiraCompletedLevels(selectedCadeira);
+
+    // Adicionar XP baseado no score
+    const xpEarned = Math.round((score / currentLevelData.exercises.length) * currentLevelData.xp);
+    addXP(xpEarned);
+
+    if (!currentCadeiraCompletedLevels.includes(selectedLevel)) {
+      addCompletedLevel(selectedCadeira, selectedLevel);
+    }
+
+    // Verificar se todos os níveis da cadeira atual foram completados
+    if (currentCadeiraCompletedLevels.length + 1 === totalLevels) {
+      setQuizState(prev => ({ ...prev, quizFinished: true }));
+    } else {
+      setQuizState(prev => ({ ...prev, levelCompleted: true }));
     }
   };
 
@@ -169,8 +259,8 @@ const QuizzerIsep = () => {
       sessionStartTime,
       timeSpent,
       currentLevelData,
-      score: quizState.score,
-      maxStreak: quizState.maxStreak,
+      score: score,
+      maxStreak: maxStreak,
       mistakes,
       totalPossibleScore: currentLevelData?.exercises.length || 0
     };
@@ -202,7 +292,7 @@ const QuizzerIsep = () => {
             cadeiras={cadeiras}
             completedLevels={completedLevels}
             totalXP={totalXP}
-            maxStreak={quizState.maxStreak}
+            maxStreak={maxStreak}
             onSelectCadeira={(cadeiraId) => {
               setSelectedCadeira(cadeiraId);
               setCurrentView('levels');
@@ -221,9 +311,9 @@ const QuizzerIsep = () => {
             completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
             onStartLevel={startLevel}
             onBack={goToCadeiras}
-            score={quizState.score}
+            score={score}
             totalXP={totalXP}
-            maxStreak={quizState.maxStreak}
+            maxStreak={maxStreak}
           />
         ) : <LoadingScreen />;
 
@@ -236,8 +326,8 @@ const QuizzerIsep = () => {
             <CompletionView
               level={currentLevelData}
               cadeira={getCurrentCadeiraData()}
-              score={quizState.score}
-              maxStreak={quizState.maxStreak}
+              score={score}
+              maxStreak={maxStreak}
               totalXP={totalXP}
               timeSpent={timeSpent}
               isLevelCompleted={quizState.levelCompleted}
@@ -259,13 +349,19 @@ const QuizzerIsep = () => {
             exercise={currentExerciseData}
             currentExerciseIndex={quizState.currentExercise}
             totalExercises={currentLevelData.exercises.length}
-            selectedAnswer={quizState.selectedAnswer}
+            selectedAnswer={quizState.answers[quizState.currentExercise]}
             showSolution={quizState.showSolution}
-            score={quizState.score}
-            streak={quizState.streak}
+            showResults={quizState.showResults}
+            answers={quizState.answers}
+            score={score}
+            maxStreak={maxStreak}
             timeSpent={timeSpent}
             onAnswer={handleAnswer}
             onNext={nextExercise}
+            onPrevious={previousExercise}
+            onGoToExercise={goToExercise}
+            onShowResults={showResultsScreen}
+            onFinishQuiz={finishQuiz}
             onBack={() => setCurrentView('levels')}
             onShowTheory={() => setShowTheory(true)}
             comments={comments}
