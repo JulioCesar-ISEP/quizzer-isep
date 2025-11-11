@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, GitBranch, BookOpen, Target, Lightbulb, Code, Zap, Home, ArrowRight, CheckCircle, Minus, Plus } from 'lucide-react';
 
 const KnowledgeTreeView = ({ 
@@ -11,14 +11,73 @@ const KnowledgeTreeView = ({
   const [expandedNodes, setExpandedNodes] = useState(new Set(['root']));
   const isLevelCompleted = completedLevels.includes(level?.id);
 
-  if (!level || !level.knowledgeTree) {
+  // DEBUG: Verificar TODOS os dados do level
+  useEffect(() => {
+    console.log('=== KNOWLEDGE TREE DEBUG ===');
+    console.log('Full Level object:', level);
+    console.log('Level keys:', level ? Object.keys(level) : 'No level');
+    console.log('KnowledgeTreeView prop:', level?.KnowledgeTreeView);
+    console.log('Has KnowledgeTreeView:', !!level?.KnowledgeTreeView);
+    console.log('======================');
+  }, [level]);
+
+  // Função para obter a knowledge tree dos dados reais
+  const getKnowledgeTreeData = () => {
+    if (!level) {
+      return getEmptyKnowledgeTree();
+    }
+
+    // Os dados reais estão em level.KnowledgeTreeView (com V maiúsculo)
+    const treeData = level.KnowledgeTreeView;
+    
+    if (treeData) {
+      console.log('Found real KnowledgeTreeView data:', treeData);
+      
+      return {
+        conceptsCount: treeData.conceptsCount || 0,
+        topicsCount: treeData.topicsCount || 0,
+        examplesCount: treeData.examplesCount || 0,
+        root: treeData.root || getEmptyRootNode(),
+        source: 'KnowledgeTreeView'
+      };
+    }
+    
+    // Se não encontrar dados, usar estrutura vazia em vez de fallback
+    console.warn('No KnowledgeTreeView data found, using empty structure');
+    return getEmptyKnowledgeTree();
+  };
+
+  // Estrutura vazia (não fallback)
+  const getEmptyKnowledgeTree = () => {
+    return {
+      conceptsCount: 0,
+      topicsCount: 0,
+      examplesCount: 0,
+      root: getEmptyRootNode(),
+      source: 'empty'
+    };
+  };
+
+  const getEmptyRootNode = () => {
+    return {
+      id: 'root',
+      type: 'topic',
+      title: `Conceitos de ${level?.name || 'Nível'}`,
+      description: `Estrutura de conhecimento para ${level?.name || 'este nível'}`,
+      children: []
+    };
+  };
+
+  const knowledgeTree = getKnowledgeTreeData();
+
+  if (!level) {
     return (
       <div className="knowledge-tree-screen">
         <div className="container">
           <div className="error-state">
             <GitBranch size={64} />
             <h2>Árvore do Conhecimento</h2>
-            <p>Conteúdo em desenvolvimento para {level?.name}</p>
+            <p>Nível não encontrado</p>
             <button onClick={onBack} className="btn btn-primary">
               Voltar aos Níveis
             </button>
@@ -97,7 +156,8 @@ const KnowledgeTreeView = ({
     );
   };
 
-  const { knowledgeTree } = level;
+  const isUsingRealData = knowledgeTree.source === 'KnowledgeTreeView';
+  const hasTreeContent = knowledgeTree.root.children && knowledgeTree.root.children.length > 0;
 
   return (
     <div className="knowledge-tree-screen">
@@ -119,6 +179,15 @@ const KnowledgeTreeView = ({
               <div className="title-text">
                 <h1>Árvore do Conhecimento</h1>
                 <p className="subtitle">{level.name} - {cadeira.name}</p>
+                {isUsingRealData ? (
+                  <p style={{fontSize: '0.9rem', color: 'var(--success)', marginTop: '0.5rem'}}>
+                    ✅ Dados reais carregados - {knowledgeTree.conceptsCount} conceitos, {knowledgeTree.topicsCount} tópicos, {knowledgeTree.examplesCount} exemplos
+                  </p>
+                ) : (
+                  <p style={{fontSize: '0.9rem', color: 'var(--warning)', marginTop: '0.5rem'}}>
+                    ⚠️ Nenhuma árvore de conhecimento definida para este nível
+                  </p>
+                )}
               </div>
             </div>
             
@@ -136,21 +205,21 @@ const KnowledgeTreeView = ({
           <div className="stat-card">
             <Lightbulb size={20} className="stat-icon concept" />
             <div className="stat-info">
-              <span className="stat-number">{knowledgeTree.conceptsCount || 0}</span>
+              <span className="stat-number">{knowledgeTree.conceptsCount}</span>
               <span className="stat-label">Conceitos</span>
             </div>
           </div>
           <div className="stat-card">
             <BookOpen size={20} className="stat-icon topic" />
             <div className="stat-info">
-              <span className="stat-number">{knowledgeTree.topicsCount || 0}</span>
+              <span className="stat-number">{knowledgeTree.topicsCount}</span>
               <span className="stat-label">Tópicos</span>
             </div>
           </div>
           <div className="stat-card">
             <Code size={20} className="stat-icon example" />
             <div className="stat-info">
-              <span className="stat-number">{knowledgeTree.examplesCount || 0}</span>
+              <span className="stat-number">{knowledgeTree.examplesCount}</span>
               <span className="stat-label">Exemplos</span>
             </div>
           </div>
@@ -182,7 +251,20 @@ const KnowledgeTreeView = ({
           </div>
           
           <div className="tree-content">
-            {renderTreeNode(knowledgeTree.root)}
+            {hasTreeContent ? (
+              renderTreeNode(knowledgeTree.root)
+            ) : (
+              <div className="empty-tree-state">
+                <GitBranch size={48} />
+                <h3>Nenhuma árvore de conhecimento definida</h3>
+                <p>Este nível ainda não tem uma estrutura de conhecimento organizada.</p>
+                {isUsingRealData && (
+                  <p style={{color: 'var(--warning)', marginTop: '1rem'}}>
+                    ⚠️ Os dados existem mas a árvore está vazia
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

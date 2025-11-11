@@ -7,6 +7,7 @@ import Header from './components/ui/Header';
 import CadeirasView from './components/views/CadeirasView';
 import LevelsView from './components/views/LevelsView';
 import QuizView from './components/views/QuizView';
+import KnowledgeTreeView from './components/views/KnowledgeTreeView'; // NOVO IMPORT
 import CompletionView from './components/views/CompletionView';
 import LoadingScreen from './components/common/LoadingScreen';
 import cadeiras from '../data/cadeiras';
@@ -95,12 +96,17 @@ const QuizzerIsep = () => {
     return () => document.body.classList.remove('modal-open');
   }, [showTheory]);
 
-  // Funções de navegação
+  // Funções de navegação - ATUALIZADAS
   const goToCadeiras = () => {
     setCurrentView('cadeiras');
     setSelectedCadeira(null);
     setSelectedLevel(null);
     resetQuizState();
+  };
+
+  const goToLevels = () => {
+    setCurrentView('levels');
+    setSelectedLevel(null);
   };
 
   const startLevel = (levelId) => {
@@ -111,24 +117,30 @@ const QuizzerIsep = () => {
     setStartTime(Date.now());
   };
 
+  // NOVA FUNÇÃO: Abrir Árvore do Conhecimento
+  const openKnowledgeTree = (levelId) => {
+    setSelectedLevel(levelId);
+    setCurrentView('knowledge-tree');
+  };
+
   const resetQuizState = () => {
-  setQuizState({
-    currentExercise: 0,
-    answers: [],
-    showSolution: false,
-    showResults: false,
-    levelCompleted: false,
-    quizFinished: false
-  });
-  setMistakes([]);
-  setComments({});
-  setCurrentComment('');
-  
-  // Reset mais robusto do timer
-  setTimeout(() => {
-    resetTimer();
-  }, 100);
-};
+    setQuizState({
+      currentExercise: 0,
+      answers: [],
+      showSolution: false,
+      showResults: false,
+      levelCompleted: false,
+      quizFinished: false
+    });
+    setMistakes([]);
+    setComments({});
+    setCurrentComment('');
+    
+    // Reset mais robusto do timer
+    setTimeout(() => {
+      resetTimer();
+    }, 100);
+  };
 
   const handleAnswer = (selectedIndex) => {
     const currentExerciseData = getCurrentExerciseData();
@@ -289,7 +301,7 @@ const QuizzerIsep = () => {
     setComments(prev => ({ ...prev, [key]: text }));
   };
 
-  // Renderização condicional
+  // Renderização condicional - ATUALIZADA
   const renderCurrentView = () => {
     switch (currentView) {
       case 'cadeiras':
@@ -316,10 +328,24 @@ const QuizzerIsep = () => {
             cadeira={currentCadeiraData}
             completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
             onStartLevel={startLevel}
+            onOpenKnowledgeTree={openKnowledgeTree} // NOVA PROP
             onBack={goToCadeiras}
             score={score}
             totalXP={totalXP}
             maxStreak={maxStreak}
+          />
+        ) : <LoadingScreen />;
+
+      case 'knowledge-tree': // NOVA VIEW
+        const knowledgeTreeLevelData = getCurrentLevelData();
+        const knowledgeTreeCadeiraData = getCurrentCadeiraData();
+        return knowledgeTreeLevelData ? (
+          <KnowledgeTreeView
+            level={knowledgeTreeLevelData}
+            cadeira={knowledgeTreeCadeiraData}
+            onBack={goToLevels}
+            onStartQuiz={() => startLevel(selectedLevel)}
+            completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
           />
         ) : <LoadingScreen />;
 
@@ -389,7 +415,8 @@ const QuizzerIsep = () => {
         isDark={isDark}
         toggleTheme={toggleTheme}
         currentView={currentView}
-        onBack={currentView !== 'cadeiras' ? goToCadeiras : null}
+        onBack={currentView !== 'cadeiras' ? 
+          (currentView === 'knowledge-tree' ? goToLevels : goToCadeiras) : null}
         showBackButton={currentView !== 'cadeiras'}
       />
       {renderCurrentView()}

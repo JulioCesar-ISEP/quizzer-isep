@@ -63,3 +63,4 @@ export const level5KnowledgeTree = {
     ]
   }
 };
+export default level5KnowledgeTree;

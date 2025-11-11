@@ -1,10 +1,11 @@
 import React from 'react';
-import { ChevronLeft, Code, Brain, Cpu, FileText, CheckCircle, ArrowRight, Zap, Trophy, Target, Flame } from 'lucide-react';
+import { ChevronLeft, Code, Brain, Cpu, FileText, CheckCircle, ArrowRight, Zap, Trophy, Target, Flame, BookOpen, GitBranch } from 'lucide-react';
 
 const LevelsView = ({ 
   cadeira, 
   completedLevels, 
   onStartLevel, 
+  onOpenKnowledgeTree,  // NOVA PROP
   onBack, 
   score, 
   totalXP, 
@@ -55,6 +56,8 @@ const LevelsView = ({
 
       <div className="levels-section">
         <h3 className="section-title">Seleciona um Nível</h3>
+        <p className="section-subtitle">Escolhe entre fazer a prova ou explorar a Árvore do Conhecimento</p>
+        
         <div className="levels-grid">
           {cadeira.levels.map(level => {
             const isCompleted = completedLevels.includes(level.id);
@@ -62,7 +65,6 @@ const LevelsView = ({
               <div
                 key={level.id}
                 className={`level-card ${isCompleted ? 'completed' : ''}`}
-                onClick={() => onStartLevel(level.id)}
               >
                 <div className="level-header">
                   <div className="level-icon">
@@ -90,12 +92,43 @@ const LevelsView = ({
                       +{level.xp} XP
                     </span>
                   </div>
-                </div>
-                <div className="level-footer">
-                  <button className="start-btn">
-                    {isCompleted ? 'Refazer' : 'Iniciar'}
-                    <ArrowRight size={16} />
-                  </button>
+                  
+                  {/* Bifurcação: Prova vs Árvore do Conhecimento */}
+                  <div className="level-options">
+                    <div className="option-card">
+                      <div className="option-icon">
+                        <BookOpen size={24} />
+                      </div>
+                      <div className="option-content">
+                        <h5>Prova</h5>
+                        <p>Testa os teus conhecimentos com exercícios práticos</p>
+                        <button 
+                          onClick={() => onStartLevel(level.id)}
+                          className="option-btn primary"
+                        >
+                          {isCompleted ? 'Refazer Prova' : 'Iniciar Prova'}
+                          <ArrowRight size={16} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="option-card">
+                      <div className="option-icon">
+                        <GitBranch size={24} />
+                      </div>
+                      <div className="option-content">
+                        <h5>Árvore do Conhecimento</h5>
+                        <p>Explora os conceitos de forma hierárquica e interativa</p>
+                        <button 
+                          onClick={() => onOpenKnowledgeTree(level.id)}
+                          className="option-btn secondary"
+                        >
+                          Explorar
+                          <ArrowRight size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
