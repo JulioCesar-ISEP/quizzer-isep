@@ -1,5 +1,10 @@
+import KnowledgeTreeView from "../../src/components/views/KnowledgeTreeView.jsx";
 import ex5 from "./exercises/ex5.js";
-
+import { level1KnowledgeTree } from './knowledgeTrees/level1.js';
+import { level2KnowledgeTree } from './knowledgeTrees/level2.js';
+import { level3KnowledgeTree } from './knowledgeTrees/level3.js';
+import { level4KnowledgeTree } from './knowledgeTrees/level4.js';
+import { level5KnowledgeTree } from '../prcmp/knowledgeTrees/level5.js';
 
 const prcmp = [
   {
@@ -337,6 +342,7 @@ const prcmp = [
     title: "Comandos Essenciais Unix/Linux", 
     content: "O shell Unix oferece comandos poderosos para manipular arquivos, processar texto e automatizar tarefas através de pipes e redirecionamento." 
   },
+  KnowledgeTreeView: level5KnowledgeTree,
   exercises: ex5
 },
 {

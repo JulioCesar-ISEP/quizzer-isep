@@ -1,0 +1,313 @@
+/* ===== BADGES ===== */
+
+/* Completion Badge */
+.completion-badge,
+.completion-badge-large {
+  background: var(--success);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--border-radius-lg);
+  gap: var(--space-sm);
+  white-space: nowrap;
+}
+
+.completion-badge {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: var(--space-xs);
+}
+
+.completion-badge-large {
+  padding: var(--space-md) var(--space-lg);
+}
+
+/* Stat Badge */
+.stat-badge {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  color: var(--text-primary);
+}
+
+.stat-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Streak Badge */
+.stat-badge.streak {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+}
+
+/* Question Number Badge */
+.question-number-badge {
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--primary);
+}
+
+/* Answered Badge */
+.answered-badge {
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--success);
+}
+
+/* Knowledge Badge */
+.knowledge-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border-radius: 4px;
+  flex-shrink: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.timeline-card.collected .knowledge-badge {
+  background: var(--gradient-success);
+  color: white;
+}
+
+/* Question Status Text */
+.question-status-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.question-review-item.correct .question-status-text {
+  color: var(--success);
+}
+
+.question-review-item.incorrect .question-status-text {
+  color: var(--danger);
+}
+
+.question-review-item.unanswered .question-status-text {
+  color: var(--text-muted);
+}
+
+/* Status Icons */
+.correct-icon {
+  color: var(--success);
+}
+
+.incorrect-icon {
+  color: var(--danger);
+}
+
+/* Stat Mini Icon */
+.stat-mini-icon {
+  color: var(--primary);
+  margin-bottom: var(--space-sm);
+}
+
+/* Stat Icon */
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  padding: var(--space-md);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon.concept {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary);
+}
+
+.stat-icon.topic {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--purple);
+}
+
+.stat-icon.example {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.stat-icon.xp {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+/* Banana */
+.banana {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: grab;
+  transition: all var(--transition);
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+  flex-shrink: 0;
+  border: 2px solid rgba(251, 146, 60, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.banana::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50%;
+}
+
+.banana.collectible {
+  cursor: grab;
+  background: rgba(251, 146, 60, 0.25);
+  border-color: rgba(251, 146, 60, 0.6);
+  animation: bananaPulse 2s ease-in-out infinite;
+}
+
+.banana.collectible:hover {
+  transform: scale(1.2) rotate(10deg);
+  background: rgba(251, 146, 60, 0.4);
+  border-color: #fb923c;
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
+}
+
+.banana.collected {
+  cursor: default;
+  background: rgba(16, 185, 129, 0.25);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.5);
+  opacity: 0.7;
+}
+
+@keyframes bananaPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(251, 146, 60, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
+  }
+}
+
+/* Node Icon */
+.node-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all var(--transition);
+}
+
+/* Expand Icon */
+.expand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* Expand Toggle */
+.expand-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.expand-toggle:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Unanswered Icon */
+.unanswered-icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+/* Stat Badge */
+.stat-badge {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  color: var(--text-primary);
+}
+
+.stat-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Streak Badge */
+.stat-badge.streak {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import QuizzerIsep from './QuizzerIsep';
-import './styles.css';
+import './styles/main.css';
 
 function App() {
   return (
