@@ -13,11 +13,13 @@ const CadeirasView = ({
 }) => {
   return (
     <div className="main-content">
+      {/* Header Section */}
       <div className="welcome-section">
         <h2 className="welcome-title">Bem-vindo ao Quizzer ISEP</h2>
         <p className="welcome-subtitle">Melhora os teus conhecimentos através de quizzes interativos</p>
       </div>
 
+      {/* Stats Overview */}
       <div className="stats-overview">
         <div className="stat-item-overview">
           <Trophy className="stat-icon" />
@@ -49,6 +51,7 @@ const CadeirasView = ({
         </div>
       </div>
 
+      {/* Action Buttons */}
       <div className="action-buttons-main">
         <button onClick={onDownloadReport} className="btn btn-secondary">
           <Download size={20} />
@@ -60,6 +63,7 @@ const CadeirasView = ({
         </button>
       </div>
 
+      {/* Cadeiras Grid */}
       <div className="cadeiras-section">
         <h3 className="section-title">Cadeiras Disponíveis</h3>
         <div className="cadeiras-grid">
@@ -67,52 +71,72 @@ const CadeirasView = ({
             const completedLevelsCount = completedLevels[cadeira.id]?.length || 0;
             const totalLevelsCount = cadeira.levels.length;
             const isFullyCompleted = completedLevelsCount === totalLevelsCount;
+            const progressPercentage = (completedLevelsCount / totalLevelsCount) * 100;
 
             return (
               <div
                 key={cadeira.id}
                 className={`cadeira-card ${isFullyCompleted ? 'completed' : ''}`}
                 onClick={() => onSelectCadeira(cadeira.id)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    onSelectCadeira(cadeira.id);
+                  }
+                }}
               >
                 <div className="cadeira-header">
                   <div className="cadeira-icon">
                     {cadeira.icon === 'Cpu' ? <Cpu size={32} /> :
-                      cadeira.icon === 'Code' ? <Code size={32} /> :
-                        cadeira.icon === 'Brain' ? <Brain size={32} /> :
-                          <FileText size={32} />}
+                     cadeira.icon === 'Code' ? <Code size={32} /> :
+                     cadeira.icon === 'Brain' ? <Brain size={32} /> :
+                     <FileText size={32} />}
                   </div>
                   {isFullyCompleted && (
-                    <div className="completion-badge">
+                    <div className="completion-badge" title="Cadeira totalmente completada">
                       <CheckCircle size={20} />
                     </div>
                   )}
                 </div>
+                
                 <div className="cadeira-content">
                   <h4 className="cadeira-name">{cadeira.name}</h4>
                   <p className="cadeira-desc">{cadeira.description}</p>
+                  
                   <div className="cadeira-meta">
                     <span className="meta-item">
                       <FileText size={16} />
-                      {totalLevelsCount} níveis
+                      {totalLevelsCount} nível{totalLevelsCount !== 1 ? 's' : ''}
                     </span>
                     <span className="meta-item">
                       <Zap size={16} />
                       +{cadeira.xp} XP
                     </span>
                   </div>
+                  
                   <div className="progress-info">
-                    <span>{completedLevelsCount}/{totalLevelsCount} níveis completos</span>
+                    <div className="progress-header">
+                      <span className="progress-text">
+                        {completedLevelsCount}/{totalLevelsCount} níveis completos
+                      </span>
+                      <span className="progress-percentage">
+                        {Math.round(progressPercentage)}%
+                      </span>
+                    </div>
                     <div className="progress-bar">
                       <div
                         className="progress-fill"
-                        style={{ width: `${(completedLevelsCount / totalLevelsCount) * 100}%` }}
+                        style={{ width: `${progressPercentage}%` }}
+                        aria-label={`Progresso: ${Math.round(progressPercentage)}% completado`}
                       />
                     </div>
                   </div>
                 </div>
+                
                 <div className="cadeira-footer">
-                  <button className="start-btn">
-                    {isFullyCompleted ? 'Ver Níveis' : 'Ver Níveis'}
+                  <button className="start-btn" aria-label={`Ver níveis de ${cadeira.name}`}>
+                    {isFullyCompleted ? 'Ver Níveis' : 'Iniciar'}
                     <ArrowRight size={16} />
                   </button>
                 </div>

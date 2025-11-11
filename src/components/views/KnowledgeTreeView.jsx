@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, GitBranch, BookOpen, Target, Lightbulb, Code, Zap, Home, ArrowRight, CheckCircle, Minus, Plus } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ChevronLeft, GitBranch, BookOpen, Target, Lightbulb, Code, Zap, Home, ArrowRight, CheckCircle, Minus, Plus, Banana } from 'lucide-react';
 
 const KnowledgeTreeView = ({ 
   level, 
@@ -9,30 +9,16 @@ const KnowledgeTreeView = ({
   completedLevels 
 }) => {
   const [expandedNodes, setExpandedNodes] = useState(new Set(['root']));
+  const [collectedBananas, setCollectedBananas] = useState(new Set());
+  const [collectionProgress, setCollectionProgress] = useState(0);
   const isLevelCompleted = completedLevels.includes(level?.id);
-
-  // DEBUG: Verificar TODOS os dados do level
-  useEffect(() => {
-    console.log('=== KNOWLEDGE TREE DEBUG ===');
-    console.log('Full Level object:', level);
-    console.log('Level keys:', level ? Object.keys(level) : 'No level');
-    console.log('KnowledgeTreeView prop:', level?.KnowledgeTreeView);
-    console.log('Has KnowledgeTreeView:', !!level?.KnowledgeTreeView);
-    console.log('======================');
-  }, [level]);
 
   // Função para obter a knowledge tree dos dados reais
   const getKnowledgeTreeData = () => {
-    if (!level) {
-      return getEmptyKnowledgeTree();
-    }
-
-    // Os dados reais estão em level.KnowledgeTreeView (com V maiúsculo)
-    const treeData = level.KnowledgeTreeView;
+    if (!level) return getEmptyKnowledgeTree();
     
+    const treeData = level.KnowledgeTreeView;
     if (treeData) {
-      console.log('Found real KnowledgeTreeView data:', treeData);
-      
       return {
         conceptsCount: treeData.conceptsCount || 0,
         topicsCount: treeData.topicsCount || 0,
@@ -42,33 +28,179 @@ const KnowledgeTreeView = ({
       };
     }
     
-    // Se não encontrar dados, usar estrutura vazia em vez de fallback
-    console.warn('No KnowledgeTreeView data found, using empty structure');
     return getEmptyKnowledgeTree();
   };
 
-  // Estrutura vazia (não fallback)
-  const getEmptyKnowledgeTree = () => {
-    return {
-      conceptsCount: 0,
-      topicsCount: 0,
-      examplesCount: 0,
-      root: getEmptyRootNode(),
-      source: 'empty'
-    };
+  const getEmptyKnowledgeTree = () => ({
+    conceptsCount: 0,
+    topicsCount: 0,
+    examplesCount: 0,
+    root: getEmptyRootNode(),
+    source: 'empty'
+  });
+
+  const getEmptyRootNode = () => ({
+    id: 'root',
+    type: 'topic',
+    title: `Conceitos de ${level?.name || 'Nível'}`,
+    description: `Estrutura de conhecimento para ${level?.name || 'este nível'}`,
+    children: []
+  });
+
+  const knowledgeTree = useMemo(() => getKnowledgeTreeData(), [level]);
+
+  // Calcular total de bananas
+  const calculateTotalBananas = (node) => {
+    let count = 0;
+    if (node.type === 'concept' || node.type === 'example') count++;
+    if (node.children) {
+      node.children.forEach(child => count += calculateTotalBananas(child));
+    }
+    return count;
   };
 
-  const getEmptyRootNode = () => {
-    return {
-      id: 'root',
-      type: 'topic',
-      title: `Conceitos de ${level?.name || 'Nível'}`,
-      description: `Estrutura de conhecimento para ${level?.name || 'este nível'}`,
-      children: []
-    };
+  const totalBananas = useMemo(() => calculateTotalBananas(knowledgeTree.root), [knowledgeTree]);
+  const collectedCount = collectedBananas.size;
+
+  // Atualizar progresso
+  useEffect(() => {
+    const progress = totalBananas > 0 ? (collectedCount / totalBananas) * 100 : 0;
+    setCollectionProgress(progress);
+  }, [collectedCount, totalBananas]);
+
+  const toggleNode = (nodeId) => {
+    const newExpanded = new Set(expandedNodes);
+    newExpanded.has(nodeId) ? newExpanded.delete(nodeId) : newExpanded.add(nodeId);
+    setExpandedNodes(newExpanded);
   };
 
-  const knowledgeTree = getKnowledgeTreeData();
+  const collectBanana = (nodeId) => {
+    if (canCollectBanana(nodeId)) {
+      setCollectedBananas(prev => new Set([...prev, nodeId]));
+    }
+  };
+
+  const canCollectBanana = (nodeId) => {
+    const findNode = (currentNode, targetId) => {
+      if (currentNode.id === targetId) return currentNode;
+      if (currentNode.children) {
+        for (let child of currentNode.children) {
+          const found = findNode(child, targetId);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const node = findNode(knowledgeTree.root, nodeId);
+    if (!node) return false;
+
+    const checkDependencies = (currentNode) => {
+      if (!currentNode.children || currentNode.children.length === 0) return true;
+      return currentNode.children.every(child => 
+        collectedBananas.has(child.id) || checkDependencies(child)
+      );
+    };
+
+    return checkDependencies(node);
+  };
+
+  const getNodeIcon = (type) => {
+    switch (type) {
+      case 'concept': return <Lightbulb size={16} />;
+      case 'topic': return <BookOpen size={16} />;
+      case 'example': return <Code size={16} />;
+      case 'exercise': return <Target size={16} />;
+      default: return <GitBranch size={16} />;
+    }
+  };
+
+  const getNodeColor = (type) => {
+    switch (type) {
+      case 'concept': return '#3b82f6';
+      case 'topic': return '#8b5cf6';
+      case 'example': return '#10b981';
+      case 'exercise': return '#f59e0b';
+      default: return '#6b7280';
+    }
+  };
+
+  // RENDERIZAÇÃO SIMPLES - ESTILO GITHUB TIMELINE
+  const renderTimelineTree = (node, depth = 0, index = 0) => {
+    const hasChildren = node.children && node.children.length > 0;
+    const isExpanded = expandedNodes.has(node.id);
+    const isCollectible = node.type === 'concept' || node.type === 'example';
+    const isCollected = collectedBananas.has(node.id);
+    const canCollect = isCollectible && !isCollected && canCollectBanana(node.id);
+    const isAlternate = depth % 2 === 0;
+
+    return (
+      <div key={node.id} className={`timeline-item ${isAlternate ? 'left' : 'right'}`}>
+        {/* Linha do tempo */}
+        <div className="timeline-connector">
+          <div className="timeline-dot"></div>
+          {hasChildren && isExpanded && (
+            <div className="timeline-branch"></div>
+          )}
+        </div>
+
+        {/* Card do nó */}
+        <div className={`timeline-card ${isCollected ? 'collected' : ''} ${canCollect ? 'collectible' : ''}`}>
+          <div 
+            className="card-content"
+            onClick={() => hasChildren && toggleNode(node.id)}
+          >
+            <div className="card-header">
+              <div className="node-icon" style={{ color: getNodeColor(node.type) }}>
+                {getNodeIcon(node.type)}
+              </div>
+              <div className="node-title">
+                <h4>{node.title}</h4>
+                {isCollectible && (
+                  <span className="knowledge-badge">
+                    {isCollected ? '✅ Aprendido' : '🍌 Conhecimento'}
+                  </span>
+                )}
+              </div>
+              <div className="card-actions">
+                {isCollectible && (
+                  <div 
+                    className={`banana ${isCollected ? 'collected' : ''} ${canCollect ? 'collectible' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (canCollect) collectBanana(node.id);
+                    }}
+                    title={isCollected ? "Conhecimento adquirido!" : canCollect ? "Clique para coletar" : "Complete os pré-requisitos"}
+                  >
+                    <Banana size={16} />
+                  </div>
+                )}
+                
+                {hasChildren && (
+                  <div className="expand-toggle">
+                    {isExpanded ? <Minus size={14} /> : <Plus size={14} />}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {node.description && (
+              <p className="node-description">{node.description}</p>
+            )}
+          </div>
+
+          {/* Filhos - renderizados inline */}
+          {hasChildren && isExpanded && (
+            <div className="timeline-children">
+              {node.children.map((child, childIndex) => 
+                renderTimelineTree(child, depth + 1, childIndex)
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   if (!level) {
     return (
@@ -86,75 +218,6 @@ const KnowledgeTreeView = ({
       </div>
     );
   }
-
-  const toggleNode = (nodeId) => {
-    const newExpanded = new Set(expandedNodes);
-    if (newExpanded.has(nodeId)) {
-      newExpanded.delete(nodeId);
-    } else {
-      newExpanded.add(nodeId);
-    }
-    setExpandedNodes(newExpanded);
-  };
-
-  const getNodeIcon = (type) => {
-    switch (type) {
-      case 'concept': return <Lightbulb size={18} className="concept-icon" />;
-      case 'topic': return <BookOpen size={18} className="topic-icon" />;
-      case 'example': return <Code size={18} className="example-icon" />;
-      case 'exercise': return <Target size={18} className="exercise-icon" />;
-      default: return <GitBranch size={18} />;
-    }
-  };
-
-  const getNodeColor = (type) => {
-    switch (type) {
-      case 'concept': return 'var(--primary)';
-      case 'topic': return 'var(--purple)';
-      case 'example': return 'var(--success)';
-      case 'exercise': return 'var(--warning)';
-      default: return 'var(--text-primary)';
-    }
-  };
-
-  const renderTreeNode = (node, depth = 0) => {
-    const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = expandedNodes.has(node.id);
-    const isRoot = depth === 0;
-    
-    return (
-      <div key={node.id} className="tree-node">
-        <div 
-          className={`node-content ${hasChildren ? 'has-children' : ''} ${isExpanded ? 'expanded' : ''} ${isRoot ? 'root-node' : ''}`}
-          style={{ marginLeft: `${depth * 24}px` }}
-          onClick={() => hasChildren && toggleNode(node.id)}
-        >
-          <div className="node-icon" style={{ color: getNodeColor(node.type) }}>
-            {getNodeIcon(node.type)}
-          </div>
-          
-          <div className="node-text">
-            <h4 className="node-title">{node.title}</h4>
-            {node.description && (
-              <p className="node-description">{node.description}</p>
-            )}
-          </div>
-          
-          {hasChildren && (
-            <div className="expand-icon">
-              {isExpanded ? <Minus size={16} /> : <Plus size={16} />}
-            </div>
-          )}
-        </div>
-        
-        {hasChildren && isExpanded && (
-          <div className="node-children">
-            {node.children.map(child => renderTreeNode(child, depth + 1))}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   const isUsingRealData = knowledgeTree.source === 'KnowledgeTreeView';
   const hasTreeContent = knowledgeTree.root.children && knowledgeTree.root.children.length > 0;
@@ -181,7 +244,7 @@ const KnowledgeTreeView = ({
                 <p className="subtitle">{level.name} - {cadeira.name}</p>
                 {isUsingRealData ? (
                   <p style={{fontSize: '0.9rem', color: 'var(--success)', marginTop: '0.5rem'}}>
-                    ✅ Dados reais carregados - {knowledgeTree.conceptsCount} conceitos, {knowledgeTree.topicsCount} tópicos, {knowledgeTree.examplesCount} exemplos
+                    ✅ {totalBananas} bananas de conhecimento disponíveis
                   </p>
                 ) : (
                   <p style={{fontSize: '0.9rem', color: 'var(--warning)', marginTop: '0.5rem'}}>
@@ -197,6 +260,23 @@ const KnowledgeTreeView = ({
                 Nível Completado
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Progresso de Coleção */}
+        <div className="collection-progress">
+          <div className="progress-header">
+            <Banana size={20} />
+            <span>Progresso da Colheita</span>
+          </div>
+          <div className="progress-bar">
+            <div 
+              className="progress-fill"
+              style={{ width: `${collectionProgress}%` }}
+            ></div>
+          </div>
+          <div className="progress-stats">
+            {collectedCount} / {totalBananas} bananas coletadas
           </div>
         </div>
 
@@ -243,26 +323,30 @@ const KnowledgeTreeView = ({
           </button>
         </div>
 
-        {/* Knowledge Tree */}
+        {/* TIMELINE TREE */}
         <div className="knowledge-tree-container">
           <div className="tree-header">
-            <h2>Estrutura de Conhecimento</h2>
-            <p>Explora os conceitos de forma hierárquica. Clica para expandir/colapsar.</p>
+            <h2>🌳 Linha do Conhecimento</h2>
+            <p>
+              Siga a linha do tempo do conhecimento - colete as bananas na ordem correta
+            </p>
           </div>
           
           <div className="tree-content">
             {hasTreeContent ? (
-              renderTreeNode(knowledgeTree.root)
+              <div className="timeline-container">
+                <div className="timeline-line"></div>
+                <div className="timeline-tree">
+                  {knowledgeTree.root.children && knowledgeTree.root.children.map((child, index) => 
+                    renderTimelineTree(child, 0, index)
+                  )}
+                </div>
+              </div>
             ) : (
               <div className="empty-tree-state">
-                <GitBranch size={48} />
+                <Banana size={48} />
                 <h3>Nenhuma árvore de conhecimento definida</h3>
                 <p>Este nível ainda não tem uma estrutura de conhecimento organizada.</p>
-                {isUsingRealData && (
-                  <p style={{color: 'var(--warning)', marginTop: '1rem'}}>
-                    ⚠️ Os dados existem mas a árvore está vazia
-                  </p>
-                )}
               </div>
             )}
           </div>
@@ -270,23 +354,19 @@ const KnowledgeTreeView = ({
 
         {/* Legend */}
         <div className="tree-legend">
-          <h4>Legenda:</h4>
+          <h4>Como colher conhecimento:</h4>
           <div className="legend-items">
             <div className="legend-item">
-              <Lightbulb size={16} className="concept" />
-              <span>Conceitos</span>
+              <div className="banana collectible"><Banana size={16} /></div>
+              <span>Pronto para colher</span>
             </div>
             <div className="legend-item">
-              <BookOpen size={16} className="topic" />
-              <span>Tópicos</span>
+              <div className="banana collected"><Banana size={16} /></div>
+              <span>Conhecimento adquirido</span>
             </div>
             <div className="legend-item">
-              <Code size={16} className="example" />
-              <span>Exemplos</span>
-            </div>
-            <div className="legend-item">
-              <Target size={16} className="exercise" />
-              <span>Exercícios</span>
+              <div className="banana"><Banana size={16} /></div>
+              <span>Pré-requisitos pendentes</span>
             </div>
           </div>
         </div>

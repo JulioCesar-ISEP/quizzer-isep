@@ -1,0 +1,66 @@
+/* ===== TRANSITIONS & EASE ===== */
+
+/* Transições globais suaves */
+*,
+*::before,
+*::after {
+  transition: 
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Botões */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-solution,
+.btn-results,
+.pagination-btn,
+.tab-btn,
+.expand-toggle,
+.banana {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cards */
+.solution-card,
+.summary-card,
+.stat-card,
+.question-card,
+.question-review-item,
+.node-content,
+.timeline-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover mais rápido */
+.option-btn:hover,
+.node-content:hover,
+.timeline-card:hover {
+  transition: all 0.2s ease;
+}
+
+/* Textarea e inputs */
+input,
+textarea,
+.filter-select {
+  transition: all 0.25s ease;
+}
+
+/* Ícones */
+.node-icon,
+.expand-icon,
+.stat-icon,
+.option-icon {
+  transition: all 0.2s ease;
+}
+
+/* Efeito de brilho nos botões */
+.option-btn::before,
+.banana::before {
+  transition: left 0.6s ease;
+}

@@ -1,0 +1,569 @@
+/* ===== CARDS ===== */
+
+/* Question Card */
+.question-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition);
+}
+
+.question-card:hover {
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-light);
+}
+
+/* Cadeira/Subject Card */
+.cadeira-card,
+.level-card {
+  @extend .card-base;
+  padding: var(--space-2xl);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.cadeira-card.completed,
+.level-card.completed {
+  border-left: 6px solid var(--success);
+}
+
+.cadeira-card:focus,
+.level-card:focus {
+  outline: 3px solid rgba(59, 130, 246, 0.3);
+  outline-offset: 2px;
+}
+
+/* Cadeira Header */
+.cadeira-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+}
+
+/* Cadeira Icon */
+.cadeira-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Level Icon */
+.level-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Cadeira Content */
+.cadeira-content,
+.level-content {
+  flex: 1;
+  margin-bottom: var(--space-lg);
+}
+
+/* Cadeira Name */
+.cadeira-name {
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  line-height: 1.3;
+  font-size: 1.5rem;
+}
+
+/* Level Name */
+.level-name {
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  line-height: 1.3;
+  font-size: 1.25rem;
+}
+
+/* Cadeira Description */
+.cadeira-desc,
+.level-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.level-desc {
+  font-size: 0.95rem;
+}
+
+/* Cadeira Meta */
+.cadeira-meta,
+.level-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* Meta Item */
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Progress Info */
+.progress-info {
+  margin-top: var(--space-md);
+}
+
+.progress-info span {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+/* Cadeira Footer */
+.cadeira-footer,
+.level-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Stat Card */
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Score Card */
+.score-card,
+.score-card-large {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.score-card:hover,
+.score-card-large:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Score Header */
+.score-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Score Icon */
+.score-icon {
+  color: var(--warning);
+}
+
+/* Score Value */
+.score-value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+}
+
+.score-value-large {
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  margin: var(--space-lg) 0;
+}
+
+/* Score Value Span */
+.score-value span,
+.score-value-large span {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.score-value span {
+  font-size: 1.5rem;
+}
+
+.score-value-large span {
+  font-size: 2rem;
+}
+
+/* Score Percentage */
+.score-percentage,
+.score-percentage-large {
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--space-md);
+}
+
+.score-percentage {
+  font-size: 1.25rem;
+}
+
+.score-percentage-large {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-lg);
+}
+
+/* Option Card */
+.option-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.option-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+}
+
+/* Option Card Icon */
+.option-card-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: var(--space-md);
+}
+
+.option-card:nth-child(2) .option-card-icon {
+  background: var(--gradient-success);
+}
+
+/* Option Content */
+.option-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.option-content h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.option-content p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Question Review Item */
+.question-review-item {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.question-review-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.question-review-item.unanswered {
+  border-color: var(--text-muted);
+  background: var(--bg-secondary);
+}
+
+.question-review-item.correct {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.question-review-item.incorrect {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* Timeline Card */
+.timeline-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  max-width: 320px;
+  width: 100%;
+  position: relative;
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.timeline-card.collected {
+  border-color: var(--success);
+  background: linear-gradient(135deg, var(--bg-primary), rgba(16, 185, 129, 0.05));
+}
+
+.timeline-card.collectible {
+  animation: card-pulse 2s ease-in-out infinite;
+  border-color: var(--warning);
+}
+
+@keyframes card-pulse {
+  0%, 100% {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  50% {
+    transform: translateY(-4px);
+    box-shadow:
+      var(--shadow-lg),
+      0 8px 20px rgba(245, 158, 11, 0.2);
+  }
+}
+
+/* Theory Content Card */
+.theory-content-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+/* Level Card */
+.level-card {
+  @extend .card-base;
+  padding: var(--space-2xl);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-card.completed {
+  border-left: 6px solid var(--success);
+}
+
+.level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+}
+
+.level-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.level-content {
+  flex: 1;
+  margin-bottom: var(--space-lg);
+}
+
+.level-name {
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  line-height: 1.3;
+  font-size: 1.5rem;
+}
+
+.level-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.level-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Cadeira Card Improvements */
+.cadeira-card {
+  @extend .card-base;
+  padding: var(--space-2xl);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-slow);
+  border: 2px solid var(--border-light);
+}
+
+.cadeira-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-light);
+}
+
+.cadeira-card:focus {
+  outline: 3px solid rgba(59, 130, 246, 0.3);
+  outline-offset: 2px;
+}
+
+.cadeira-card.completed {
+  border-left: 6px solid var(--success);
+  background: linear-gradient(135deg, var(--bg-primary), rgba(16, 185, 129, 0.05));
+}
+
+.cadeira-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+}
+
+.cadeira-icon {
+  width: 64px;
+  height: 64px;
+  padding: var(--space-md);
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius-lg);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cadeira-content {
+  flex: 1;
+  margin-bottom: var(--space-lg);
+}
+
+.cadeira-name {
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  line-height: 1.3;
+  font-size: 1.5rem;
+}
+
+.cadeira-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.cadeira-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.progress-info {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-light);
+}
+
+.cadeira-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+/* Progress Info Improvements */
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.progress-percentage {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+}

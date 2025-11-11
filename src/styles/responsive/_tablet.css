@@ -1,0 +1,96 @@
+/* ===== TABLET (768px - 1024px) ===== */
+@media (max-width: 1024px) and (min-width: 769px) {
+
+  /* Layout geral */
+  .container {
+    padding: 0 var(--space-lg);
+  }
+
+  /* Quiz */
+  .quiz-content {
+    gap: var(--space-xl);
+  }
+
+  .question-card {
+    padding: var(--space-xl);
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .option-btn {
+    min-height: 64px;
+    padding: var(--space-md);
+  }
+
+  /* Knowledge Tree */
+  .knowledge-tree-container {
+    padding: var(--space-xl);
+  }
+
+  .tree-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .node-content {
+    padding: var(--space-md);
+  }
+
+  .node-children {
+    margin-left: 16px;
+    padding-left: var(--space-md);
+  }
+
+  /* Timeline */
+  .timeline-item.left,
+  .timeline-item.right {
+    padding-left: 45%;
+    padding-right: 0;
+  }
+
+  .timeline-card {
+    max-width: 280px;
+  }
+
+  /* Solutions */
+  .solutions-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .solution-card {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .solutions-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    max-width: none;
+  }
+
+  /* Results */
+  .results-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .questions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-actions {
+    flex-direction: column;
+  }
+
+  .btn-results {
+    min-width: auto;
+  }
+}

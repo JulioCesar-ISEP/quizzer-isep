@@ -237,13 +237,6 @@ const QuizView = ({
                 )}
               </div>
             </div>
-            
-            {exercise.code && (
-              <pre className="code-block">
-                <code>{exercise.code}</code>
-              </pre>
-            )}
-
             <div className="options-grid">
               {exercise.options.map((option, index) => (
                 <OptionButton

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, Sun, Moon } from 'lucide-react';
 
+
 const Header = ({ isDark, toggleTheme, currentView, onBack, showBackButton = false }) => {
   return (
     <div className="main-header">

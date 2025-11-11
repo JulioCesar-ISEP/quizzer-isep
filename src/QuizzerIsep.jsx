@@ -7,7 +7,7 @@ import Header from './components/ui/Header';
 import CadeirasView from './components/views/CadeirasView';
 import LevelsView from './components/views/LevelsView';
 import QuizView from './components/views/QuizView';
-import KnowledgeTreeView from './components/views/KnowledgeTreeView'; // NOVO IMPORT
+import KnowledgeTreeView from './components/views/KnowledgeTreeView';
 import CompletionView from './components/views/CompletionView';
 import LoadingScreen from './components/common/LoadingScreen';
 import cadeiras from '../data/cadeiras';
@@ -336,18 +336,18 @@ const QuizzerIsep = () => {
           />
         ) : <LoadingScreen />;
 
-      case 'knowledge-tree': // NOVA VIEW
-        const knowledgeTreeLevelData = getCurrentLevelData();
-        const knowledgeTreeCadeiraData = getCurrentCadeiraData();
-        return knowledgeTreeLevelData ? (
-          <KnowledgeTreeView
-            level={knowledgeTreeLevelData}
-            cadeira={knowledgeTreeCadeiraData}
-            onBack={goToLevels}
-            onStartQuiz={() => startLevel(selectedLevel)}
-            completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
-          />
-        ) : <LoadingScreen />;
+      // case 'knowledge-tree': // NOVA VIEW
+      //   const knowledgeTreeLevelData = getCurrentLevelData();
+      //   const knowledgeTreeCadeiraData = getCurrentCadeiraData();
+      //   return knowledgeTreeLevelData ? (
+      //     <KnowledgeTreeView
+      //       level={knowledgeTreeLevelData}
+      //       cadeira={knowledgeTreeCadeiraData}
+      //       onBack={goToLevels}
+      //       onStartQuiz={() => startLevel(selectedLevel)}
+      //       completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
+      //     />
+      //   ) : <LoadingScreen />;
 
       case 'quiz':
         const currentLevelData = getCurrentLevelData();

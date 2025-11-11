@@ -1,0 +1,76 @@
+/* ===== ACESSIBILIDADE ===== */
+
+/* Alto contraste (prefers-contrast) */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #111111;
+    --bg-tertiary: #222222;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border-light: #444444;
+    --primary: #00ffff;
+    --success: #00ff00;
+    --danger: #ff0000;
+    --warning: #ffff00;
+  }
+
+  .option-btn.correct { background: #003300; border-color: #00ff00; }
+  .option-btn.incorrect { background: #330000; border-color: #ff0000; }
+}
+
+/* Reduzir animações */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  @keyframes fadeIn { from, to { opacity: 1; } }
+  @keyframes slideInLeft { from, to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideInRight { from, to { transform: translateX(0); opacity: 1; } }
+  @keyframes pulse { from, to { transform: scale(1); } }
+  @keyframes bounce { from, to { transform: translateY(0); } }
+}
+
+/* Foco visível */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Tamanho mínimo de toque */
+.btn,
+.option-btn,
+.tab-btn,
+.pagination-btn,
+.banana,
+.expand-toggle {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Legibilidade */
+body {
+  line-height: 1.6;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary);
+  color: white;
+  padding: 8px;
+  border-radius: var(--border-radius);
+  z-index: 10000;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
