@@ -1,5 +1,6 @@
 import React from 'react';
-import { Cpu, Code, Brain, FileText, CheckCircle, Zap, ArrowRight, Download, RotateCw, Trophy, Flame, TrendingUp } from 'lucide-react';
+import { Cpu, Code, Brain, FileText, CheckCircle, Zap, ArrowRight, Download, RotateCw, Trophy, Flame, TrendingUp, AlertTriangle } from 'lucide-react';
+import '../../styles/components/CadeirasView.css';
 
 const CadeirasView = ({ 
   cadeiras, 
@@ -9,64 +10,97 @@ const CadeirasView = ({
   onSelectCadeira, 
   onDownloadReport, 
   onResetProgress,
-  dailyStats 
+  dailyStats,
+  criticalGaps = []
 }) => {
   return (
-    <div className="main-content">
+    <div className="ape-main-content">
       {/* Header Section */}
-      <div className="welcome-section">
-        <h2 className="welcome-title">Bem-vindo ao Quizzer ISEP</h2>
-        <p className="welcome-subtitle">Melhora os teus conhecimentos através de quizzes interativos</p>
+      <div className="ape-welcome-section">
+        <h2 className="ape-welcome-title">Ape Level - Laboratório de Conhecimento</h2>
+        <p className="ape-welcome-subtitle">Passe no teste. Suba de nível. Domine a faculdade.</p>
       </div>
 
+      {/* Critical Gaps Warning */}
+      {criticalGaps.length > 0 && (
+        <div className="ape-critical-gaps">
+          <div className="ape-critical-gaps-header">
+            <AlertTriangle size={24} />
+            <h3 className="ape-critical-gaps-title">Lacunas Críticas Detectadas</h3>
+          </div>
+          <div className="ape-gaps-list">
+            {criticalGaps.slice(0, 3).map((gap, index) => (
+              <div key={index} className="ape-gap-item">
+                <span className="ape-gap-name">{gap.name}</span>
+                <span className="ape-gap-severity">{gap.severity}</span>
+                <button className="ape-fix-gap-btn">
+                  Corrigir Lacuna
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Stats Overview */}
-      <div className="stats-overview">
-        <div className="stat-item-overview">
-          <Trophy className="stat-icon" />
-          <div>
-            <span className="stat-number">{Object.values(completedLevels).flat().length}</span>
-            <span className="stat-label">Níveis Completos</span>
+      <div className="ape-stats-overview">
+        <div className="ape-stat-item">
+          <div className="ape-stat-icon">
+            <Trophy size={24} />
+          </div>
+          <div className="ape-stat-content">
+            <span className="ape-stat-number">{Object.values(completedLevels).flat().length}</span>
+            <span className="ape-stat-label">Níveis Dominados</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <Zap className="stat-icon" />
-          <div>
-            <span className="stat-number">{totalXP}</span>
-            <span className="stat-label">Total XP</span>
+        <div className="ape-stat-item">
+          <div className="ape-stat-icon">
+            <Zap size={24} />
+          </div>
+          <div className="ape-stat-content">
+            <span className="ape-stat-number">{totalXP}</span>
+            <span className="ape-stat-label">Bananas Coletadas</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <Flame className="stat-icon" />
-          <div>
-            <span className="stat-number">{maxStreak}</span>
-            <span className="stat-label">Melhor Sequência</span>
+        <div className="ape-stat-item">
+          <div className="ape-stat-icon">
+            <Flame size={24} />
+          </div>
+          <div className="ape-stat-content">
+            <span className="ape-stat-number">{maxStreak}</span>
+            <span className="ape-stat-label">Sequência Máxima</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <TrendingUp className="stat-icon" />
-          <div>
-            <span className="stat-number">{dailyStats.successRate}%</span>
-            <span className="stat-label">Taxa de Sucesso</span>
+        <div className="ape-stat-item">
+          <div className="ape-stat-icon">
+            <TrendingUp size={24} />
+          </div>
+          <div className="ape-stat-content">
+            <span className="ape-stat-number">{dailyStats.successRate}%</span>
+            <span className="ape-stat-label">Eficiência no Lab</span>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="action-buttons-main">
-        <button onClick={onDownloadReport} className="btn btn-secondary">
+      <div className="ape-action-buttons">
+        <button onClick={onDownloadReport} className="ape-btn ape-btn-secondary">
           <Download size={20} />
-          Relatório Diário
+          Relatório do Laboratório
         </button>
-        <button onClick={onResetProgress} className="btn btn-danger">
+        <button onClick={onResetProgress} className="ape-btn ape-btn-danger">
           <RotateCw size={20} />
-          Resetar Progresso
+          Reiniciar Experimentos
         </button>
       </div>
 
       {/* Cadeiras Grid */}
-      <div className="cadeiras-section">
-        <h3 className="section-title">Cadeiras Disponíveis</h3>
-        <div className="cadeiras-grid">
+      <div className="ape-cadeiras-section">
+        <h3 className="ape-section-title">
+          <Brain size={28} />
+          Árvore do Conhecimento
+        </h3>
+        <div className="ape-cadeiras-grid">
           {cadeiras.map(cadeira => {
             const completedLevelsCount = completedLevels[cadeira.id]?.length || 0;
             const totalLevelsCount = cadeira.levels.length;
@@ -76,7 +110,7 @@ const CadeirasView = ({
             return (
               <div
                 key={cadeira.id}
-                className={`cadeira-card ${isFullyCompleted ? 'completed' : ''}`}
+                className={`ape-cadeira-card ${isFullyCompleted ? 'completed' : ''}`}
                 onClick={() => onSelectCadeira(cadeira.id)}
                 role="button"
                 tabIndex={0}
@@ -86,57 +120,57 @@ const CadeirasView = ({
                   }
                 }}
               >
-                <div className="cadeira-header">
-                  <div className="cadeira-icon">
-                    {cadeira.icon === 'Cpu' ? <Cpu size={32} /> :
-                     cadeira.icon === 'Code' ? <Code size={32} /> :
-                     cadeira.icon === 'Brain' ? <Brain size={32} /> :
-                     <FileText size={32} />}
+                <div className="ape-cadeira-header">
+                  <div className="ape-cadeira-icon">
+                    {cadeira.icon === 'Cpu' ? <Cpu size={28} /> :
+                     cadeira.icon === 'Code' ? <Code size={28} /> :
+                     cadeira.icon === 'Brain' ? <Brain size={28} /> :
+                     <FileText size={28} />}
                   </div>
                   {isFullyCompleted && (
-                    <div className="completion-badge" title="Cadeira totalmente completada">
+                    <div className="ape-completion-badge" title="Conceito totalmente dominado">
                       <CheckCircle size={20} />
                     </div>
                   )}
                 </div>
                 
-                <div className="cadeira-content">
-                  <h4 className="cadeira-name">{cadeira.name}</h4>
-                  <p className="cadeira-desc">{cadeira.description}</p>
+                <div className="ape-cadeira-content">
+                  <h4 className="ape-cadeira-name">{cadeira.name}</h4>
+                  <p className="ape-cadeira-desc">{cadeira.description}</p>
                   
-                  <div className="cadeira-meta">
-                    <span className="meta-item">
+                  <div className="ape-cadeira-meta">
+                    <span className="ape-meta-item">
                       <FileText size={16} />
-                      {totalLevelsCount} nível{totalLevelsCount !== 1 ? 's' : ''}
+                      {totalLevelsCount} nó{totalLevelsCount !== 1 ? 's' : ''}
                     </span>
-                    <span className="meta-item">
+                    <span className="ape-meta-item">
                       <Zap size={16} />
-                      +{cadeira.xp} XP
+                      +{cadeira.xp} bananas
                     </span>
                   </div>
                   
-                  <div className="progress-info">
-                    <div className="progress-header">
-                      <span className="progress-text">
-                        {completedLevelsCount}/{totalLevelsCount} níveis completos
+                  <div className="ape-progress-info">
+                    <div className="ape-progress-header">
+                      <span className="ape-progress-text">
+                        {completedLevelsCount}/{totalLevelsCount} nós dominados
                       </span>
-                      <span className="progress-percentage">
+                      <span className="ape-progress-percentage">
                         {Math.round(progressPercentage)}%
                       </span>
                     </div>
-                    <div className="progress-bar">
+                    <div className="ape-progress-bar">
                       <div
-                        className="progress-fill"
+                        className="ape-progress-fill"
                         style={{ width: `${progressPercentage}%` }}
-                        aria-label={`Progresso: ${Math.round(progressPercentage)}% completado`}
+                        aria-label={`Progresso: ${Math.round(progressPercentage)}% dominado`}
                       />
                     </div>
                   </div>
                 </div>
                 
-                <div className="cadeira-footer">
-                  <button className="start-btn" aria-label={`Ver níveis de ${cadeira.name}`}>
-                    {isFullyCompleted ? 'Ver Níveis' : 'Iniciar'}
+                <div className="ape-cadeira-footer">
+                  <button className="ape-start-btn" aria-label={`Explorar ${cadeira.name}`}>
+                    {isFullyCompleted ? 'Revisar Nós' : 'Iniciar Lab'}
                     <ArrowRight size={16} />
                   </button>
                 </div>

@@ -1,0 +1,416 @@
+/* LevelsView.css */
+.ape-levels-content {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+  padding: 2rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Breadcrumb Navigation */
+.ape-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.ape-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ape-back-btn:hover {
+  background: rgba(255, 215, 0, 0.2);
+  transform: translateX(-5px);
+}
+
+.ape-cadeira-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+/* Stats Overview */
+.ape-levels-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ape-level-stat-item {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.ape-level-stat-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+}
+
+.ape-level-stat-icon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1f2e;
+  flex-shrink: 0;
+}
+
+.ape-level-stat-content {
+  flex: 1;
+}
+
+.ape-level-stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffd700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.ape-level-stat-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Levels Section */
+.ape-levels-section {
+  margin-bottom: 2rem;
+}
+
+.ape-levels-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.ape-levels-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.ape-levels-subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Levels Grid */
+.ape-levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 2rem;
+}
+
+/* Level Card */
+.ape-level-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-level-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.ape-level-card:hover::before {
+  transform: scaleX(1);
+}
+
+.ape-level-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ape-level-card.completed {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.ape-level-card.completed::before {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  transform: scaleX(1);
+}
+
+.ape-level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.ape-level-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1f2e;
+}
+
+.ape-level-card.completed .ape-level-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+}
+
+.ape-level-completion-badge {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.ape-level-content {
+  margin-bottom: 1.5rem;
+}
+
+.ape-level-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 0.75rem;
+}
+
+.ape-level-desc {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.ape-level-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ape-level-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+/* Level Options - Bifurcação */
+.ape-level-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.ape-option-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ape-option-card:hover {
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
+}
+
+.ape-option-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ape-option-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1f2e;
+  flex-shrink: 0;
+}
+
+.ape-option-card:nth-child(2) .ape-option-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+}
+
+.ape-option-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.ape-option-desc {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.ape-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.ape-option-btn.primary {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #1a1f2e;
+}
+
+.ape-option-btn.primary:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+.ape-option-btn.secondary {
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+  color: white;
+}
+
+.ape-option-btn.secondary:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+}
+
+/* Rank Badge */
+.ape-rank-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #1a1f2e;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ape-level-card.completed .ape-rank-badge {
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ape-levels-content {
+    padding: 1rem;
+  }
+  
+  .ape-breadcrumb {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .ape-levels-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .ape-levels-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ape-level-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .ape-levels-title {
+    font-size: 1.6rem;
+  }
+  
+  .ape-level-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-levels-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .ape-level-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .ape-option-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}

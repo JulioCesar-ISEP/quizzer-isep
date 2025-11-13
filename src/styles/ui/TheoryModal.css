@@ -1,0 +1,593 @@
+/* TheoryModal.css */
+.ape-theory-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(13, 17, 23, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ape-theory-modal-overlay.visible {
+  opacity: 1;
+}
+
+.ape-theory-modal-content {
+  background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.ape-theory-modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  background-size: 200% 100%;
+  animation: shimmerBorder 3s infinite linear;
+}
+
+@keyframes shimmerBorder {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.ape-theory-modal-content.visible {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Modal Header */
+.ape-theory-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ape-theory-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.ape-theory-icon {
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  padding: 0.75rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.ape-theory-modal-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.ape-theory-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ape-theory-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* Modal Body */
+.ape-theory-modal-body {
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+  max-height: calc(90vh - 140px);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Theory Content Card */
+.ape-theory-content-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-theory-content-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.ape-theory-content-card:hover::before {
+  transform: scaleX(1);
+}
+
+.ape-theory-content-card:hover {
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(255, 215, 0, 0.1);
+}
+
+.ape-theory-content {
+  color: #e2e8f0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 0;
+  text-align: justify;
+}
+
+.ape-theory-content strong {
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.ape-theory-content em {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Theory Keypoints */
+.ape-theory-keypoints {
+  background: rgba(34, 197, 94, 0.05);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.ape-theory-keypoints:hover {
+  border-color: rgba(34, 197, 94, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.1);
+}
+
+.ape-keypoints-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin: 0 0 1.5rem 0;
+}
+
+.ape-keypoints-title svg {
+  color: #22c55e;
+}
+
+.ape-keypoints-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ape-keypoint-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  animation: slideInLeft 0.5s ease;
+  animation-fill-mode: both;
+}
+
+.ape-keypoint-item:hover {
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ape-keypoint-item:nth-child(1) { animation-delay: 0.1s; }
+.ape-keypoint-item:nth-child(2) { animation-delay: 0.2s; }
+.ape-keypoint-item:nth-child(3) { animation-delay: 0.3s; }
+.ape-keypoint-item:nth-child(4) { animation-delay: 0.4s; }
+.ape-keypoint-item:nth-child(5) { animation-delay: 0.5s; }
+
+.ape-keypoint-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ape-keypoint-dot {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 50%;
+  position: relative;
+}
+
+.ape-keypoint-dot::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.2;
+  }
+}
+
+.ape-keypoint-text {
+  color: #e2e8f0;
+  line-height: 1.6;
+  flex: 1;
+  font-size: 1rem;
+}
+
+/* Theory Examples */
+.ape-theory-examples {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.ape-theory-examples:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.1);
+}
+
+.ape-examples-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: 0 0 1.5rem 0;
+}
+
+.ape-examples-code {
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  position: relative;
+  margin: 0;
+}
+
+.ape-examples-code::before {
+  content: '💻 Código de Exemplo';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0 0 8px 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ape-examples-code code {
+  color: #e2e8f0;
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: block;
+  margin-top: 1.5rem;
+}
+
+/* Scrollbar Styling */
+.ape-theory-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ape-theory-modal-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.ape-theory-modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 3px;
+}
+
+.ape-theory-modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+/* Compact Version */
+.ape-theory-modal-content.compact .ape-theory-modal-header {
+  padding: 2rem 2rem 1rem 2rem;
+}
+
+.ape-theory-modal-content.compact .ape-theory-modal-body {
+  padding: 1.5rem 2rem;
+  gap: 1.5rem;
+}
+
+.ape-theory-modal-content.compact .ape-theory-content-card,
+.ape-theory-modal-content.compact .ape-theory-keypoints,
+.ape-theory-modal-content.compact .ape-theory-examples {
+  padding: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ape-theory-modal-overlay {
+    padding: 1rem;
+  }
+  
+  .ape-theory-modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .ape-theory-modal-header {
+    padding: 2rem 1.5rem 1rem 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .ape-theory-modal-body {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .ape-theory-content-card,
+  .ape-theory-keypoints,
+  .ape-theory-examples {
+    padding: 1.5rem;
+  }
+  
+  .ape-theory-modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .ape-theory-content {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-theory-modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .ape-theory-modal-header {
+    padding: 1.5rem 1.25rem 1rem 1.25rem;
+  }
+  
+  .ape-theory-modal-body {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+  
+  .ape-theory-content-card,
+  .ape-theory-keypoints,
+  .ape-theory-examples {
+    padding: 1.25rem;
+  }
+  
+  .ape-theory-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .ape-theory-modal-title {
+    font-size: 1.3rem;
+  }
+  
+  .ape-keypoint-item {
+    padding: 0.75rem;
+  }
+  
+  .ape-examples-code {
+    padding: 1rem;
+  }
+  
+  .ape-examples-code code {
+    font-size: 0.8rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-theory-modal-overlay,
+  .ape-theory-modal-content {
+    transition: none;
+  }
+  
+  .ape-theory-modal-content::before {
+    animation: none;
+  }
+  
+  .ape-keypoint-item {
+    animation: none;
+  }
+  
+  .ape-keypoint-dot::before {
+    animation: none;
+  }
+  
+  .ape-theory-content-card:hover,
+  .ape-theory-keypoints:hover,
+  .ape-theory-examples:hover,
+  .ape-keypoint-item:hover {
+    transform: none;
+  }
+  
+  .ape-theory-close-btn:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .ape-theory-modal-content {
+    border-width: 3px;
+    border-color: #ffff00;
+  }
+  
+  .ape-theory-content-card,
+  .ape-theory-keypoints,
+  .ape-theory-examples {
+    border-width: 2px;
+  }
+}
+
+/* Additional TheoryModal Styles */
+.ape-theory-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.ape-theory-subtitle svg {
+  color: #ffd700;
+}
+
+.ape-content-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #ffd700;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ape-application-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.ape-application-tip svg {
+  color: #ffd700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.ape-application-tip strong {
+  color: #ffd700;
+}
+
+.ape-theory-tips {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.ape-tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.ape-tip-item svg {
+  color: #3b82f6;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.ape-tip-item strong {
+  color: #3b82f6;
+}

@@ -1,5 +1,6 @@
-import React from 'react';
-import { CheckCircle, XCircle, Lightbulb, ArrowRight, Trophy, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle, XCircle, Lightbulb, ArrowRight, Trophy, ArrowLeft, Zap, Flame, Star, Target } from 'lucide-react';
+import '../../styles/ui/SolutionPanel.css';
 
 const SolutionPanel = ({ 
   isCorrect, 
@@ -11,78 +12,188 @@ const SolutionPanel = ({
   onNext, 
   isLastExercise,
   allQuestionsAnswered,
-  onPrevious
+  onPrevious,
+  currentStreak = 0,
+  xpReward = 0,
+  compact = false
 }) => {
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  useEffect(() => {
+    if (isCorrect) {
+      setShowCelebration(true);
+      const timer = setTimeout(() => setShowCelebration(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isCorrect]);
+
+  const getAchievement = () => {
+    if (currentStreak >= 5) return '🔥 SEQUÊNCIA QUENTE!';
+    if (isCorrect && xpReward >= 20) return '⭐ RESPOSTA PERFEITA!';
+    if (isCorrect) return '🎯 ACERTOU!';
+    return '📚 OPORTUNIDADE DE APRENDIZADO';
+  };
+
+  const getXPBreakdown = () => {
+    const baseXP = isCorrect ? 10 : 5;
+    const streakBonus = Math.min(currentStreak * 2, 10);
+    const accuracyBonus = isCorrect ? 5 : 0;
+    return {
+      base: baseXP,
+      streak: streakBonus,
+      accuracy: accuracyBonus,
+      total: baseXP + streakBonus + accuracyBonus
+    };
+  };
+
+  const xpBreakdown = getXPBreakdown();
+
   return (
-    <div className={`solution-panel ${isCorrect ? 'correct' : 'incorrect'}`}>
-      <div className="solution-header">
-        <div className="solution-result">
+    <div className={`ape-solution-panel ${isCorrect ? 'correct' : 'incorrect'} ${compact ? 'compact' : ''}`}>
+      {/* Header */}
+      <div className="ape-solution-header">
+        <div className={`ape-solution-result ${isCorrect ? 'correct' : 'incorrect'}`}>
           {isCorrect ? (
             <>
-              <CheckCircle size={24} />
-              <span>Resposta Correta! 🎉</span>
+              <CheckCircle size={28} />
+              <span>DESAFIO SUPERADO! 🎉</span>
             </>
           ) : (
             <>
-              <XCircle size={24} />
-              <span>Resposta Incorreta</span>
+              <XCircle size={28} />
+              <span>DESAFIO PARA REVISAR</span>
             </>
+          )}
+          <div className="ape-achievement-badge">
+            {getAchievement()}
+          </div>
+        </div>
+
+        {/* Streak Indicator */}
+        {currentStreak > 1 && (
+          <div className="ape-streak-indicator">
+            <Flame size={16} />
+            Sequência de {currentStreak} respostas corretas!
+          </div>
+        )}
+
+        {/* XP Reward */}
+        <div className="ape-xp-reward">
+          <Zap size={20} />
+          <span>+{xpBreakdown.total} XP GANHO</span>
+          {xpBreakdown.streak > 0 && (
+            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+              (+{xpBreakdown.streak} por sequência)
+            </span>
           )}
         </div>
       </div>
 
-      <div className="solution-content">
-        <div className="explanation-section">
-          <h4>📝 Explicação</h4>
+      {/* Content */}
+      <div className="ape-solution-content">
+        {/* Explanation Section */}
+        <div className="ape-explanation-section">
+          <h4>
+            <Target size={20} />
+            Análise da Solução
+          </h4>
           <p>{explanation}</p>
           {code && (
-            <pre className="code-block">
+            <div className="ape-code-block">
               <code>{code}</code>
-            </pre>
+            </div>
           )}
         </div>
 
+        {/* Theory Section */}
         {theoryPoints && (
-          <div className="theory-section">
+          <div className="ape-theory-section">
             <h4>
-              <Lightbulb size={18} />
-              {theoryPoints.title}
+              <Lightbulb size={20} />
+              {theoryPoints.title || 'Conceito do Laboratório'}
             </h4>
             <p>{theoryPoints.content}</p>
             {theoryPoints.keyPoints && (
-              <ul className="keypoints-list-small">
+              <ul className="ape-keypoints-list">
                 {theoryPoints.keyPoints.map((point, i) => (
-                  <li key={i}>{point}</li>
+                  <li key={i}>
+                    <strong>Ponto {i + 1}:</strong> {point}
+                  </li>
                 ))}
               </ul>
             )}
           </div>  
         )}
 
-        {!isCorrect && hasComment && (
-          <div className="comment-review">
-            <h4>💬 A tua dúvida</h4>
+        {/* Comment Review */}
+        {!isCorrect && hasComment && comment && (
+          <div className="ape-comment-review">
+            <h4>
+              <Star size={20} />
+              Teu Registro do Lab
+            </h4>
             <p>"{comment}"</p>
-            <p className="comment-hint">👉 Revê esta questão no relatório final</p>
+            <p className="ape-comment-hint">
+              👉 Esta anotação vai ajudar a identificar lacunas no teu relatório final
+            </p>
+          </div>
+        )}
+
+        {/* Learning Tip for Incorrect Answers */}
+        {!isCorrect && (
+          <div className="ape-theory-section">
+            <h4>
+              <Lightbulb size={20} />
+              Dica de Aprendizado
+            </h4>
+            <p>
+              <strong>Não desanimes!</strong> Cada erro é uma oportunidade para 
+              fortalecer o teu conhecimento. Revisa os conceitos e tenta identificar 
+              onde o teu raciocínio pode ser ajustado.
+            </p>
           </div>
         )}
       </div>
 
-      <div className="solution-actions">
+      {/* Actions */}
+      <div className="ape-solution-actions">
         {onPrevious && (
-          <button onClick={onPrevious} className="btn btn-secondary">
+          <button 
+            onClick={onPrevious} 
+            className="ape-solution-btn secondary"
+            aria-label="Voltar para questão anterior"
+          >
             <ArrowLeft size={20} />
-            Voltar
+            Questão Anterior
           </button>
         )}
         
-        <button onClick={onNext} className="btn btn-primary">
+        <button 
+          onClick={onNext} 
+          className={`ape-solution-btn ${allQuestionsAnswered ? 'success' : 'primary'}`}
+          aria-label={
+            allQuestionsAnswered 
+              ? "Ver resultados finais" 
+              : isLastExercise 
+              ? "Ver resultados do desafio" 
+              : "Próximo desafio"
+          }
+        >
           {allQuestionsAnswered ? (
-            <>Ver Resultados <Trophy size={20} /></>
+            <>
+              Ver Resultados Finais
+              <Trophy size={20} />
+            </>
           ) : isLastExercise ? (
-            <>Ver Resultados <Trophy size={20} /></>
+            <>
+              Concluir Desafio
+              <Trophy size={20} />
+            </>
           ) : (
-            <>Próxima Questão <ArrowRight size={20} /></>
+            <>
+              Próximo Desafio
+              <ArrowRight size={20} />
+            </>
           )}
         </button>
       </div>

@@ -1,0 +1,554 @@
+/* CompletionView.css */
+.ape-completion-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.ape-completion-container {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: slideUpScale 0.6s ease;
+}
+
+@keyframes slideUpScale {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ape-completion-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  background-size: 200% 100%;
+  animation: shimmerBorder 3s infinite linear;
+}
+
+@keyframes shimmerBorder {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Completion Header */
+.ape-completion-header {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.ape-medal-display {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounceIn 1s ease;
+  display: inline-block;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-180deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(10deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.ape-completion-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.ape-completion-subtitle {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Score Summary */
+.ape-score-summary {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Score Card */
+.ape-score-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.8s ease 0.2s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ape-score-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ape-score-card:hover::before {
+  opacity: 1;
+}
+
+.ape-score-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.ape-score-icon {
+  color: #ffd700;
+}
+
+.ape-score-value {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #ffd700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.ape-score-value span {
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.ape-score-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 1.5rem;
+}
+
+.ape-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ape-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffed4e);
+  border-radius: 6px;
+  transition: width 1.5s ease;
+  position: relative;
+}
+
+.ape-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Stats Grid */
+.ape-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  animation: slideUp 0.8s ease 0.4s both;
+}
+
+.ape-stat-mini {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-stat-mini::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-stat-mini:hover::before {
+  left: 100%;
+}
+
+.ape-stat-mini:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+}
+
+.ape-stat-mini-icon {
+  color: #ffd700;
+  margin-bottom: 0.75rem;
+}
+
+.ape-stat-mini-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffd700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.ape-stat-mini-label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Rank Badge */
+.ape-rank-badge {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 1rem auto;
+  display: inline-block;
+  animation: slideInUp 0.6s ease 0.6s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Action Buttons */
+.ape-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideUp 0.8s ease 0.8s both;
+}
+
+.ape-completion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-completion-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-completion-btn:hover::before {
+  left: 100%;
+}
+
+.ape-completion-btn.success {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: white;
+}
+
+.ape-completion-btn.success:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+}
+
+.ape-completion-btn.primary {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+}
+
+.ape-completion-btn.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+.ape-completion-btn.danger {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+}
+
+.ape-completion-btn.danger:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+/* XP Breakdown */
+.ape-xp-breakdown {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.8s ease 0.6s both;
+}
+
+.ape-xp-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #ffd700;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.ape-xp-items {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.ape-xp-item {
+  text-align: center;
+}
+
+.ape-xp-amount {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffd700;
+  margin-bottom: 0.25rem;
+}
+
+.ape-xp-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Celebration Effects */
+.ape-celebration-confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ape-confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #22c55e, #3b82f6);
+  border-radius: 50%;
+  animation: confettiFall 3s ease-in-out forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ape-completion-screen {
+    padding: 1rem;
+  }
+  
+  .ape-completion-container {
+    padding: 2rem;
+  }
+  
+  .ape-completion-title {
+    font-size: 2rem;
+  }
+  
+  .ape-completion-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .ape-score-value {
+    font-size: 3rem;
+  }
+  
+  .ape-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .ape-stat-mini {
+    padding: 1.25rem 1rem;
+  }
+  
+  .ape-xp-items {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-completion-container {
+    padding: 1.5rem;
+  }
+  
+  .ape-completion-title {
+    font-size: 1.8rem;
+  }
+  
+  .ape-medal-display {
+    font-size: 3rem;
+  }
+  
+  .ape-score-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .ape-score-value {
+    font-size: 2.5rem;
+  }
+  
+  .ape-completion-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-completion-container,
+  .ape-medal-display,
+  .ape-score-card,
+  .ape-stats-grid,
+  .ape-rank-badge,
+  .ape-action-buttons,
+  .ape-xp-breakdown {
+    animation: none;
+  }
+  
+  .ape-completion-container::before {
+    animation: none;
+  }
+  
+  .ape-progress-fill::after {
+    animation: none;
+  }
+  
+  .ape-stat-mini:hover,
+  .ape-completion-btn:hover {
+    transform: none;
+  }
+  
+  .ape-confetti-piece {
+    display: none;
+  }
+}

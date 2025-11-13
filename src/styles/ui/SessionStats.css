@@ -1,0 +1,108 @@
+/* SessionStats.css */
+.ape-session-stats {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  z-index: 900;
+  animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ape-session-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.ape-session-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px;
+}
+
+.ape-session-stat-icon {
+  color: #ffd700;
+}
+
+.ape-session-stat-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffd700;
+  line-height: 1;
+}
+
+.ape-session-stat-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .ape-session-stats {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 1rem;
+    animation: none;
+  }
+  
+  .ape-session-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ape-session-stats {
+    margin: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .ape-session-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .ape-session-stat-value {
+    font-size: 1rem;
+  }
+  
+  .ape-session-stat-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-session-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-session-stats {
+    animation: none;
+  }
+}

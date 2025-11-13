@@ -1,0 +1,380 @@
+/* QuizStats.css */
+.ape-quiz-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ape-quiz-stats::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  background-size: 200% 100%;
+  animation: shimmerBorder 3s infinite linear;
+}
+
+@keyframes shimmerBorder {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.ape-quiz-stats:hover {
+  border-color: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Stat Badge */
+.ape-stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.ape-stat-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-stat-badge:hover::before {
+  left: 100%;
+}
+
+.ape-stat-badge:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
+}
+
+.ape-stat-badge svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.ape-stat-badge:hover svg {
+  transform: scale(1.1);
+}
+
+/* Specific Stat Types */
+.ape-stat-badge.score {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.ape-stat-badge.score svg {
+  color: #22c55e;
+}
+
+.ape-stat-badge.score:hover {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.15);
+}
+
+.ape-stat-badge.streak {
+  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(249, 115, 22, 0.05);
+  position: relative;
+}
+
+.ape-stat-badge.streak svg {
+  color: #f97316;
+}
+
+.ape-stat-badge.streak::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: #f97316;
+  border-radius: 50%;
+  animation: pulseFlame 2s infinite;
+}
+
+@keyframes pulseFlame {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-50%) scale(1.2);
+  }
+}
+
+.ape-stat-badge.streak:hover {
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.15);
+}
+
+.ape-stat-badge.time {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.ape-stat-badge.time svg {
+  color: #3b82f6;
+}
+
+.ape-stat-badge.time:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15);
+}
+
+.ape-stat-badge.progress {
+  border-color: rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.ape-stat-badge.progress svg {
+  color: #ffd700;
+}
+
+.ape-stat-badge.progress:hover {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
+}
+
+/* Stat Values */
+.ape-stat-value {
+  font-weight: 800;
+  margin-left: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.ape-stat-badge.score .ape-stat-value {
+  color: #22c55e;
+}
+
+.ape-stat-badge.streak .ape-stat-value {
+  color: #f97316;
+}
+
+.ape-stat-badge.time .ape-stat-value {
+  color: #3b82f6;
+}
+
+.ape-stat-badge.progress .ape-stat-value {
+  color: #ffd700;
+}
+
+.ape-stat-badge:hover .ape-stat-value {
+  transform: scale(1.05);
+}
+
+/* Compact Version */
+.ape-quiz-stats.compact {
+  padding: 1rem 1.5rem;
+  gap: 0.75rem;
+}
+
+.ape-quiz-stats.compact .ape-stat-badge {
+  padding: 0.75rem 1rem;
+  min-width: 120px;
+  font-size: 0.85rem;
+  gap: 0.5rem;
+}
+
+/* Mini Version */
+.ape-quiz-stats.mini {
+  padding: 0.75rem 1rem;
+  gap: 0.5rem;
+  border-radius: 12px;
+}
+
+.ape-quiz-stats.mini .ape-stat-badge {
+  padding: 0.5rem 0.75rem;
+  min-width: auto;
+  font-size: 0.8rem;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.ape-quiz-stats.mini .ape-stat-badge span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Achievement Badges */
+.ape-achievement-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: bounceIn 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(10px);
+  }
+  70% {
+    transform: scale(1.1) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Streak Fire Effect */
+.ape-streak-fire {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  border-radius: 50%;
+  animation: firePulse 1.5s infinite;
+}
+
+@keyframes firePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
+/* Time Warning */
+.ape-stat-badge.time.warning {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.1);
+  animation: timeWarning 2s infinite;
+}
+
+@keyframes timeWarning {
+  0%, 100% {
+    border-color: rgba(245, 158, 11, 0.5);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.7);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ape-quiz-stats {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+  
+  .ape-stat-badge {
+    min-width: calc(50% - 0.75rem);
+    flex: 1;
+  }
+  
+  .ape-quiz-stats.compact {
+    padding: 1rem;
+  }
+  
+  .ape-quiz-stats.compact .ape-stat-badge {
+    min-width: calc(50% - 0.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-quiz-stats {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .ape-stat-badge {
+    min-width: 100%;
+    padding: 0.75rem 1rem;
+  }
+  
+  .ape-quiz-stats.compact .ape-stat-badge {
+    min-width: 100%;
+  }
+  
+  .ape-quiz-stats.mini {
+    flex-direction: column;
+  }
+  
+  .ape-quiz-stats.mini .ape-stat-badge {
+    width: 100%;
+  }
+}
+
+/* Loading State */
+.ape-quiz-stats.loading .ape-stat-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  animation: pulse 1.5s infinite;
+}
+
+.ape-quiz-stats.loading .ape-stat-value {
+  color: transparent;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  min-width: 40px;
+}
+
+/* High Score Celebration */
+.ape-quiz-stats.celebrating {
+  animation: celebrate 0.5s ease;
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

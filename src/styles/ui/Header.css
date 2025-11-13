@@ -1,0 +1,462 @@
+/* Header.css */
+.ape-main-header {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.ape-main-header.scrolled {
+  background: rgba(26, 31, 46, 0.95);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  border-bottom-color: rgba(255, 215, 0, 0.2);
+}
+
+.ape-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header Left */
+.ape-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.ape-app-logo {
+  color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+  padding: 0.75rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-app-logo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-app-logo:hover::before {
+  left: 100%;
+}
+
+.ape-app-logo:hover {
+  transform: scale(1.05) rotate(5deg);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+}
+
+.ape-app-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+.ape-app-title::after {
+  content: 'LABORATÓRIO';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.25rem;
+}
+
+/* Header Actions */
+.ape-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Back Button */
+.ape-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-back-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-back-btn:hover::before {
+  left: 100%;
+}
+
+.ape-back-btn:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateX(-3px);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.ape-back-btn:active {
+  transform: translateX(-1px);
+}
+
+/* Theme Toggle */
+.ape-theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #ffd700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-theme-toggle-btn:hover::before {
+  left: 100%;
+}
+
+.ape-theme-toggle-btn:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.ape-theme-toggle-btn:active {
+  transform: scale(1.05) rotate(5deg);
+}
+
+/* Navigation */
+.ape-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 2rem;
+}
+
+.ape-nav-item {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.ape-nav-item:hover::before {
+  left: 100%;
+}
+
+.ape-nav-item:hover {
+  color: #e2e8f0;
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.ape-nav-item.active {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
+}
+
+/* User Info */
+.ape-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 2rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.ape-user-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1f2e;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.ape-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ape-user-name {
+  font-weight: 700;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.ape-user-rank {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* XP Indicator */
+.ape-xp-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Progress Bar */
+.ape-header-progress {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ape-header-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffed4e);
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.ape-header-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Compact Header */
+.ape-main-header.compact .ape-header-content {
+  padding: 0.75rem 1.5rem;
+}
+
+.ape-main-header.compact .ape-app-logo {
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.ape-main-header.compact .ape-app-title {
+  font-size: 1.5rem;
+}
+
+.ape-main-header.compact .ape-back-btn,
+.ape-main-header.compact .ape-theme-toggle-btn {
+  padding: 0.5rem;
+  width: 40px;
+  height: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .ape-header-nav {
+    display: none;
+  }
+  
+  .ape-user-info {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .ape-header-content {
+    padding: 1rem;
+  }
+  
+  .ape-app-title {
+    font-size: 1.5rem;
+  }
+  
+  .ape-app-title::after {
+    font-size: 0.6rem;
+  }
+  
+  .ape-back-btn span {
+    display: none;
+  }
+  
+  .ape-back-btn {
+    padding: 0.75rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-header-content {
+    padding: 0.75rem;
+  }
+  
+  .ape-app-title {
+    font-size: 1.3rem;
+  }
+  
+  .ape-app-logo {
+    padding: 0.5rem;
+  }
+  
+  .ape-app-title::after {
+    display: none;
+  }
+  
+  .ape-header-actions {
+    gap: 0.5rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-main-header {
+    transition: none;
+  }
+  
+  .ape-app-logo::before,
+  .ape-back-btn::before,
+  .ape-theme-toggle-btn::before,
+  .ape-nav-item::before {
+    display: none;
+  }
+  
+  .ape-app-logo:hover,
+  .ape-back-btn:hover,
+  .ape-theme-toggle-btn:hover,
+  .ape-nav-item:hover {
+    transform: none;
+  }
+  
+  .ape-header-progress-fill::after {
+    animation: none;
+  }
+}
+
+/* Loading State */
+.ape-main-header.loading .ape-app-title {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  min-height: 1.8rem;
+  animation: pulse 1.5s infinite;
+}
+
+.ape-main-header.loading .ape-back-btn,
+.ape-main-header.loading .ape-theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: transparent;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

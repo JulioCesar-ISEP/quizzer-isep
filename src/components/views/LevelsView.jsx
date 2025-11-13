@@ -1,11 +1,12 @@
 import React from 'react';
-import { ChevronLeft, Code, Brain, Cpu, FileText, CheckCircle, ArrowRight, Zap, Trophy, Target, Flame, BookOpen, GitBranch } from 'lucide-react';
+import { ChevronLeft, Code, Brain, Cpu, FileText, CheckCircle, ArrowRight, Zap, Trophy, Target, Flame, BookOpen, GitBranch, Sparkles } from 'lucide-react';
+import '../../styles/components/LevelsView.css';
 
 const LevelsView = ({ 
   cadeira, 
   completedLevels, 
   onStartLevel, 
-  onOpenKnowledgeTree,  // NOVA PROP
+  onOpenKnowledgeTree,
   onBack, 
   score, 
   totalXP, 
@@ -13,120 +14,164 @@ const LevelsView = ({
 }) => {
   if (!cadeira) return null;
 
+  const getRankByLevel = (levelIndex) => {
+    const ranks = [
+      'Macaco-Prego',
+      'Chimpanzé', 
+      'Gorila',
+      'Orangotango',
+      'Homo Sapiens'
+    ];
+    return ranks[levelIndex] || ranks[0];
+  };
+
   return (
-    <div className="main-content">
-      <div className="breadcrumb">
-        <button onClick={onBack} className="back-btn">
+    <div className="ape-levels-content">
+      {/* Breadcrumb Navigation */}
+      <div className="ape-breadcrumb">
+        <button onClick={onBack} className="ape-back-btn">
           <ChevronLeft size={20} />
-          Voltar às Cadeiras
+          Voltar à Árvore
         </button>
-        <h2 className="cadeira-title">{cadeira.name}</h2>
+        <h2 className="ape-cadeira-title">{cadeira.name}</h2>
       </div>
 
-      <div className="stats-overview">
-        <div className="stat-item-overview">
-          <Zap className="stat-icon" />
-          <div>
-            <span className="stat-number">{totalXP}</span>
-            <span className="stat-label">Total XP</span>
+      {/* Stats Overview */}
+      <div className="ape-levels-stats">
+        <div className="ape-level-stat-item">
+          <div className="ape-level-stat-icon">
+            <Zap size={20} />
+          </div>
+          <div className="ape-level-stat-content">
+            <span className="ape-level-stat-number">{totalXP}</span>
+            <span className="ape-level-stat-label">Bananas Totais</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <Trophy className="stat-icon" />
-          <div>
-            <span className="stat-number">{completedLevels.length}/{cadeira.levels.length}</span>
-            <span className="stat-label">Níveis Completos</span>
+        <div className="ape-level-stat-item">
+          <div className="ape-level-stat-icon">
+            <Trophy size={20} />
+          </div>
+          <div className="ape-level-stat-content">
+            <span className="ape-level-stat-number">{completedLevels.length}/{cadeira.levels.length}</span>
+            <span className="ape-level-stat-label">Níveis Dominados</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <Target className="stat-icon" />
-          <div>
-            <span className="stat-number">{score}</span>
-            <span className="stat-label">Pontuação Atual</span>
+        <div className="ape-level-stat-item">
+          <div className="ape-level-stat-icon">
+            <Target size={20} />
+          </div>
+          <div className="ape-level-stat-content">
+            <span className="ape-level-stat-number">{score}</span>
+            <span className="ape-level-stat-label">Precisão Atual</span>
           </div>
         </div>
-        <div className="stat-item-overview">
-          <Flame className="stat-icon" />
-          <div>
-            <span className="stat-number">{maxStreak}</span>
-            <span className="stat-label">Melhor Sequência</span>
+        <div className="ape-level-stat-item">
+          <div className="ape-level-stat-icon">
+            <Flame size={20} />
+          </div>
+          <div className="ape-level-stat-content">
+            <span className="ape-level-stat-number">{maxStreak}</span>
+            <span className="ape-level-stat-label">Sequência Máxima</span>
           </div>
         </div>
       </div>
 
-      <div className="levels-section">
-        <h3 className="section-title">Seleciona um Nível</h3>
-        <p className="section-subtitle">Escolhe entre fazer a prova ou explorar a Árvore do Conhecimento</p>
+      {/* Levels Section */}
+      <div className="ape-levels-section">
+        <div className="ape-levels-header">
+          <h3 className="ape-levels-title">
+            <Sparkles size={28} />
+            Laboratório de Níveis
+          </h3>
+          <p className="ape-levels-subtitle">
+            Escolhe entre enfrentar o Desafio do Laboratório ou explorar a Árvore do Conhecimento
+          </p>
+        </div>
         
-        <div className="levels-grid">
-          {cadeira.levels.map(level => {
+        <div className="ape-levels-grid">
+          {cadeira.levels.map((level, index) => {
             const isCompleted = completedLevels.includes(level.id);
+            const currentRank = getRankByLevel(index);
+            
             return (
               <div
                 key={level.id}
-                className={`level-card ${isCompleted ? 'completed' : ''}`}
+                className={`ape-level-card ${isCompleted ? 'completed' : ''}`}
               >
-                <div className="level-header">
-                  <div className="level-icon">
+                {/* Rank Badge */}
+                <div className="ape-rank-badge">
+                  Rank: {currentRank}
+                </div>
+
+                <div className="ape-level-header">
+                  <div className="ape-level-icon">
                     {level.icon === 'Code' ? <Code size={32} /> :
-                      level.icon === 'Brain' ? <Brain size={32} /> :
-                        level.icon === 'Cpu' ? <Cpu size={32} /> :
-                          <FileText size={32} />}
+                     level.icon === 'Brain' ? <Brain size={32} /> :
+                     level.icon === 'Cpu' ? <Cpu size={32} /> :
+                     <FileText size={32} />}
                   </div>
                   {isCompleted && (
-                    <div className="completion-badge">
+                    <div className="ape-level-completion-badge" title="Nível totalmente dominado">
                       <CheckCircle size={20} />
                     </div>
                   )}
                 </div>
-                <div className="level-content">
-                  <h4 className="level-name">{level.name}</h4>
-                  <p className="level-desc">{level.description}</p>
-                  <div className="level-meta">
-                    <span className="meta-item">
+
+                <div className="ape-level-content">
+                  <h4 className="ape-level-name">{level.name}</h4>
+                  <p className="ape-level-desc">{level.description}</p>
+                  
+                  <div className="ape-level-meta">
+                    <span className="ape-level-meta-item">
                       <FileText size={16} />
-                      {level.exercises.length} exercícios
+                      {level.exercises.length} desafios
                     </span>
-                    <span className="meta-item">
+                    <span className="ape-level-meta-item">
                       <Zap size={16} />
-                      +{level.xp} XP
+                      +{level.xp} bananas
                     </span>
                   </div>
                   
                   {/* Bifurcação: Prova vs Árvore do Conhecimento */}
-                  <div className="level-options">
-                    <div className="option-card">
-                      <div className="option-icon">
-                        <BookOpen size={24} />
+                  <div className="ape-level-options">
+                    {/* Opção 1: Desafio do Laboratório */}
+                    <div className="ape-option-card">
+                      <div className="ape-option-header">
+                        <div className="ape-option-icon">
+                          <BookOpen size={24} />
+                        </div>
+                        <h5 className="ape-option-title">Desafio do Lab</h5>
                       </div>
-                      <div className="option-content">
-                        <h5>Prova</h5>
-                        <p>Testa os teus conhecimentos com exercícios práticos</p>
-                        <button 
-                          onClick={() => onStartLevel(level.id)}
-                          className="option-btn primary"
-                        >
-                          {isCompleted ? 'Refazer Prova' : 'Iniciar Prova'}
-                          <ArrowRight size={16} />
-                        </button>
-                      </div>
+                      <p className="ape-option-desc">
+                        Testa os teus conhecimentos em condições de laboratório com exercícios práticos e cronometrados
+                      </p>
+                      <button 
+                        onClick={() => onStartLevel(level.id)}
+                        className="ape-option-btn primary"
+                      >
+                        {isCompleted ? 'Refazer Desafio' : 'Iniciar Lab'}
+                        <ArrowRight size={16} />
+                      </button>
                     </div>
                     
-                    <div className="option-card">
-                      <div className="option-icon">
-                        <GitBranch size={24} />
+                    {/* Opção 2: Árvore do Conhecimento */}
+                    <div className="ape-option-card">
+                      <div className="ape-option-header">
+                        <div className="ape-option-icon">
+                          <GitBranch size={24} />
+                        </div>
+                        <h5 className="ape-option-title">Árvore do Conhecimento</h5>
                       </div>
-                      <div className="option-content">
-                        <h5>Árvore do Conhecimento</h5>
-                        <p>Explora os conceitos de forma hierárquica e interativa</p>
-                        <button 
-                          onClick={() => onOpenKnowledgeTree(level.id)}
-                          className="option-btn secondary"
-                        >
-                          Explorar
-                          <ArrowRight size={16} />
-                        </button>
-                      </div>
+                      <p className="ape-option-desc">
+                        Explora os conceitos de forma hierárquica e interativa, identificando lacunas no teu conhecimento
+                      </p>
+                      <button 
+                        onClick={() => onOpenKnowledgeTree(level.id)}
+                        className="ape-option-btn secondary"
+                      >
+                        Explorar Nós
+                        <ArrowRight size={16} />
+                      </button>
                     </div>
                   </div>
                 </div>

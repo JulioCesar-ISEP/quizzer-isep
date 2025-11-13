@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useTimer } from './hooks/useTimer';
 import { useProgress } from './hooks/useProgress';
 import { useReports } from './hooks/useReports';
+import { useAchievements } from './hooks/useAchievements';
 import Header from './components/ui/Header';
 import CadeirasView from './components/views/CadeirasView';
 import LevelsView from './components/views/LevelsView';
 import QuizView from './components/views/QuizView';
 import KnowledgeTreeView from './components/views/KnowledgeTreeView';
 import CompletionView from './components/views/CompletionView';
-import LoadingScreen from './components/common/LoadingScreen';
+import AchievementPopup from './components/ui/AchievementPopup';
+import SessionStats from './components/ui/SessionStats';
 import cadeiras from '../data/cadeiras';
+import './styles/QuizzerIsep.css';
 
 const QuizzerIsep = () => {
   const [currentView, setCurrentView] = useState('cadeiras');
@@ -21,6 +24,8 @@ const QuizzerIsep = () => {
   const [currentComment, setCurrentComment] = useState('');
   const [mistakes, setMistakes] = useState([]);
   const [sessionStartTime] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Quiz state
   const [quizState, setQuizState] = useState({
@@ -36,6 +41,7 @@ const QuizzerIsep = () => {
   const { timeSpent, resetTimer, setStartTime } = useTimer(currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished);
   const { completedLevels, totalXP, addCompletedLevel, addXP, resetProgress, getCadeiraCompletedLevels } = useProgress();
   const { dailyStats, downloadReport, initializeReports } = useReports();
+  const { achievements, checkAchievements, unlockAchievement } = useAchievements();
 
   // Funções auxiliares
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
@@ -43,7 +49,7 @@ const QuizzerIsep = () => {
   const getCurrentExerciseData = () => getCurrentLevelData()?.exercises[quizState.currentExercise];
 
   // Calcular score baseado nas respostas
-  const calculateScore = () => {
+  const calculateScore = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     if (!currentLevelData) return 0;
     
@@ -52,10 +58,10 @@ const QuizzerIsep = () => {
       const exercise = currentLevelData.exercises[index];
       return score + (answer === exercise.correct ? 1 : 0);
     }, 0);
-  };
+  }, [quizState.answers, selectedLevel]);
 
   // Calcular streak
-  const calculateStreak = () => {
+  const calculateStreak = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     if (!currentLevelData) return 0;
     
@@ -77,53 +83,72 @@ const QuizzerIsep = () => {
     });
     
     return maxStreak;
-  };
+  }, [quizState.answers, selectedLevel]);
 
   const score = calculateScore();
   const maxStreak = calculateStreak();
 
   // Efeitos
   useEffect(() => {
-    initializeReports();
+    const initApp = async () => {
+      try {
+        setLoading(true);
+        await initializeReports();
+        setLoading(false);
+      } catch (err) {
+        setError('Erro ao inicializar a aplicação');
+        setLoading(false);
+      }
+    };
+    initApp();
   }, [initializeReports]);
 
   useEffect(() => {
     if (showTheory) {
-      document.body.classList.add('modal-open');
+      document.body.classList.add('ape-modal-open');
     } else {
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove('ape-modal-open');
     }
-    return () => document.body.classList.remove('modal-open');
+    return () => document.body.classList.remove('ape-modal-open');
   }, [showTheory]);
 
-  // Funções de navegação - ATUALIZADAS
-  const goToCadeiras = () => {
+  // Verificar conquistas
+  useEffect(() => {
+    if (score > 0 || totalXP > 0) {
+      const newAchievements = checkAchievements({ score, totalXP, maxStreak, completedLevels });
+      newAchievements.forEach(achievement => {
+        unlockAchievement(achievement.id);
+      });
+    }
+  }, [score, totalXP, maxStreak, completedLevels, checkAchievements, unlockAchievement]);
+
+  // Funções de navegação
+  const goToCadeiras = useCallback(() => {
     setCurrentView('cadeiras');
     setSelectedCadeira(null);
     setSelectedLevel(null);
     resetQuizState();
-  };
+  }, []);
 
-  const goToLevels = () => {
+  const goToLevels = useCallback(() => {
     setCurrentView('levels');
     setSelectedLevel(null);
-  };
+  }, []);
 
-  const startLevel = (levelId) => {
+  const startLevel = useCallback((levelId) => {
     setSelectedLevel(levelId);
     setCurrentView('quiz');
     resetTimer();
     resetQuizState();
     setStartTime(Date.now());
-  };
+  }, [resetTimer, setStartTime]);
 
-  // NOVA FUNÇÃO: Abrir Árvore do Conhecimento
-  const openKnowledgeTree = (levelId) => {
+  const openKnowledgeTree = useCallback((levelId) => {
     setSelectedLevel(levelId);
     setCurrentView('knowledge-tree');
-  };
+  }, []);
 
-  const resetQuizState = () => {
+  const resetQuizState = useCallback(() => {
     setQuizState({
       currentExercise: 0,
       answers: [],
@@ -136,18 +161,16 @@ const QuizzerIsep = () => {
     setComments({});
     setCurrentComment('');
     
-    // Reset mais robusto do timer
     setTimeout(() => {
       resetTimer();
     }, 100);
-  };
+  }, [resetTimer]);
 
-  const handleAnswer = (selectedIndex) => {
+  const handleAnswer = useCallback((selectedIndex) => {
     const currentExerciseData = getCurrentExerciseData();
     const currentLevelData = getCurrentLevelData();
     const currentCadeiraData = getCurrentCadeiraData();
 
-    // Atualizar a resposta para a questão atual
     const newAnswers = [...quizState.answers];
     newAnswers[quizState.currentExercise] = selectedIndex;
     
@@ -157,7 +180,6 @@ const QuizzerIsep = () => {
       showSolution: true
     }));
 
-    // Registrar erro se a resposta estiver incorreta
     if (selectedIndex !== currentExerciseData.correct) {
       const commentKey = `${selectedLevel}-${quizState.currentExercise}`;
       setMistakes(prev => [...prev, {
@@ -176,9 +198,9 @@ const QuizzerIsep = () => {
         timestamp: new Date().toLocaleTimeString('pt-PT')
       }]);
     }
-  };
+  }, [quizState.answers, quizState.currentExercise, selectedCadeira, selectedLevel, comments]);
 
-  const nextExercise = () => {
+  const nextExercise = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     const totalExercisesInLevel = currentLevelData?.exercises.length || 0;
 
@@ -194,7 +216,6 @@ const QuizzerIsep = () => {
         currentExercise: prev.currentExercise + 1 
       }));
     } else {
-      // Verificar se todas as questões foram respondidas
       const allAnswered = quizState.answers.length === totalExercisesInLevel && 
                          quizState.answers.every(answer => answer !== undefined);
       
@@ -204,7 +225,6 @@ const QuizzerIsep = () => {
           showResults: true 
         }));
       } else {
-        // Se não estão todas respondidas, voltar para a primeira não respondida
         const firstUnanswered = quizState.answers.findIndex(answer => answer === undefined);
         if (firstUnanswered !== -1) {
           setQuizState(prev => ({ 
@@ -219,9 +239,9 @@ const QuizzerIsep = () => {
         }
       }
     }
-  };
+  }, [quizState.currentExercise, quizState.answers]);
 
-  const previousExercise = () => {
+  const previousExercise = useCallback(() => {
     if (quizState.currentExercise > 0) {
       setQuizState(prev => ({ 
         ...prev, 
@@ -230,32 +250,31 @@ const QuizzerIsep = () => {
       }));
       setCurrentComment('');
     }
-  };
+  }, [quizState.currentExercise]);
 
-  const goToExercise = (exerciseIndex) => {
+  const goToExercise = useCallback((exerciseIndex) => {
     setQuizState(prev => ({ 
       ...prev, 
       currentExercise: exerciseIndex,
       showSolution: false,
-      showResults: false // IMPORTANTE: Sair da tela de resultados quando navegar para uma questão
+      showResults: false
     }));
     setCurrentComment('');
-  };
+  }, []);
 
-  const showResultsScreen = () => {
+  const showResultsScreen = useCallback(() => {
     setQuizState(prev => ({ 
       ...prev, 
       showResults: true 
     }));
-  };
+  }, []);
 
-  const finishQuiz = () => {
+  const finishQuiz = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     const currentCadeiraData = getCurrentCadeiraData();
     const totalLevels = currentCadeiraData?.levels.length || 0;
     const currentCadeiraCompletedLevels = getCadeiraCompletedLevels(selectedCadeira);
 
-    // Adicionar XP baseado no score
     const xpEarned = Math.round((score / currentLevelData.exercises.length) * currentLevelData.xp);
     addXP(xpEarned);
 
@@ -263,15 +282,14 @@ const QuizzerIsep = () => {
       addCompletedLevel(selectedCadeira, selectedLevel);
     }
 
-    // Verificar se todos os níveis da cadeira atual foram completados
     if (currentCadeiraCompletedLevels.length + 1 === totalLevels) {
       setQuizState(prev => ({ ...prev, quizFinished: true }));
     } else {
       setQuizState(prev => ({ ...prev, levelCompleted: true }));
     }
-  };
+  }, [score, selectedCadeira, selectedLevel, addXP, addCompletedLevel, getCadeiraCompletedLevels]);
 
-  const handleDownloadReport = () => {
+  const handleDownloadReport = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     const sessionData = {
       sessionStartTime,
@@ -283,26 +301,58 @@ const QuizzerIsep = () => {
       totalPossibleScore: currentLevelData?.exercises.length || 0
     };
     downloadReport(sessionData);
-  };
+  }, [sessionStartTime, timeSpent, score, maxStreak, mistakes, downloadReport]);
 
-  const handleResetProgress = () => {
-    if (window.confirm('⚠️ Tem a certeza? Vai perder todo o progresso!')) {
+  const handleResetProgress = useCallback(() => {
+    if (window.confirm('⚠️ Tens a certeza? Vais perder todo o progresso no laboratório!')) {
       resetProgress();
       resetQuizState();
       setSelectedLevel(null);
       setSelectedCadeira(null);
       setCurrentView('cadeiras');
     }
-  };
+  }, [resetProgress, resetQuizState]);
 
-  const saveComment = (text) => {
+  const saveComment = useCallback((text) => {
     setCurrentComment(text);
     const key = `${selectedLevel}-${quizState.currentExercise}`;
     setComments(prev => ({ ...prev, [key]: text }));
-  };
+  }, [selectedLevel, quizState.currentExercise]);
 
-  // Renderização condicional - ATUALIZADA
+  // Componentes de UI
+  const LoadingScreen = () => (
+    <div className="ape-loading-screen">
+      <div className="ape-loading-animation">
+        <span>🧠</span>
+      </div>
+      <h2 className="ape-loading-text">Carregando Laboratório...</h2>
+      <p className="ape-loading-subtext">A preparar a tua experiência de aprendizado</p>
+    </div>
+  );
+
+  const ErrorScreen = () => (
+    <div className="ape-error-boundary">
+      <div className="ape-error-icon">
+        <span>⚠️</span>
+      </div>
+      <h2 className="ape-error-title">Erro no Laboratório</h2>
+      <p className="ape-error-message">
+        {error || 'Ocorreu um erro inesperado. Tenta recarregar a página.'}
+      </p>
+      <button 
+        className="ape-error-retry-btn"
+        onClick={() => window.location.reload()}
+      >
+        🔄 Recarregar Aplicação
+      </button>
+    </div>
+  );
+
+  // Renderização condicional
   const renderCurrentView = () => {
+    if (error) return <ErrorScreen />;
+    if (loading) return <LoadingScreen />;
+
     switch (currentView) {
       case 'cadeiras':
         return (
@@ -328,7 +378,7 @@ const QuizzerIsep = () => {
             cadeira={currentCadeiraData}
             completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
             onStartLevel={startLevel}
-            onOpenKnowledgeTree={openKnowledgeTree} // NOVA PROP
+            onOpenKnowledgeTree={openKnowledgeTree}
             onBack={goToCadeiras}
             score={score}
             totalXP={totalXP}
@@ -336,18 +386,18 @@ const QuizzerIsep = () => {
           />
         ) : <LoadingScreen />;
 
-      // case 'knowledge-tree': // NOVA VIEW
-      //   const knowledgeTreeLevelData = getCurrentLevelData();
-      //   const knowledgeTreeCadeiraData = getCurrentCadeiraData();
-      //   return knowledgeTreeLevelData ? (
-      //     <KnowledgeTreeView
-      //       level={knowledgeTreeLevelData}
-      //       cadeira={knowledgeTreeCadeiraData}
-      //       onBack={goToLevels}
-      //       onStartQuiz={() => startLevel(selectedLevel)}
-      //       completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
-      //     />
-      //   ) : <LoadingScreen />;
+      case 'knowledge-tree':
+        const knowledgeTreeLevelData = getCurrentLevelData();
+        const knowledgeTreeCadeiraData = getCurrentCadeiraData();
+        return knowledgeTreeLevelData ? (
+          <KnowledgeTreeView
+            level={knowledgeTreeLevelData}
+            cadeira={knowledgeTreeCadeiraData}
+            onBack={goToLevels}
+            onStartQuiz={() => startLevel(selectedLevel)}
+            completedLevels={getCadeiraCompletedLevels(selectedCadeira)}
+          />
+        ) : <LoadingScreen />;
 
       case 'quiz':
         const currentLevelData = getCurrentLevelData();
@@ -410,7 +460,7 @@ const QuizzerIsep = () => {
   };
 
   return (
-    <div className={`main-menu ${isDark ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`ape-quizzer-app ${isDark ? 'dark-theme' : 'light-theme'}`}>
       <Header 
         isDark={isDark}
         toggleTheme={toggleTheme}
@@ -418,8 +468,36 @@ const QuizzerIsep = () => {
         onBack={currentView !== 'cadeiras' ? 
           (currentView === 'knowledge-tree' ? goToLevels : goToCadeiras) : null}
         showBackButton={currentView !== 'cadeiras'}
+        user={{ name: 'Símio', xp: totalXP }}
+        xp={totalXP}
+        progress={Math.round((Object.values(completedLevels).flat().length / 
+          (cadeiras.reduce((acc, c) => acc + c.levels.length, 0))) * 100)}
       />
-      {renderCurrentView()}
+      
+      {/* Session Stats */}
+      {currentView === 'quiz' && (
+        <SessionStats
+          score={score}
+          streak={maxStreak}
+          timeSpent={timeSpent}
+          currentExercise={quizState.currentExercise + 1}
+          totalExercises={getCurrentLevelData()?.exercises.length || 0}
+        />
+      )}
+
+      {/* Main Content */}
+      <main className="ape-main-content-area">
+        {renderCurrentView()}
+      </main>
+
+      {/* Achievement Popups */}
+      {achievements.map(achievement => (
+        <AchievementPopup
+          key={achievement.id}
+          achievement={achievement}
+          onClose={() => {}}
+        />
+      ))}
     </div>
   );
 };

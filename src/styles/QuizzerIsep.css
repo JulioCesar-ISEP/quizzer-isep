@@ -1,0 +1,471 @@
+/* QuizzerIsep.css */
+.ape-quizzer-app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.ape-quizzer-app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ape-quizzer-app.light-theme {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #1a1f2e;
+}
+
+.ape-quizzer-app.light-theme::before {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
+}
+
+/* Main Content Area */
+.ape-main-content-area {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 80px);
+  padding: 0;
+}
+
+/* Loading Screen */
+.ape-loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 2rem;
+  text-align: center;
+}
+
+.ape-loading-animation {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounceRotate 2s infinite ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.ape-loading-animation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shine 1.5s infinite;
+}
+
+@keyframes bounceRotate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(90deg);
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.ape-loading-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.ape-loading-subtext {
+  color: #94a3b8;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.ape-quizzer-app.light-theme .ape-loading-subtext {
+  color: #64748b;
+}
+
+/* Session Stats Overlay */
+.ape-session-stats {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  z-index: 900;
+  animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ape-session-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1rem;
+  align-items: center;
+}
+
+.ape-session-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ape-session-stat-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffd700;
+}
+
+.ape-session-stat-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ape-quizzer-app.light-theme .ape-session-stat-label {
+  color: #64748b;
+}
+
+/* Progress Notification */
+.ape-progress-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  z-index: 1000;
+  animation: slideUpBounce 0.5s ease;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@keyframes slideUpBounce {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  70% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Error Boundary */
+.ape-error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  gap: 2rem;
+}
+
+.ape-error-icon {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.ape-error-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ef4444;
+  margin: 0;
+}
+
+.ape-error-message {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  max-width: 500px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ape-quizzer-app.light-theme .ape-error-message {
+  color: #64748b;
+}
+
+.ape-error-retry-btn {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ape-error-retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+/* Modal Open State */
+body.ape-modal-open {
+  overflow: hidden;
+}
+
+body.ape-modal-open .ape-quizzer-app::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* Achievement Popup */
+.ape-achievement-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #1a1f2e, #0d1117);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  border-radius: 20px;
+  padding: 2rem;
+  z-index: 1001;
+  animation: achievementPop 0.6s ease;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes achievementPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.ape-achievement-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.ape-achievement-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+}
+
+.ape-achievement-desc {
+  color: #94a3b8;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .ape-session-stats {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 1rem;
+    animation: none;
+  }
+  
+  .ape-session-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ape-quizzer-app {
+    padding: 0;
+  }
+  
+  .ape-session-stats {
+    margin: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .ape-session-stat-value {
+    font-size: 1rem;
+  }
+  
+  .ape-session-stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .ape-progress-notification {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    text-align: center;
+  }
+  
+  .ape-achievement-popup {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .ape-achievement-icon {
+    font-size: 3rem;
+  }
+  
+  .ape-achievement-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-session-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .ape-session-stat {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .ape-loading-text {
+    font-size: 1.3rem;
+  }
+  
+  .ape-error-title {
+    font-size: 1.5rem;
+  }
+  
+  .ape-error-message {
+    font-size: 1rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-loading-animation,
+  .ape-loading-animation::before,
+  .ape-session-stats,
+  .ape-progress-notification,
+  .ape-error-icon,
+  .ape-achievement-popup,
+  .ape-achievement-icon {
+    animation: none;
+  }
+  
+  .ape-error-retry-btn:hover {
+    transform: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .ape-quizzer-app {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .ape-session-stats,
+  .ape-progress-notification,
+  .ape-header {
+    display: none !important;
+  }
+}

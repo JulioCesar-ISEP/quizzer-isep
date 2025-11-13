@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, XCircle, BookOpen, Lightbulb, ArrowLeft, ArrowRight, Flag, CheckSquare } from 'lucide-react';
+import { CheckCircle, XCircle, BookOpen, Lightbulb, ArrowLeft, ArrowRight, Flag, CheckSquare, Zap, Trophy, Clock, Star } from 'lucide-react';
 import QuizHeader from '../ui/QuizHeader';
 import QuizStats from '../ui/QuizStats';
 import OptionButton from '../ui/OptionButton';
@@ -7,6 +7,7 @@ import CommentSection from '../ui/CommentSection';
 import SolutionPanel from '../ui/SolutionPanel';
 import TheoryModal from '../ui/TheoryModal';
 import { shouldShowTheoryButton } from '../../utils/quizHelpers';
+import '../../styles/components/QuizView.css';
 
 const QuizView = ({
   level,
@@ -47,57 +48,69 @@ const QuizView = ({
 
   // Tela de resultados
   if (showResults) {
+    const percentage = Math.round((score / totalExercises) * 100);
+    const getRankByScore = (score) => {
+      if (score >= 90) return 'Homo Sapiens';
+      if (score >= 75) return 'Gorila';
+      if (score >= 60) return 'Chimpanzé';
+      if (score >= 40) return 'Macaco-Prego';
+      return 'Iniciante';
+    };
+
     return (
-      <div className="quiz-screen">
-        <div className="results-screen">
-          <div className="results-header">
-            <h1 className="results-title">Resultados do Quiz</h1>
-            <p className="results-subtitle">Confira seu desempenho em {level.name}</p>
+      <div className="ape-quiz-screen">
+        <div className="ape-results-screen">
+          <div className="ape-results-header">
+            <h1 className="ape-results-title">Desafio do Lab Concluído!</h1>
+            <p className="ape-results-subtitle">Performance em {level.name} - Rank: {getRankByScore(percentage)}</p>
           </div>
 
-          <div className="results-summary">
-            <div className="score-card-large">
-              <div className="score-header">
-                <CheckSquare className="score-icon" />
+          <div className="ape-results-summary">
+            <div className="ape-score-card-large">
+              <div className="ape-score-header">
+                <Trophy className="ape-score-icon" />
                 <span>Pontuação Final</span>
               </div>
-              <div className="score-value-large">
+              <div className="ape-score-value-large">
                 {score}<span>/{totalExercises}</span>
               </div>
-              <div className="score-percentage-large">
-                {Math.round((score / totalExercises) * 100)}%
+              <div className="ape-score-percentage-large">
+                {percentage}% de Eficiência
               </div>
-              <div className="progress-bar-large">
+              <div className="ape-progress-bar-large">
                 <div
-                  className="progress-fill"
-                  style={{ width: `${(score / totalExercises) * 100}%` }}
+                  className="ape-progress-fill-large"
+                  style={{ width: `${percentage}%` }}
                 />
               </div>
             </div>
 
-            <div className="results-stats">
-              <div className="stat-result">
-                <span className="stat-label">Questões Corretas</span>
-                <span className="stat-value">{score}</span>
+            <div className="ape-results-stats">
+              <div className="ape-stat-result">
+                <span className="ape-stat-label">Respostas Corretas</span>
+                <span className="ape-stat-value">{score}</span>
               </div>
-              <div className="stat-result">
-                <span className="stat-label">Questões Incorretas</span>
-                <span className="stat-value">{totalExercises - score}</span>
+              <div className="ape-stat-result">
+                <span className="ape-stat-label">Respostas Incorretas</span>
+                <span className="ape-stat-value">{totalExercises - score}</span>
               </div>
-              <div className="stat-result">
-                <span className="stat-label">Melhor Sequência</span>
-                <span className="stat-value">{maxStreak}</span>
+              <div className="ape-stat-result">
+                <span className="ape-stat-label">Sequência Máxima</span>
+                <span className="ape-stat-value">{maxStreak}</span>
               </div>
-              <div className="stat-result">
-                <span className="stat-label">Tempo Total</span>
-                <span className="stat-value">{displayTime}</span>
+              <div className="ape-stat-result">
+                <span className="ape-stat-label">Tempo no Lab</span>
+                <span className="ape-stat-value">{displayTime}</span>
               </div>
             </div>
           </div>
 
-          <div className="questions-review">
-            <h3 className="review-title">Revisão das Questões</h3>
-            <div className="questions-grid">
+          <div className="ape-questions-review">
+            <h3 className="ape-review-title">
+              <Star size={24} />
+              Análise do Desempenho
+            </h3>
+            <div className="ape-questions-grid">
               {level.exercises.map((ex, index) => {
                 const userAnswer = answers[index];
                 const isCorrect = userAnswer !== undefined && userAnswer === ex.correct;
@@ -106,28 +119,28 @@ const QuizView = ({
                 return (
                   <div
                     key={index}
-                    className={`question-review-item ${isAnswered ? (isCorrect ? 'correct' : 'incorrect') : 'unanswered'}`}
+                    className={`ape-question-review-item ${isAnswered ? (isCorrect ? 'correct' : 'incorrect') : 'unanswered'}`}
                     onClick={() => {
                       onGoToExercise(index);
                     }}
                   >
-                    <div className="question-number">Questão {index + 1}</div>
-                    <div className="question-status">
+                    <div className="ape-question-number">Desafio {index + 1}</div>
+                    <div className="ape-question-status">
                       {isAnswered ? (
                         isCorrect ? (
-                          <CheckCircle size={20} className="correct-icon" />
+                          <CheckCircle size={20} className="ape-correct-icon" />
                         ) : (
-                          <XCircle size={20} className="incorrect-icon" />
+                          <XCircle size={20} className="ape-incorrect-icon" />
                         )
                       ) : (
-                        <div className="unanswered-icon">?</div>
+                        <div className="ape-unanswered-icon">?</div>
                       )}
                     </div>
-                    <div className="question-preview">
+                    <div className="ape-question-preview">
                       {ex.question.substring(0, 50)}...
                     </div>
-                    <div className="question-status-text">
-                      {isAnswered ? (isCorrect ? 'Correta' : 'Incorreta') : 'Não respondida'}
+                    <div className="ape-question-status-text">
+                      {isAnswered ? (isCorrect ? 'Dominado' : 'Lacuna') : 'Pendente'}
                     </div>
                   </div>
                 );
@@ -135,17 +148,17 @@ const QuizView = ({
             </div>
           </div>
 
-          <div className="results-actions">
+          <div className="ape-results-actions">
             <button 
               onClick={() => onGoToExercise(0)} 
-              className="btn btn-secondary"
+              className="ape-btn ape-btn-secondary"
             >
               <ArrowLeft size={20} />
-              Revisar Questões
+              Revisar Desafios
             </button>
-            <button onClick={onFinishQuiz} className="btn btn-primary">
+            <button onClick={onFinishQuiz} className="ape-btn ape-btn-primary">
               <CheckSquare size={20} />
-              Finalizar Quiz
+              Concluir Lab
             </button>
           </div>
         </div>
@@ -155,7 +168,7 @@ const QuizView = ({
 
   // Tela normal do quiz
   return (
-    <div className="quiz-screen">
+    <div className="ape-quiz-screen">
       {showTheory && exercise.theoryPoints && (
         <TheoryModal
           theory={exercise.theoryPoints}
@@ -172,7 +185,7 @@ const QuizView = ({
         showTheoryButton={showTheoryButton}
       />
 
-      <div className="quiz-content">
+      <div className="ape-quiz-content">
         <QuizStats
           score={score}
           streak={maxStreak}
@@ -182,18 +195,18 @@ const QuizView = ({
         />
 
         {/* Navegação entre questões */}
-        <div className="questions-navigation">
-          <div className="nav-buttons">
+        <div className="ape-questions-navigation">
+          <div className="ape-nav-buttons">
             <button 
               onClick={onPrevious} 
               disabled={currentExerciseIndex === 0}
-              className="nav-btn"
+              className="ape-nav-btn"
             >
               <ArrowLeft size={16} />
               Anterior
             </button>
             
-            <div className="questions-dots">
+            <div className="ape-questions-dots">
               {level.exercises.map((_, index) => {
                 const isAnswered = answers[index] !== undefined;
                 const isCurrent = index === currentExerciseIndex;
@@ -202,8 +215,8 @@ const QuizView = ({
                   <button
                     key={index}
                     onClick={() => onGoToExercise(index)}
-                    className={`question-dot ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
-                    title={`Questão ${index + 1}`}
+                    className={`ape-question-dot ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
+                    title={`Desafio ${index + 1}`}
                   >
                     {index + 1}
                   </button>
@@ -213,31 +226,31 @@ const QuizView = ({
             
             <button 
               onClick={onNext} 
-              className="nav-btn"
+              className="ape-nav-btn"
             >
-              {isLastExercise && allQuestionsAnswered ? 'Ver Resultados' : 'Próxima'}
+              {isLastExercise && allQuestionsAnswered ? 'Ver Resultados' : 'Próximo'}
               <ArrowRight size={16} />
             </button>
           </div>
         </div>
 
-        <div className="question-container">
-          <div className="question-card">
-            <div className="question-header">
-              <h2 className="question-text">{exercise.question}</h2>
-              <div className="question-meta">
-                <span className="question-number-badge">
-                  Questão {currentExerciseIndex + 1} de {totalExercises}
+        <div className="ape-question-container">
+          <div className="ape-question-card">
+            <div className="ape-question-header">
+              <h2 className="ape-question-text">{exercise.question}</h2>
+              <div className="ape-question-meta">
+                <span className="ape-question-number-badge">
+                  Desafio {currentExerciseIndex + 1} de {totalExercises}
                 </span>
                 {answers[currentExerciseIndex] !== undefined && (
-                  <span className="answered-badge">
+                  <span className="ape-answered-badge">
                     <CheckCircle size={16} />
-                    Respondida
+                    Resolvido
                   </span>
                 )}
               </div>
             </div>
-            <div className="options-grid">
+            <div className="ape-options-grid">
               {exercise.options.map((option, index) => (
                 <OptionButton
                   key={index}
@@ -278,13 +291,13 @@ const QuizView = ({
 
           {/* Botão para ir direto aos resultados quando todas as questões estiverem respondidas */}
           {allQuestionsAnswered && !showSolution && !showResults && (
-            <div className="finish-quiz-section">
+            <div className="ape-finish-quiz-section">
               <button 
                 onClick={onShowResults}
-                className="btn btn-success finish-btn"
+                className="ape-finish-btn"
               >
                 <Flag size={20} />
-                Ver Resultados Finais
+                Analisar Performance
               </button>
             </div>
           )}
