@@ -1,0 +1,97 @@
+export const level4KnowledgeTree = {
+  conceptsCount: 6,
+  topicsCount: 9,
+  examplesCount: 12,
+  root: {
+    id: 'root',
+    type: 'concept',
+    title: 'Modelo de Execução de Programas',
+    description: 'Ciclo de fetch-decode-execute e fluxo de controle',
+    children: [
+      {
+        id: 'ciclo-instruction',
+        type: 'topic',
+        title: 'Ciclo de Instrução',
+        description: 'Etapas de execução de uma instrução',
+        children: [
+          {
+            id: 'fetch',
+            type: 'concept',
+            title: 'Busca (Fetch)',
+            description: 'Carregamento da instrução da memória'
+          },
+          {
+            id: 'decode',
+            type: 'concept',
+            title: 'Decodificação',
+            description: 'Interpretação da instrução'
+          },
+          {
+            id: 'execute',
+            type: 'concept',
+            title: 'Execução',
+            description: 'Operação na ALU ou acesso à memória'
+          },
+          {
+            id: 'ex-ciclo-completo',
+            type: 'example',
+            title: 'Exemplo: Ciclo Completo',
+            description: 'PC → Fetch → Decode → Execute → Update PC'
+          }
+        ]
+      },
+      {
+        id: 'controle-fluxo',
+        type: 'topic',
+        title: 'Controle de Fluxo',
+        description: 'Branches e jumps para alterar execução',
+        children: [
+          {
+            id: 'branches',
+            type: 'concept',
+            title: 'Branches Condicionais',
+            description: 'Alteram PC baseado em condições'
+          },
+          {
+            id: 'jumps',
+            type: 'concept',
+            title: 'Jumps Incondicionais',
+            description: 'Alteram PC sempre'
+          },
+          {
+            id: 'ex-branch',
+            type: 'example',
+            title: 'Exemplo: Loop com Branch',
+            description: 'beq a0, zero, fim  # if a0==0 goto fim'
+          }
+        ]
+      },
+      {
+        id: 'pipeline',
+        type: 'topic',
+        title: 'Execução Pipeline',
+        description: 'Execução paralela de instruções',
+        children: [
+          {
+            id: 'estagios-pipeline',
+            type: 'concept',
+            title: 'Estágios de Pipeline',
+            description: 'IF, ID, EX, MEM, WB'
+          },
+          {
+            id: 'hazards',
+            type: 'concept',
+            title: 'Hazards de Pipeline',
+            description: 'Conflitos na execução paralela'
+          },
+          {
+            id: 'ex-pipeline',
+            type: 'example',
+            title: 'Exemplo: Hazard de Dados',
+            description: 'add a0,a1,a2\nsub a3,a0,a4  # a0 não está pronto'
+          }
+        ]
+      }
+    ]
+  }
+};

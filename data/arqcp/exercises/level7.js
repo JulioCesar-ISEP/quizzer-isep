@@ -1,0 +1,42 @@
+export const level7Exercises = [
+  {
+    id: 1,
+    question: "Como otimizar acesso à memória?",
+    code: "// Otimização\nLoop com acessos sequenciais // bom para cache",
+    options: ["Explorar localidade espacial/temporal", "Usar mais branches", "Aumentar loads aleatórios", "Ignorar hierarquia"],
+    correct: 0,
+    explanation: "Localidade melhora hits de cache, reduzindo misses caros.",
+    theoryPoints: {
+      title: "Otimização de Memória",
+      content: "Minimize misses de cache reorganizando dados/acessos para localidade.",
+      keyPoints: [
+        "Espacial: acessos próximos",
+        "Temporal: reuso rápido",
+        "Cache lines: 64 bytes típico",
+        "Prefetching em hardware"
+      ],
+      examples: "Em matrizes: row-major vs column-major loops."
+    },
+    hints: ["Princípio de localidade", "Cache performance"]
+  },
+  {
+    id: 2,
+    question: "Qual pseudo-instrução otimiza jumps?",
+    code: "// Pseudo\nret  // jalr x0, x1, 0",
+    options: ["ret", "jr", "j", "tail"],
+    correct: 0,
+    explanation: "ret retorna de subroutine, otimizando uso de ra.",
+    theoryPoints: {
+      title: "Otimização em ASM",
+      content: "Use pseudo-instruções para código mais limpo/eficiente, minimize branches caros.",
+      keyPoints: [
+        "la: load address",
+        "mv: copy reg",
+        "ret: return",
+        "Evite stalls em pipeline"
+      ],
+      examples: "tail para chamadas sem retorno, otimiza stack."
+    },
+    hints: ["Reference Card: Pseudo Instructions", "Para subrotinas"]
+  }
+];

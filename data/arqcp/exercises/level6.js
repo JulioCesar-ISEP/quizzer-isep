@@ -1,0 +1,62 @@
+export const level6Exercises = [
+  {
+    id: 1,
+    question: "Qual flag de compilação é essencial para gdb?",
+    code: "// Compilação\nriscv32-unknown-elf-gcc -Wall -Wextra -fanalyzer -g ...",
+    options: ["-g", "-O2", "-Wall", "-march=rv32im"],
+    correct: 0,
+    explanation: "-g inclui debug info; sem ele, gdb não funciona corretamente.",
+    theoryPoints: {
+      title: "Depuração e Compilação",
+      content: "Use -g para symbols, -Wall/-Wextra para warnings. Corrija warnings antes de executar.",
+      keyPoints: [
+        "Makefile com regras específicas",
+        "cppcheck para análise estática",
+        "gdb: quit para encerrar",
+        "Testes de unidade verificam comportamento"
+      ],
+      examples: "make: compila modular (main.o func1.o func2.o)"
+    },
+    hints: ["Survival Tips: gdb não funciona sem", "Para depuração"]
+  },
+  {
+    id: 2,
+    question: "Qual é um erro comum em C mencionado nas tips?",
+    code: "// Erro comum\nstr = \"One\";  // wrong!",
+    options: ["Atribuição direta a string", "Uso de sizeof em pointer", "Uninitialized variables", "Todos acima"],
+    correct: 3,
+    explanation: "Strings em C não podem ser atribuídas diretamente; use strcpy. sizeof(pointer) retorna tamanho do pointer, não do array.",
+    theoryPoints: {
+      title: "Erros Comuns em C/ASM",
+      content: "Evite uninit vars, strings erradas, *ptr++ incorreto, convenções ABI erradas.",
+      keyPoints: [
+        "Inicialize vars",
+        "Strings: use strcpy/strcpy",
+        "Pointers: * não parte do nome",
+        "ASM: respeite savers"
+      ],
+      examples: "char str[10]; strcpy(str, \"Hello\"); // correto\nif (strcmp(str, \"\") == 0) // comparar"
+    },
+    hints: ["Survival_Tips section 4", "Strings, pointers, vars"]
+  },
+  {
+    id: 3,
+    question: "Como estruturar código para avaliação?",
+    code: "// Estrutura\nfunc1.s\nfunc2.s\nmain.c\nMakefile",
+    options: ["Modular: cada função em arquivo", "Tudo em um arquivo", "Sem comentários", "Sem indentação"],
+    correct: 0,
+    explanation: "Modular obrigatório (0% se não); comentários com ID, indentação.",
+    theoryPoints: {
+      title: "Estrutura e Avaliação",
+      content: "Global: 10% (implementação 30%, compilação 30%, execução 40%). ASM: 40% cada, com ABI.",
+      keyPoints: [
+        "Modular: 0% se não",
+        "Comentários/indent: 0-100%",
+        "Makefile: genérico 1-50%, específico 51-100%",
+        "Execução: testes além retorno"
+      ],
+      examples: "Em Exer2: func1.s, func2.s, main.c com chamadas."
+    },
+    hints: ["Exer_2_Crit: modular implica 0% se não", "Makefile específico"]
+  }
+];

@@ -1,0 +1,42 @@
+export const level4Exercises = [
+  {
+    id: 1,
+    question: "Qual instrução realiza branch se rs1 == rs2?",
+    code: "// Branches\n??? rs1, rs2, imm  // if equal, PC += imm",
+    options: ["beq", "bne", "blt", "bge"],
+    correct: 0,
+    explanation: "beq rs1, rs2, imm branch se iguais.",
+    theoryPoints: {
+      title: "Controle de Fluxo em RISC-V",
+      content: "Branches condicionais e jumps alteram PC para controle de fluxo.",
+      keyPoints: [
+        "beq/bne: equal/not equal",
+        "blt/bge: less/greater signed",
+        "bltu/bgeu: unsigned",
+        "jal/jalr: jumps com link"
+      ],
+      examples: "beq a0, zero, fim  // if a0==0, branch\njal ra, func  // call function"
+    },
+    hints: ["Para loops e ifs", "Comparação de igualdade"]
+  },
+  {
+    id: 2,
+    question: "O que acontece no ciclo fetch-decode-execute?",
+    code: "// Ciclo\n1. Fetch: lw IR, (PC)\n2. Decode: ???\n3. Execute: ALU ops",
+    options: ["Interpretar opcode e operandos", "Armazenar resultados", "Atualizar flags", "Interromper execução"],
+    correct: 0,
+    explanation: "Decode interpreta instrução, identifica operação e fontes.",
+    theoryPoints: {
+      title: "Modelo de Execução",
+      content: "Ciclo básico da CPU: fetch da memória, decode para controle, execute na ALU/registros.",
+      keyPoints: [
+        "PC aponta para próxima instrução",
+        "IR armazena instrução fetched",
+        "Atualização de PC após execute",
+        "Interrupções quebram o ciclo"
+      ],
+      examples: "Em RISC-V, fetch via lw-like, decode opcode, execute add/sub/etc."
+    },
+    hints: ["Passos da CPU por instrução", "O que vem após buscar?"]
+  }
+];

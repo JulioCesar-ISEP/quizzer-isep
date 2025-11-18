@@ -1,6 +1,6 @@
 import prcmp from './prcmp/prcmp';
 // import aprog from './aprog';
-// import arqcp from './arqcp';
+import arqcp from './arqcp/arqcp';
 
 const cadeiras = [
   {
@@ -11,23 +11,16 @@ const cadeiras = [
     color: "#3b82f6",
     xp: 100,
     levels: prcmp
+  },
+  {
+    id: 2,
+    name: "ARQCP - Arquitetura de Sistemas de Computadores",
+    description: "Visão geral dos componentes e modelos de sistemas computacionais",
+    icon: "Computer",
+    color: "#8b5cf6",
+    xp: 100,
+    levels: arqcp
   }
-  // {
-  //   id: 2,
-  //   name: "APROG - Algoritmos e Programação",
-  //   description: "",
-  //   icon: "",
-  //   color: "#8b5cf6",
-  //   levels: aprog
-  // },
-  // {
-  //   id: 3,
-  //   name: "ARQCP - Arquitetura de Computadores",
-  //   description: "",
-  //   icon: "",
-  //   color: "#f50b0bff",
-  //   levels: arqcp
-  // }
 ];
 
 export default cadeiras;
