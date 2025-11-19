@@ -17,6 +17,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
+import mermaid from 'mermaid';
 import 'katex/dist/katex.min.css';
 
 import '../../styles/components/KnowledgeTreeView.css';
@@ -102,13 +104,53 @@ const TreeNode = React.memo(({ node, nodeRefs, onNodeClick, selectedNode, studyP
   );
 });
 
-// ======================== MODAL DE CONTEÚDO ========================
+// ======================== MODAL DE CONTEÚDO CORRIGIDO ========================
 const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
   useEffect(() => {
     const handleEsc = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
+
+  // Inicializa o Mermaid
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { 
+        htmlLabels: true,
+        curve: 'basis'
+      },
+    });
+  }, []);
+
+  // Renderiza diagramas Mermaid
+  useEffect(() => {
+    if (node?.content) {
+      setTimeout(() => {
+        mermaid.contentLoaded();
+        // Renderiza apenas elementos mermaid que ainda não foram processados
+        const mermaidElements = document.querySelectorAll('.mermaid:not([data-processed])');
+        mermaidElements.forEach((element, index) => {
+          try {
+            const code = element.textContent.trim();
+            mermaid.render(`mermaid-${Date.now()}-${index}`, code, (svgCode) => {
+              element.innerHTML = svgCode;
+              element.setAttribute('data-processed', 'true');
+            });
+          } catch (error) {
+            console.error('Mermaid rendering error:', error);
+            element.innerHTML = `<div style="color: #ef4444; padding: 1rem; text-align: center;">
+              ❌ Erro ao renderizar diagrama Mermaid
+            </div>`;
+            element.setAttribute('data-processed', 'true');
+          }
+        });
+      }, 500);
+    }
+  }, [node?.content]);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -124,28 +166,156 @@ const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
           {node.content ? (
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex]}
+              rehypePlugins={[rehypeKatex, rehypeRaw]}
+              components={{
+                // PARÁGRAFO CORRIGIDO - evita div dentro de p
+                p: ({ children }) => {
+                  // Se contiver apenas um iframe, renderiza sem p
+                  const childrenArray = React.Children.toArray(children);
+                  if (childrenArray.some(child => 
+                    React.isValidElement(child) && 
+                    (child.props?.src?.includes('youtube.com') || child.type === 'iframe')
+                  )) {
+                    return <>{children}</>;
+                  }
+                  return <p className="content-paragraph">{children}</p>;
+                },
+
+                // MERMAID CORRIGIDO
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-mermaid/.exec(className || '');
+                  if (match) {
+                    return (
+                      <div className="mermaid-container">
+                        <pre className="mermaid-source" style={{ display: 'none' }}>
+                          {String(children).trim()}
+                        </pre>
+                        <div className="mermaid">
+                          {String(children).trim()}
+                        </div>
+                        <div className="mermaid-caption">
+                          Diagrama Mermaid - Role para visualizar completamente
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // CÓDIGO NORMAL
+                  const isCodeBlock = !inline && className;
+                  if (isCodeBlock) {
+                    return (
+                      <div className="code-block-container">
+                        <pre className="code-block">
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                        <div className="code-caption">
+                          Bloco de código - Role horizontalmente para visualizar
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <code className="inline-code" {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+
+                // IMAGENS CORRIGIDAS
+                img({ src, alt }) {
+                  return (
+                    <div className="image-container">
+                      <img
+                        src={src}
+                        alt={alt || 'Imagem do conteúdo'}
+                        className="content-image"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'block';
+                        }}
+                      />
+                      <div className="image-fallback" style={{display: 'none'}}>
+                        🖼️ {alt || 'Imagem não disponível'}
+                      </div>
+                      {alt && <div className="image-caption">{alt}</div>}
+                    </div>
+                  );
+                },
+
+                // YOUTUBE CORRIGIDO
+                iframe({ src, title, ...props }) {
+                  if (src?.includes('youtube.com') || src?.includes('youtu.be')) {
+                    return (
+                      <div className="video-container">
+                        <iframe
+                          src={src}
+                          title={title || 'Vídeo do YouTube'}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="youtube-iframe"
+                          {...props}
+                        />
+                        <div className="video-caption">
+                          {title || 'Vídeo incorporado do YouTube'}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return <iframe src={src} title={title} {...props} />;
+                },
+
+                // TABELAS
+                table({ children }) {
+                  return (
+                    <div className="table-container">
+                      <table className="content-table">
+                        {children}
+                      </table>
+                    </div>
+                  );
+                },
+
+                // HEADERS
+                h1({ children }) { return <h1 className="content-h1">{children}</h1>; },
+                h2({ children }) { return <h2 className="content-h2">{children}</h2>; },
+                h3({ children }) { return <h3 className="content-h3">{children}</h3>; },
+
+                // LINKS
+                a({ href, children }) {
+                  return (
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="content-link">
+                      {children}
+                    </a>
+                  );
+                }
+              }}
             >
               {node.content}
             </ReactMarkdown>
           ) : (
-            <p style={{ color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', marginTop: '3rem' }}>
-              Conteúdo em desenvolvimento... Em breve aqui estará a explicação completa! 🚀
-            </p>
+            <div className="no-content">
+              <p>📝 Conteúdo em desenvolvimento...</p>
+              <small>Esta seção estará disponível em breve</small>
+            </div>
           )}
         </div>
 
         <div className="modal-footer">
-          <button className="action-button" onClick={() => onMarkAsStudied(node.id)}>
+          <button 
+            className={`action-button ${isStudied ? 'studied' : 'not-studied'}`}
+            onClick={() => onMarkAsStudied(node.id)}
+          >
             <CheckCircle size={20} />
-            {isStudied ? 'Revisado' : 'Marcar como estudado'}
+            {isStudied ? '✅ Revisado' : '📚 Marcar como estudado'}
           </button>
         </div>
       </div>
     </div>
   );
 };
-
 // ======================== COMPONENTE PRINCIPAL ========================
 const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
   const [selectedNode, setSelectedNode] = useState(null);
@@ -304,7 +474,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
           </div>
         </div>
 
-        {/* Só temos o diagrama agora, botão sempre ativo */}
         <div className="view-controls">
           <button className="view-button active">
             <Network size={18} /> Diagrama
@@ -312,7 +481,7 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
         </div>
       </div>
 
-      {/* MAIN CONTENT - sempre diagrama */}
+      {/* MAIN CONTENT */}
       <div className="main-layout">
         <div className="diagram-container">
           <div className="flowchart" ref={flowchartRef}>
