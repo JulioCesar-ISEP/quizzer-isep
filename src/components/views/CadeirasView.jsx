@@ -15,89 +15,78 @@ const CadeirasView = ({
 }) => {
   return (
     <div className="ape-main-content">
-      {/* Header Section */}
+      {/* Header Compact */}
       <div className="ape-welcome-section">
-        <h2 className="ape-welcome-title">Ape Level - Laboratório de Conhecimento</h2>
+        <h2 className="ape-welcome-title">Ape Level</h2>
         <p className="ape-welcome-subtitle">Passe no teste. Suba de nível. Domine a faculdade.</p>
       </div>
 
-      {/* Critical Gaps Warning */}
+      {/* Critical Gaps - apenas se houver */}
       {criticalGaps.length > 0 && (
         <div className="ape-critical-gaps">
           <div className="ape-critical-gaps-header">
-            <AlertTriangle size={24} />
-            <h3 className="ape-critical-gaps-title">Lacunas Críticas Detectadas</h3>
+            <AlertTriangle size={18} />
+            <h3>Lacunas Críticas Detectadas</h3>
           </div>
           <div className="ape-gaps-list">
-            {criticalGaps.slice(0, 3).map((gap, index) => (
+            {criticalGaps.slice(0, 2).map((gap, index) => (
               <div key={index} className="ape-gap-item">
                 <span className="ape-gap-name">{gap.name}</span>
                 <span className="ape-gap-severity">{gap.severity}</span>
-                <button className="ape-fix-gap-btn">
-                  Corrigir Lacuna
-                </button>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Stats Overview */}
+      {/* Stats Overview Compact */}
       <div className="ape-stats-overview">
         <div className="ape-stat-item">
-          <div className="ape-stat-icon">
-            <Trophy size={24} />
-          </div>
+          <Trophy size={18} />
           <div className="ape-stat-content">
             <span className="ape-stat-number">{Object.values(completedLevels).flat().length}</span>
-            <span className="ape-stat-label">Níveis Dominados</span>
+            <span className="ape-stat-label">Níveis</span>
           </div>
         </div>
         <div className="ape-stat-item">
-          <div className="ape-stat-icon">
-            <Zap size={24} />
-          </div>
+          <Zap size={18} />
           <div className="ape-stat-content">
             <span className="ape-stat-number">{totalXP}</span>
-            <span className="ape-stat-label">Bananas Coletadas</span>
+            <span className="ape-stat-label">Bananas</span>
           </div>
         </div>
         <div className="ape-stat-item">
-          <div className="ape-stat-icon">
-            <Flame size={24} />
-          </div>
+          <Flame size={18} />
           <div className="ape-stat-content">
             <span className="ape-stat-number">{maxStreak}</span>
-            <span className="ape-stat-label">Sequência Máxima</span>
+            <span className="ape-stat-label">Sequência</span>
           </div>
         </div>
         <div className="ape-stat-item">
-          <div className="ape-stat-icon">
-            <TrendingUp size={24} />
-          </div>
+          <TrendingUp size={18} />
           <div className="ape-stat-content">
             <span className="ape-stat-number">{dailyStats.successRate}%</span>
-            <span className="ape-stat-label">Eficiência no Lab</span>
+            <span className="ape-stat-label">Eficiência</span>
           </div>
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons Compact */}
       <div className="ape-action-buttons">
         <button onClick={onDownloadReport} className="ape-btn ape-btn-secondary">
-          <Download size={20} />
-          Relatório do Laboratório
+          <Download size={16} />
+          Relatório
         </button>
         <button onClick={onResetProgress} className="ape-btn ape-btn-danger">
-          <RotateCw size={20} />
-          Reiniciar Experimentos
+          <RotateCw size={16} />
+          Reiniciar
         </button>
       </div>
 
-      {/* Cadeiras Grid */}
+      {/* Cadeiras Grid Compact */}
       <div className="ape-cadeiras-section">
         <h3 className="ape-section-title">
-          <Brain size={28} />
+          <Brain size={20} />
           Árvore do Conhecimento
         </h3>
         <div className="ape-cadeiras-grid">
@@ -114,22 +103,17 @@ const CadeirasView = ({
                 onClick={() => onSelectCadeira(cadeira.id)}
                 role="button"
                 tabIndex={0}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    onSelectCadeira(cadeira.id);
-                  }
-                }}
               >
                 <div className="ape-cadeira-header">
                   <div className="ape-cadeira-icon">
-                    {cadeira.icon === 'Cpu' ? <Cpu size={28} /> :
-                     cadeira.icon === 'Code' ? <Code size={28} /> :
-                     cadeira.icon === 'Brain' ? <Brain size={28} /> :
-                     <FileText size={28} />}
+                    {cadeira.icon === 'Cpu' ? <Cpu size={20} /> :
+                     cadeira.icon === 'Code' ? <Code size={20} /> :
+                     cadeira.icon === 'Brain' ? <Brain size={20} /> :
+                     <FileText size={20} />}
                   </div>
                   {isFullyCompleted && (
-                    <div className="ape-completion-badge" title="Conceito totalmente dominado">
-                      <CheckCircle size={20} />
+                    <div className="ape-completion-badge">
+                      <CheckCircle size={16} />
                     </div>
                   )}
                 </div>
@@ -140,19 +124,15 @@ const CadeirasView = ({
                   
                   <div className="ape-cadeira-meta">
                     <span className="ape-meta-item">
-                      <FileText size={16} />
-                      {totalLevelsCount} nó{totalLevelsCount !== 1 ? 's' : ''}
-                    </span>
-                    <span className="ape-meta-item">
-                      <Zap size={16} />
-                      +{cadeira.xp} bananas
+                      <FileText size={14} />
+                      {totalLevelsCount} níveis
                     </span>
                   </div>
                   
                   <div className="ape-progress-info">
                     <div className="ape-progress-header">
                       <span className="ape-progress-text">
-                        {completedLevelsCount}/{totalLevelsCount} nós dominados
+                        {completedLevelsCount}/{totalLevelsCount}
                       </span>
                       <span className="ape-progress-percentage">
                         {Math.round(progressPercentage)}%
@@ -162,16 +142,15 @@ const CadeirasView = ({
                       <div
                         className="ape-progress-fill"
                         style={{ width: `${progressPercentage}%` }}
-                        aria-label={`Progresso: ${Math.round(progressPercentage)}% dominado`}
                       />
                     </div>
                   </div>
                 </div>
                 
                 <div className="ape-cadeira-footer">
-                  <button className="ape-start-btn" aria-label={`Explorar ${cadeira.name}`}>
-                    {isFullyCompleted ? 'Revisar Nós' : 'Iniciar Lab'}
-                    <ArrowRight size={16} />
+                  <button className="ape-start-btn">
+                    {isFullyCompleted ? 'Revisar' : 'Iniciar'}
+                    <ArrowRight size={14} />
                   </button>
                 </div>
               </div>

@@ -1,11 +1,11 @@
-/* QuizzerIsep.css - Versão Otimizada Sem Header */
+/* QuizzerIsep.css - Versão Sem Scroll */
 .ape-quizzer-app {
-  min-height: 100vh;
+  height: 100vh; /* Alterado de min-height para height */
   background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
   font-family: 'Segoe UI', system-ui, sans-serif;
   transition: all 0.3s ease;
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden; /* Alterado de overflow-x: hidden para overflow: hidden */
 }
 
 .ape-quizzer-app::before {
@@ -35,13 +35,13 @@
     radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
 }
 
-/* Main Content Area - Sem header, mais espaço */
+/* Main Content Area - Sem scroll */
 .ape-main-content-area {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  height: 100%; /* Alterado para 100% da altura do container pai */
   padding: 0;
-  overflow-y: auto;
+  overflow: hidden; /* Removido overflow-y: auto */
 }
 
 /* Loading Screen */
@@ -50,7 +50,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100%; /* Alterado de min-height: 100vh para height: 100% */
   gap: 1.5rem;
   text-align: center;
   padding: 2rem;
@@ -115,7 +115,7 @@
   color: #64748b;
 }
 
-/* Session Stats Overlay - Ajustado para topo sem header */
+/* Session Stats Overlay */
 .ape-session-stats {
   position: fixed;
   top: 1rem;
@@ -201,7 +201,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100%; /* Alterado de min-height: 100vh para height: 100% */
   padding: 1.5rem;
   text-align: center;
   gap: 1.5rem;

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTheme } from './hooks/useTheme';
+// QuizzerIsep.jsx (versão atualizada sem scroll e sem loop infinito)
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTimer } from './hooks/useTimer';
 import { useProgress } from './hooks/useProgress';
 import { useReports } from './hooks/useReports';
@@ -14,8 +14,7 @@ import SessionStats from './components/ui/SessionStats';
 import cadeiras from '../data/cadeiras';
 import './styles/QuizzerIsep.css';
 
-const QuizzerIsep = () => {
-  const [currentView, setCurrentView] = useState('cadeiras');
+const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) => {
   const [selectedCadeira, setSelectedCadeira] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [showTheory, setShowTheory] = useState(false);
@@ -36,11 +35,26 @@ const QuizzerIsep = () => {
     quizFinished: false
   });
 
-  const { isDark, toggleTheme } = useTheme();
   const { timeSpent, resetTimer, setStartTime } = useTimer(currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished);
   const { completedLevels, totalXP, addCompletedLevel, addXP, resetProgress, getCadeiraCompletedLevels } = useProgress();
   const { dailyStats, downloadReport, initializeReports } = useReports();
   const { achievements, checkAchievements, unlockAchievement } = useAchievements();
+
+  // Refs para prevenir loop infinito
+  const lastProgressUpdate = useRef({ xp: 0, progress: 0 });
+
+  // Atualizar progresso no App pai - CORRIGIDO PARA EVITAR LOOP
+  useEffect(() => {
+    const totalLevels = cadeiras.reduce((acc, c) => acc + c.levels.length, 0);
+    const completedCount = Object.values(completedLevels).flat().length;
+    const progress = Math.round((completedCount / totalLevels) * 100);
+    
+    // Só atualiza se os valores realmente mudaram
+    if (lastProgressUpdate.current.xp !== totalXP || lastProgressUpdate.current.progress !== progress) {
+      lastProgressUpdate.current = { xp: totalXP, progress };
+      onProgressUpdate(totalXP, progress);
+    }
+  }, [totalXP, completedLevels, onProgressUpdate]);
 
   // Funções auxiliares
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
@@ -123,29 +137,29 @@ const QuizzerIsep = () => {
 
   // Funções de navegação
   const goToCadeiras = useCallback(() => {
-    setCurrentView('cadeiras');
+    onViewChange('cadeiras');
     setSelectedCadeira(null);
     setSelectedLevel(null);
     resetQuizState();
-  }, []);
+  }, [onViewChange]);
 
   const goToLevels = useCallback(() => {
-    setCurrentView('levels');
+    onViewChange('levels');
     setSelectedLevel(null);
-  }, []);
+  }, [onViewChange]);
 
   const startLevel = useCallback((levelId) => {
     setSelectedLevel(levelId);
-    setCurrentView('quiz');
+    onViewChange('quiz');
     resetTimer();
     resetQuizState();
     setStartTime(Date.now());
-  }, [resetTimer, setStartTime]);
+  }, [onViewChange, resetTimer, setStartTime]);
 
   const openKnowledgeTree = useCallback((levelId) => {
     setSelectedLevel(levelId);
-    setCurrentView('knowledge-tree');
-  }, []);
+    onViewChange('knowledge-tree');
+  }, [onViewChange]);
 
   const resetQuizState = useCallback(() => {
     setQuizState({
@@ -308,9 +322,9 @@ const QuizzerIsep = () => {
       resetQuizState();
       setSelectedLevel(null);
       setSelectedCadeira(null);
-      setCurrentView('cadeiras');
+      onViewChange('cadeiras');
     }
-  }, [resetProgress, resetQuizState]);
+  }, [resetProgress, resetQuizState, onViewChange]);
 
   const saveComment = useCallback((text) => {
     setCurrentComment(text);
@@ -362,7 +376,7 @@ const QuizzerIsep = () => {
             maxStreak={maxStreak}
             onSelectCadeira={(cadeiraId) => {
               setSelectedCadeira(cadeiraId);
-              setCurrentView('levels');
+              onViewChange('levels');
             }}
             onDownloadReport={handleDownloadReport}
             onResetProgress={handleResetProgress}
@@ -415,7 +429,7 @@ const QuizzerIsep = () => {
               isQuizFinished={quizState.quizFinished}
               onBackToLevels={() => {
                 setQuizState(prev => ({ ...prev, levelCompleted: false }));
-                setCurrentView('levels');
+                onViewChange('levels');
               }}
               onBackToCadeiras={goToCadeiras}
               onDownloadReport={handleDownloadReport}
@@ -443,7 +457,7 @@ const QuizzerIsep = () => {
             onGoToExercise={goToExercise}
             onShowResults={showResultsScreen}
             onFinishQuiz={finishQuiz}
-            onBack={() => setCurrentView('levels')}
+            onBack={() => onViewChange('levels')}
             onShowTheory={() => setShowTheory(true)}
             comments={comments}
             currentComment={currentComment}
@@ -460,8 +474,6 @@ const QuizzerIsep = () => {
 
   return (
     <div className={`ape-quizzer-app ${isDark ? 'dark-theme' : 'light-theme'}`}>
-      {/* Header removido conforme solicitado */}
-      
       {/* Session Stats */}
       {currentView === 'quiz' && (
         <SessionStats
@@ -474,9 +486,10 @@ const QuizzerIsep = () => {
       )}
 
       {/* Main Content */}
-      <main className="ape-main-content-area">
+      <div className="ape-quizzer-content">
         {renderCurrentView()}
-      </main>
+      </div>
+      
       {achievements.map(achievement => (
         <AchievementPopup
           key={achievement.id}

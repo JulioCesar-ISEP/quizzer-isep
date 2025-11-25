@@ -1,28 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Home, User, Zap, Brain } from 'lucide-react';
 import '../../styles/ui/Header.css';
 
 const Header = ({ 
   currentView, 
   onNavigate,
-  onBack, // Mantemos onBack para a funcionalidade de voltar ao início
+  onBack,
   user = null,
   xp = 0,
   progress = 0,
   compact = false,
   loading = false
 }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const getUserRank = (xp) => {
     if (xp >= 10000) return 'Homo Sapiens';
     if (xp >= 5000) return 'Gorila';
@@ -32,9 +21,21 @@ const Header = ({
   };
 
   const navigationItems = [
-    { id: 'home', icon: Home, label: 'Início' },
+    { id: 'cadeiras', icon: Home, label: 'Início' },
     { id: 'profile', icon: User, label: 'Perfil' }
   ];
+
+  // Função específica para o botão Início que sempre volta para a página inicial
+  const handleHomeClick = () => {
+    // Primeiro navega para a view home
+    if (onNavigate) {
+      onNavigate('cadeiras');
+    }
+    // Depois executa a função de voltar (que provavelmente reseta para o estado inicial)
+    if (onBack) {
+      onBack();
+    }
+  };
 
   const handleNavigation = (viewId) => {
     if (onNavigate) {
@@ -42,19 +43,7 @@ const Header = ({
     }
     
     // Se clicou no "Início" E temos uma função onBack, executa a função de voltar
-    if (viewId === 'home' && onBack) {
-      onBack();
-    }
-  };
-
-  // Função específica para o botão Início que sempre volta para a página inicial
-  const handleHomeClick = () => {
-    // Primeiro navega para a view home
-    if (onNavigate) {
-      onNavigate('home');
-    }
-    // Depois executa a função de voltar (que provavelmente reseta para o estado inicial)
-    if (onBack) {
+    if (viewId === 'cadeiras' && onBack) {
       onBack();
     }
   };
@@ -75,7 +64,7 @@ const Header = ({
   }
 
   return (
-    <div className={`ape-main-header ${isScrolled ? 'scrolled' : ''} ${compact ? 'compact' : ''}`}>
+    <div className={`ape-main-header ${compact ? 'compact' : ''}`}>
       <div className="ape-header-content">
         {/* Left Section - Logo and Title */}
         <div className="ape-header-left">
@@ -93,7 +82,7 @@ const Header = ({
                   <button
                     key={item.id}
                     className={`ape-nav-item ${currentView === item.id ? 'active' : ''}`}
-                    onClick={() => item.id === 'home' ? handleHomeClick() : handleNavigation(item.id)}
+                    onClick={() => item.id === 'cadeiras' ? handleHomeClick() : handleNavigation(item.id)}
                   >
                     <Icon size={16} />
                     {item.label}
@@ -128,21 +117,6 @@ const Header = ({
           )}
         </div>
       </div>
-
-      {/* Progress Bar */}
-      {progress > 0 && (
-        <div className="ape-header-progress">
-          <div
-            className="ape-header-progress-fill"
-            style={{ width: `${progress}%` }}
-            aria-label={`Progresso geral: ${Math.round(progress)}%`}
-            role="progressbar"
-            aria-valuenow={Math.round(progress)}
-            aria-valuemin="0"
-            aria-valuemax="100"
-          />
-        </div>
-      )}
     </div>
   );
 };
