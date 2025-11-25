@@ -1,4 +1,4 @@
-/* QuizView.css */
+/* QuizView.css - Versão Otimizada */
 .ape-quiz-screen {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
@@ -7,50 +7,52 @@
   overflow-x: hidden;
 }
 
-/* Results Screen */
+/* Results Screen - Mais Compacta */
 .ape-results-screen {
-  padding: 2rem;
+  padding: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .ape-results-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 20px;
+  padding: 1.5rem;
+  border-radius: 16px;
   border: 1px solid rgba(255, 215, 0, 0.1);
 }
 
 .ape-results-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
 
 .ape-results-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #94a3b8;
   font-weight: 500;
+  line-height: 1.3;
 }
 
 .ape-results-summary {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .ape-score-card-large {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 215, 0, 0.3);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 16px;
+  padding: 1.5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -62,7 +64,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: linear-gradient(90deg, #ffd700, #ffed4e);
 }
 
@@ -71,9 +73,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   color: #ffd700;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .ape-score-icon {
@@ -81,7 +84,7 @@
 }
 
 .ape-score-value-large {
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #ffd700;
   line-height: 1;
@@ -89,41 +92,41 @@
 }
 
 .ape-score-value-large span {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #94a3b8;
 }
 
 .ape-score-percentage-large {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #22c55e;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .ape-progress-bar-large {
   width: 100%;
-  height: 12px;
+  height: 10px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  border-radius: 5px;
   overflow: hidden;
 }
 
 .ape-progress-fill-large {
   height: 100%;
   background: linear-gradient(90deg, #ffd700, #ffed4e);
-  border-radius: 6px;
+  border-radius: 5px;
   transition: width 1s ease;
 }
 
 .ape-results-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .ape-stat-result {
   background: rgba(255, 255, 255, 0.08);
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
@@ -131,30 +134,32 @@
 
 .ape-stat-label {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #94a3b8;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .ape-stat-value {
   display: block;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #ffd700;
+  line-height: 1;
 }
 
-/* Questions Review */
+/* Questions Review - Mais Compacto */
 .ape-questions-review {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .ape-review-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #e2e8f0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -162,19 +167,20 @@
 
 .ape-questions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
 }
 
 .ape-question-review-item {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.25rem;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  min-height: 80px;
 }
 
 .ape-question-review-item::before {
@@ -183,7 +189,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   transition: all 0.3s ease;
 }
 
@@ -200,15 +206,16 @@
 }
 
 .ape-question-review-item:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: rgba(255, 215, 0, 0.3);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
 }
 
 .ape-question-number {
   font-weight: 600;
   color: #e2e8f0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
 }
 
 .ape-question-status {
@@ -226,27 +233,31 @@
 }
 
 .ape-unanswered-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: #94a3b8;
   color: #1a1f2e;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 
 .ape-question-preview {
   color: #94a3b8;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .ape-question-status-text {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -271,25 +282,25 @@
   flex-wrap: wrap;
 }
 
-/* Quiz Content */
+/* Quiz Content - Mais Compacto */
 .ape-quiz-content {
-  padding: 2rem;
+  padding: 1.5rem;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-/* Questions Navigation */
+/* Questions Navigation - Mais Compacto */
 .ape-questions-navigation {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .ape-nav-buttons {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 0.75rem;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -297,12 +308,13 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.25rem;
   background: rgba(255, 215, 0, 0.1);
   color: #ffd700;
   border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 8px;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -315,27 +327,27 @@
 
 .ape-nav-btn:hover:not(:disabled) {
   background: rgba(255, 215, 0, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .ape-questions-dots {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
   justify-content: center;
   flex: 1;
 }
 
 .ape-question-dot {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 2px solid;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -344,7 +356,7 @@
   border-color: #ffd700;
   background: rgba(255, 215, 0, 0.2);
   color: #ffd700;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .ape-question-dot.answered {
@@ -360,35 +372,35 @@
 }
 
 .ape-question-dot:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
 }
 
-/* Question Container */
+/* Question Container - Mais Compacto */
 .ape-question-container {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
 }
 
 .ape-question-card {
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .ape-question-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   gap: 1rem;
 }
 
 .ape-question-text {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #e2e8f0;
-  line-height: 1.5;
+  line-height: 1.4;
   flex: 1;
   margin: 0;
 }
@@ -396,7 +408,7 @@
 .ape-question-meta {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   align-items: flex-end;
   flex-shrink: 0;
 }
@@ -404,9 +416,9 @@
 .ape-question-number-badge {
   background: rgba(255, 215, 0, 0.2);
   color: #ffd700;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -415,9 +427,9 @@
 .ape-answered-badge {
   background: rgba(34, 197, 94, 0.2);
   color: #22c55e;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -426,17 +438,17 @@
   letter-spacing: 0.5px;
 }
 
-/* Options Grid */
+/* Options Grid - Mais Compacto */
 .ape-options-grid {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .ape-option-button {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1.25rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
@@ -446,8 +458,8 @@
 
 .ape-option-button:hover:not(:disabled) {
   border-color: rgba(255, 215, 0, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
 }
 
 .ape-option-button.selected {
@@ -473,20 +485,20 @@
 .ape-option-content {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .ape-option-letter {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   background: rgba(255, 215, 0, 0.2);
   color: #ffd700;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
@@ -507,14 +519,14 @@
 
 .ape-option-text {
   color: #e2e8f0;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.4;
   flex: 1;
 }
 
-/* Finish Quiz Section */
+/* Finish Quiz Section - Mais Compacto */
 .ape-finish-quiz-section {
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -523,35 +535,79 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 2rem;
+  padding: 0.9rem 1.75rem;
   background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   margin: 0 auto;
 }
 
 .ape-finish-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
 }
 
-/* Responsive Design */
+/* Botões Padrão */
+.ape-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ape-btn-primary {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #1a1f2e;
+}
+
+.ape-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+}
+
+.ape-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ape-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design - Otimizado */
 @media (max-width: 768px) {
   .ape-quiz-content {
     padding: 1rem;
   }
   
+  .ape-results-screen {
+    padding: 1rem;
+  }
+  
   .ape-results-summary {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
   .ape-results-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
   }
   
   .ape-questions-grid {
@@ -560,6 +616,7 @@
   
   .ape-nav-buttons {
     flex-direction: column;
+    gap: 0.5rem;
   }
   
   .ape-questions-dots {
@@ -569,6 +626,7 @@
   .ape-question-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.75rem;
   }
   
   .ape-question-meta {
@@ -580,21 +638,87 @@
   
   .ape-results-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .ape-score-value-large {
+    font-size: 2.5rem;
+  }
+  
+  .ape-results-title {
+    font-size: 1.75rem;
+  }
+  
+  .ape-results-subtitle {
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .ape-questions-dots {
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
   
   .ape-question-dot {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     font-size: 0.8rem;
   }
   
   .ape-score-value-large {
-    font-size: 3rem;
+    font-size: 2rem;
+  }
+  
+  .ape-score-value-large span {
+    font-size: 1.2rem;
+  }
+  
+  .ape-results-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .ape-stat-result {
+    padding: 1rem;
+  }
+  
+  .ape-stat-value {
+    font-size: 1.3rem;
+  }
+  
+  .ape-question-text {
+    font-size: 1.1rem;
+  }
+  
+  .ape-option-button {
+    padding: 1rem;
+  }
+  
+  .ape-option-letter {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  
+  .ape-option-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ape-question-review-item,
+  .ape-option-button,
+  .ape-nav-btn,
+  .ape-finish-btn,
+  .ape-btn {
+    transition: none;
+  }
+  
+  .ape-question-review-item:hover,
+  .ape-option-button:hover:not(:disabled),
+  .ape-nav-btn:hover:not(:disabled),
+  .ape-finish-btn:hover,
+  .ape-btn:hover {
+    transform: none;
   }
 }

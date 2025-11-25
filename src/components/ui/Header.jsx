@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Sun, Moon, Home, BookOpen, Trophy, User, Zap, ChevronLeft, Brain } from 'lucide-react';
+import { Sparkles, Home, User, Zap, Brain } from 'lucide-react';
 import '../../styles/ui/Header.css';
 
 const Header = ({ 
-  isDark, 
-  toggleTheme, 
   currentView, 
-  onBack, 
-  showBackButton = false,
+  onNavigate,
+  onBack, // Mantemos onBack para a funcionalidade de voltar ao início
   user = null,
   xp = 0,
   progress = 0,
@@ -33,23 +31,33 @@ const Header = ({
     return 'Iniciante';
   };
 
-  const getViewName = (view) => {
-    const viewNames = {
-      'cadeiras': 'Árvore do Conhecimento',
-      'levels': 'Laboratório de Níveis',
-      'quiz': 'Desafio do Lab',
-      'completion': 'Conquista',
-      'profile': 'Perfil do Símio'
-    };
-    return viewNames[view] || 'Ape Level';
+  const navigationItems = [
+    { id: 'home', icon: Home, label: 'Início' },
+    { id: 'profile', icon: User, label: 'Perfil' }
+  ];
+
+  const handleNavigation = (viewId) => {
+    if (onNavigate) {
+      onNavigate(viewId);
+    }
+    
+    // Se clicou no "Início" E temos uma função onBack, executa a função de voltar
+    if (viewId === 'home' && onBack) {
+      onBack();
+    }
   };
 
-  const navigationItems = [
-    { id: 'cadeiras', icon: Home, label: 'Início' },
-    { id: 'levels', icon: BookOpen, label: 'Níveis' },
-    { id: 'profile', icon: User, label: 'Perfil' },
-    { id: 'leaderboard', icon: Trophy, label: 'Ranking' }
-  ];
+  // Função específica para o botão Início que sempre volta para a página inicial
+  const handleHomeClick = () => {
+    // Primeiro navega para a view home
+    if (onNavigate) {
+      onNavigate('home');
+    }
+    // Depois executa a função de voltar (que provavelmente reseta para o estado inicial)
+    if (onBack) {
+      onBack();
+    }
+  };
 
   if (loading) {
     return (
@@ -60,11 +68,6 @@ const Header = ({
               <Sparkles size={compact ? 24 : 32} />
             </div>
             <h1 className="ape-app-title">Ape Level</h1>
-          </div>
-          <div className="ape-header-actions">
-            <button className="ape-theme-toggle-btn">
-              <Moon size={24} />
-            </button>
           </div>
         </div>
       </div>
@@ -90,7 +93,7 @@ const Header = ({
                   <button
                     key={item.id}
                     className={`ape-nav-item ${currentView === item.id ? 'active' : ''}`}
-                    onClick={() => {/* Add navigation handler */}}
+                    onClick={() => item.id === 'home' ? handleHomeClick() : handleNavigation(item.id)}
                   >
                     <Icon size={16} />
                     {item.label}
@@ -123,27 +126,6 @@ const Header = ({
               {xp}
             </div>
           )}
-
-          {/* Back Button */}
-          {showBackButton && onBack && (
-            <button 
-              onClick={onBack} 
-              className="ape-back-btn"
-              aria-label="Voltar"
-            >
-              <ChevronLeft size={20} />
-              {!compact && <span>Voltar</span>}
-            </button>
-          )}
-
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="ape-theme-toggle-btn"
-            aria-label={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
-          >
-            {isDark ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
         </div>
       </div>
 

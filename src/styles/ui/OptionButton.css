@@ -1,15 +1,15 @@
-/* OptionButton.css */
+/* OptionButton.css - Versão Otimizada */
 .ape-option-button {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
-  padding: 1.5rem;
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
+  border-radius: 12px;
   color: #e2e8f0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -37,8 +37,8 @@
 .ape-option-button:hover:not(:disabled) {
   border-color: rgba(255, 215, 0, 0.4);
   background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
 }
 
 .ape-option-button:focus-visible {
@@ -52,17 +52,17 @@
 
 /* Option Letter */
 .ape-option-letter {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 215, 0, 0.2);
   color: #ffd700;
   border: 2px solid rgba(255, 215, 0, 0.3);
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.95rem;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
@@ -76,7 +76,7 @@
 /* Option Text */
 .ape-option-text {
   flex: 1;
-  line-height: 1.5;
+  line-height: 1.4;
   transition: all 0.3s ease;
 }
 
@@ -84,17 +84,11 @@
   color: #f8fafc;
 }
 
-/* Option Icon */
-.ape-option-icon {
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
 /* Selected State */
 .ape-option-button.selected {
   border-color: #ffd700;
   background: rgba(255, 215, 0, 0.1);
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
 }
 
 .ape-option-button.selected .ape-option-letter {
@@ -113,7 +107,7 @@
 .ape-option-button.correct {
   border-color: #22c55e;
   background: rgba(34, 197, 94, 0.1);
-  animation: correctPulse 0.5s ease;
+  animation: correctPulse 0.4s ease;
 }
 
 @keyframes correctPulse {
@@ -141,14 +135,14 @@
 
 .ape-option-button.correct .ape-option-icon {
   color: #22c55e;
-  animation: bounceIn 0.5s ease;
+  animation: bounceIn 0.4s ease;
 }
 
 /* Incorrect State */
 .ape-option-button.incorrect {
   border-color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
-  animation: shake 0.5s ease;
+  animation: shake 0.4s ease;
 }
 
 @keyframes shake {
@@ -156,10 +150,10 @@
     transform: translateX(0);
   }
   25% {
-    transform: translateX(-5px);
+    transform: translateX(-4px);
   }
   75% {
-    transform: translateX(5px);
+    transform: translateX(4px);
   }
 }
 
@@ -176,7 +170,7 @@
 
 .ape-option-button.incorrect .ape-option-icon {
   color: #ef4444;
-  animation: bounceIn 0.5s ease;
+  animation: bounceIn 0.4s ease;
 }
 
 @keyframes bounceIn {
@@ -233,40 +227,40 @@
 
 /* Compact Version */
 .ape-option-button.compact {
-  padding: 1.25rem;
-  gap: 0.75rem;
+  padding: 1rem;
+  gap: 0.6rem;
 }
 
 .ape-option-button.compact .ape-option-letter {
-  width: 36px;
-  height: 36px;
-  font-size: 0.9rem;
-}
-
-.ape-option-button.compact .ape-option-text {
-  font-size: 0.95rem;
-}
-
-/* Mini Version */
-.ape-option-button.mini {
-  padding: 1rem;
-  gap: 0.75rem;
-  border-radius: 12px;
-}
-
-.ape-option-button.mini .ape-option-letter {
   width: 32px;
   height: 32px;
   font-size: 0.85rem;
 }
 
-.ape-option-button.mini .ape-option-text {
+.ape-option-button.compact .ape-option-text {
   font-size: 0.9rem;
+}
+
+/* Mini Version */
+.ape-option-button.mini {
+  padding: 0.75rem;
+  gap: 0.6rem;
+  border-radius: 10px;
+}
+
+.ape-option-button.mini .ape-option-letter {
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+}
+
+.ape-option-button.mini .ape-option-text {
+  font-size: 0.85rem;
 }
 
 /* Success Celebration */
 .ape-option-button.correct.celebrating {
-  animation: celebrateSuccess 0.6s ease;
+  animation: celebrateSuccess 0.5s ease;
 }
 
 @keyframes celebrateSuccess {
@@ -274,7 +268,7 @@
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
@@ -311,28 +305,24 @@
   color: transparent;
 }
 
+/* XP Badge */
+.ape-xp-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .ape-option-button {
-    padding: 1.25rem;
-    gap: 0.75rem;
-  }
-  
-  .ape-option-letter {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-  }
-  
-  .ape-option-text {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .ape-option-button {
     padding: 1rem;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
   
   .ape-option-letter {
@@ -344,10 +334,27 @@
   .ape-option-text {
     font-size: 0.9rem;
   }
+}
+
+@media (max-width: 480px) {
+  .ape-option-button {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .ape-option-letter {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .ape-option-text {
+    font-size: 0.85rem;
+  }
   
   .ape-option-button.compact,
   .ape-option-button.mini {
-    padding: 0.75rem;
+    padding: 0.6rem;
   }
 }
 
@@ -388,30 +395,6 @@
   
   .ape-option-icon {
     animation: none;
-  }
-}
-/* XP Badge */
-.ape-xp-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #1a1f2e;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  animation: slideInXp 0.5s ease;
-}
-
-@keyframes slideInXp {
-  from {
-    opacity: 0;
-    transform: translateX(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 

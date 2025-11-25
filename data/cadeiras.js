@@ -12,15 +12,15 @@ const cadeiras = [
     xp: 100,
     levels: prcmp
   },
-  {
-    id: 2,
-    name: "ARQCP - Arquitetura de Sistemas de Computadores",
-    description: "Visão geral dos componentes e modelos de sistemas computacionais",
-    icon: "Computer",
-    color: "#8b5cf6",
-    xp: 100,
-    levels: arqcp
-  }
+  // {
+  //   id: 2,
+  //   name: "ARQCP - Arquitetura de Sistemas de Computadores",
+  //   description: "Visão geral dos componentes e modelos de sistemas computacionais",
+  //   icon: "Computer",
+  //   color: "#8b5cf6",
+  //   xp: 100,
+  //   levels: arqcp
+  // }
 ];
 
 export default cadeiras;

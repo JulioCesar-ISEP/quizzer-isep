@@ -1,7 +1,6 @@
 import React from 'react';
 import { CheckCircle, XCircle, BookOpen, Lightbulb, ArrowLeft, ArrowRight, Flag, CheckSquare, Zap, Trophy, Clock, Star } from 'lucide-react';
 import QuizHeader from '../ui/QuizHeader';
-import QuizStats from '../ui/QuizStats';
 import OptionButton from '../ui/OptionButton';
 import CommentSection from '../ui/CommentSection';
 import SolutionPanel from '../ui/SolutionPanel';
@@ -177,131 +176,126 @@ const QuizView = ({
       )}
 
       <QuizHeader
-        levelName={level.name}
         currentExercise={currentExerciseIndex}
         totalExercises={totalExercises}
         onBack={onBack}
         onShowTheory={onShowTheory}
         showTheoryButton={showTheoryButton}
+        difficulty={level.difficulty || 'medium'}
+        xpReward={level.xp || 0}
+        score={score}
+        streak={maxStreak}
+        timeSpent={displayTime}
+        showStats={true}
       />
 
-      <div className="ape-quiz-content">
-        <QuizStats
-          score={score}
-          streak={maxStreak}
-          timeSpent={displayTime}
-          currentExercise={currentExerciseIndex}
-          totalExercises={totalExercises}
-        />
-
-        {/* Navegação entre questões */}
-        <div className="ape-questions-navigation">
-          <div className="ape-nav-buttons">
-            <button 
-              onClick={onPrevious} 
-              disabled={currentExerciseIndex === 0}
-              className="ape-nav-btn"
-            >
-              <ArrowLeft size={16} />
-              Anterior
-            </button>
-            
-            <div className="ape-questions-dots">
-              {level.exercises.map((_, index) => {
-                const isAnswered = answers[index] !== undefined;
-                const isCurrent = index === currentExerciseIndex;
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => onGoToExercise(index)}
-                    className={`ape-question-dot ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
-                    title={`Desafio ${index + 1}`}
-                  >
-                    {index + 1}
-                  </button>
-                );
-              })}
-            </div>
-            
-            <button 
-              onClick={onNext} 
-              className="ape-nav-btn"
-            >
-              {isLastExercise && allQuestionsAnswered ? 'Ver Resultados' : 'Próximo'}
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
-
-        <div className="ape-question-container">
-          <div className="ape-question-card">
-            <div className="ape-question-header">
-              <h2 className="ape-question-text">{exercise.question}</h2>
-              <div className="ape-question-meta">
-                <span className="ape-question-number-badge">
-                  Desafio {currentExerciseIndex + 1} de {totalExercises}
-                </span>
-                {answers[currentExerciseIndex] !== undefined && (
-                  <span className="ape-answered-badge">
-                    <CheckCircle size={16} />
-                    Resolvido
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="ape-options-grid">
-              {exercise.options.map((option, index) => (
-                <OptionButton
+      {/* Navegação entre questões */}
+      <div className="ape-questions-navigation">
+        <div className="ape-nav-buttons">
+          <button 
+            onClick={onPrevious} 
+            disabled={currentExerciseIndex === 0}
+            className="ape-nav-btn"
+          >
+            <ArrowLeft size={16} />
+            Anterior
+          </button>
+          
+          <div className="ape-questions-dots">
+            {level.exercises.map((_, index) => {
+              const isAnswered = answers[index] !== undefined;
+              const isCurrent = index === currentExerciseIndex;
+              
+              return (
+                <button
                   key={index}
-                  option={option}
-                  index={index}
-                  isSelected={selectedAnswer === index}
-                  isCorrect={index === exercise.correct}
-                  showSolution={showSolution}
-                  onSelect={onAnswer}
-                  disabled={showSolution || answers[currentExerciseIndex] !== undefined}
-                />
-              ))}
+                  onClick={() => onGoToExercise(index)}
+                  className={`ape-question-dot ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
+                  title={`Desafio ${index + 1}`}
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
+          </div>
+          
+          <button 
+            onClick={onNext} 
+            className="ape-nav-btn"
+          >
+            {isLastExercise && allQuestionsAnswered ? 'Ver Resultados' : 'Próximo'}
+            <ArrowRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div className="ape-question-container">
+        <div className="ape-question-card">
+          <div className="ape-question-header">
+            <h2 className="ape-question-text">{exercise.question}</h2>
+            <div className="ape-question-meta">
+              <span className="ape-question-number-badge">
+                Desafio {currentExerciseIndex + 1} de {totalExercises}
+              </span>
+              {answers[currentExerciseIndex] !== undefined && (
+                <span className="ape-answered-badge">
+                  <CheckCircle size={16} />
+                  Resolvido
+                </span>
+              )}
             </div>
           </div>
-
-          {!showSolution && answers[currentExerciseIndex] === undefined && (
-            <CommentSection
-              comment={currentComment}
-              onSaveComment={onSaveComment}
-              hasComment={hasComment}
-            />
-          )}
-
-          {showSolution && (
-            <SolutionPanel
-              isCorrect={selectedAnswer === exercise.correct}
-              explanation={exercise.explanation}
-              code={exercise.code}
-              theoryPoints={exercise.theoryPoints}
-              hasComment={hasComment}
-              comment={comments[commentKey]}
-              onNext={onNext}
-              onPrevious={onPrevious}
-              isLastExercise={isLastExercise}
-              allQuestionsAnswered={allQuestionsAnswered}
-            />
-          )}
-
-          {/* Botão para ir direto aos resultados quando todas as questões estiverem respondidas */}
-          {allQuestionsAnswered && !showSolution && !showResults && (
-            <div className="ape-finish-quiz-section">
-              <button 
-                onClick={onShowResults}
-                className="ape-finish-btn"
-              >
-                <Flag size={20} />
-                Analisar Performance
-              </button>
-            </div>
-          )}
+          <div className="ape-options-grid">
+            {exercise.options.map((option, index) => (
+              <OptionButton
+                key={index}
+                option={option}
+                index={index}
+                isSelected={selectedAnswer === index}
+                isCorrect={index === exercise.correct}
+                showSolution={showSolution}
+                onSelect={onAnswer}
+                disabled={showSolution || answers[currentExerciseIndex] !== undefined}
+              />
+            ))}
+          </div>
         </div>
+
+        {!showSolution && answers[currentExerciseIndex] === undefined && (
+          <CommentSection
+            comment={currentComment}
+            onSaveComment={onSaveComment}
+            hasComment={hasComment}
+          />
+        )}
+
+        {showSolution && (
+          <SolutionPanel
+            isCorrect={selectedAnswer === exercise.correct}
+            explanation={exercise.explanation}
+            code={exercise.code}
+            theoryPoints={exercise.theoryPoints}
+            hasComment={hasComment}
+            comment={comments[commentKey]}
+            onNext={onNext}
+            onPrevious={onPrevious}
+            isLastExercise={isLastExercise}
+            allQuestionsAnswered={allQuestionsAnswered}
+          />
+        )}
+
+        {/* Botão para ir direto aos resultados quando todas as questões estiverem respondidas */}
+        {allQuestionsAnswered && !showSolution && !showResults && (
+          <div className="ape-finish-quiz-section">
+            <button 
+              onClick={onShowResults}
+              className="ape-finish-btn"
+            >
+              <Flag size={20} />
+              Analisar Performance
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

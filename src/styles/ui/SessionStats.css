@@ -3,13 +3,16 @@
   position: fixed;
   top: 100px;
   right: 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(26, 31, 46, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 16px;
-  padding: 1rem 1.5rem;
+  padding: 0;
   z-index: 900;
   animation: slideInRight 0.5s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  min-width: 280px;
+  overflow: hidden;
 }
 
 @keyframes slideInRight {
@@ -23,11 +26,62 @@
   }
 }
 
+.ape-session-stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.ape-session-stats-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ape-session-stats-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.ape-session-stats-minimize,
+.ape-session-stats-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ape-session-stats-minimize:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+.ape-session-stats-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
 .ape-session-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 1.5rem;
   align-items: center;
+  padding: 1rem 1.5rem;
 }
 
 .ape-session-stat {
@@ -58,9 +112,85 @@
   line-height: 1.2;
 }
 
+/* Versão Minimizada */
+.ape-session-stats-minimized {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  background: rgba(26, 31, 46, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  z-index: 900;
+  animation: slideInRight 0.5s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+}
+
+.ape-session-stats-minimized-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ape-session-stats-minimized-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.ape-session-stats-minimized-icon {
+  color: #ffd700;
+  flex-shrink: 0;
+}
+
+.ape-session-stats-minimized-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  line-height: 1.2;
+}
+
+.ape-session-stats-minimized-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.ape-session-stats-expand,
+.ape-session-stats-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ape-session-stats-expand:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+.ape-session-stats-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .ape-session-stats {
+  .ape-session-stats,
+  .ape-session-stats-minimized {
     position: relative;
     top: auto;
     right: auto;
@@ -75,14 +205,19 @@
 }
 
 @media (max-width: 768px) {
-  .ape-session-stats {
+  .ape-session-stats,
+  .ape-session-stats-minimized {
     margin: 0.5rem;
-    padding: 0.75rem 1rem;
+  }
+  
+  .ape-session-stats {
+    padding: 0;
   }
   
   .ape-session-stats-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 0.75rem;
+    padding: 0.75rem 1rem;
   }
   
   .ape-session-stat-value {
@@ -92,17 +227,36 @@
   .ape-session-stat-label {
     font-size: 0.7rem;
   }
+
+  .ape-session-stats-minimized {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .ape-session-stats-minimized-text {
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 480px) {
   .ape-session-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .ape-session-stats-minimized {
+    min-width: 180px;
+  }
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-  .ape-session-stats {
+  .ape-session-stats,
+  .ape-session-stats-minimized {
     animation: none;
+  }
+  
+  .ape-session-stats-minimize:hover,
+  .ape-session-stats-close:hover,
+  .ape-session-stats-expand:hover {
+    transform: none;
   }
 }

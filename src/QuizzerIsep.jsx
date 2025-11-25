@@ -489,8 +489,6 @@ const QuizzerIsep = () => {
       <main className="ape-main-content-area">
         {renderCurrentView()}
       </main>
-
-      {/* Achievement Popups */}
       {achievements.map(achievement => (
         <AchievementPopup
           key={achievement.id}
