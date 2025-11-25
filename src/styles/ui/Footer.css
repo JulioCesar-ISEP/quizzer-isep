@@ -1,0 +1,125 @@
+/* src/components/ui/Footer.css */
+.ape-footer {
+  background: rgba(26, 31, 46, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  padding: 2rem 0 1rem 0;
+  margin-top: auto;
+}
+
+.ape-footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ape-footer-section h3,
+.ape-footer-section h4 {
+  color: #ffd700;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ape-footer-section h3 {
+  font-size: 1.3rem;
+}
+
+.ape-footer-section p {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.ape-footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.ape-footer-section li {
+  margin-bottom: 0.5rem;
+}
+
+.ape-footer-section a {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.ape-footer-section a:hover {
+  color: #ffd700;
+}
+
+.ape-footer-bottom {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem 0 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.ape-footer-bottom p {
+  margin-bottom: 0.5rem;
+}
+
+/* Light theme */
+.app.light-theme .ape-footer {
+  background: rgba(248, 250, 252, 0.95);
+  border-top-color: rgba(0, 0, 0, 0.1);
+  color: #64748b;
+}
+
+.app.light-theme .ape-footer-section h3,
+.app.light-theme .ape-footer-section h4 {
+  color: #1a1f2e;
+}
+
+.app.light-theme .ape-footer-section a {
+  color: #64748b;
+}
+
+.app.light-theme .ape-footer-section a:hover {
+  color: #1a1f2e;
+}
+
+.app.light-theme .ape-footer-bottom {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ape-footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .ape-footer-bottom {
+    padding: 1rem 1rem 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ape-footer {
+    padding: 1.5rem 0 0.75rem 0;
+  }
+  
+  .ape-footer-content {
+    gap: 1rem;
+  }
+  
+  .ape-footer-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  .ape-footer-section h4 {
+    font-size: 1rem;
+  }
+}

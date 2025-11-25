@@ -1,4 +1,4 @@
-/* Header.css */
+/* Header.css - Versão Otimizada */
 .ape-main-header {
   background: rgba(26, 31, 46, 0.95);
   backdrop-filter: blur(20px);
@@ -11,7 +11,7 @@
 
 .ape-main-header.scrolled {
   background: rgba(26, 31, 46, 0.98);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 20px rgba(0, 0, 0, 0.3);
   border-bottom-color: rgba(255, 215, 0, 0.2);
 }
 
@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -28,15 +28,15 @@
 .ape-header-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   flex: 1;
 }
 
 .ape-app-logo {
   color: #ffd700;
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-  padding: 0.75rem;
-  border-radius: 16px;
+  padding: 0.563rem;
+  border-radius: 12px;
   border: 1px solid rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
   position: relative;
@@ -61,18 +61,18 @@
 .ape-app-logo:hover {
   transform: scale(1.05) rotate(5deg);
   border-color: rgba(255, 215, 0, 0.5);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
 }
 
 .ape-app-title {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 800;
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   position: relative;
 }
 
@@ -81,37 +81,37 @@
   position: absolute;
   top: 100%;
   left: 0;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 700;
   color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 0.25rem;
+  letter-spacing: 0.8px;
+  margin-top: 0.188rem;
 }
 
 /* Header Actions */
 .ape-header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* Navigation */
 .ape-header-nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0 2rem;
+  gap: 0.375rem;
+  margin: 0 1.5rem;
 }
 
 .ape-nav-item {
-  padding: 0.75rem 1.5rem;
+  padding: 0.563rem 1.125rem;
   background: rgba(255, 255, 255, 0.05);
   color: #94a3b8;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
@@ -137,78 +137,78 @@
 .ape-nav-item:hover {
   color: #e2e8f0;
   border-color: rgba(255, 215, 0, 0.3);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .ape-nav-item.active {
   background: rgba(255, 215, 0, 0.1);
   color: #ffd700;
   border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.1);
 }
 
 /* User Info */
 .ape-user-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-left: 2rem;
-  padding: 0.75rem 1rem;
+  gap: 0.75rem;
+  margin-left: 1.5rem;
+  padding: 0.563rem 0.75rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .ape-user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: linear-gradient(135deg, #ffd700, #ffed4e);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #1a1f2e;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .ape-user-details {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.188rem;
 }
 
 .ape-user-name {
   font-weight: 700;
   color: #e2e8f0;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .ape-user-rank {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: #94a3b8;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
 
 /* XP Indicator */
 .ape-xp-indicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.375rem;
   background: rgba(255, 215, 0, 0.1);
   color: #ffd700;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 8px;
   border: 1px solid rgba(255, 215, 0, 0.2);
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 /* Progress Bar */
 .ape-header-progress {
-  height: 3px;
+  height: 2px;
   background: rgba(255, 255, 255, 0.1);
   position: absolute;
   bottom: 0;
@@ -250,16 +250,33 @@
 
 /* Compact Header */
 .ape-main-header.compact .ape-header-content {
-  padding: 0.75rem 1.5rem;
+  padding: 0.563rem 1.125rem;
 }
 
 .ape-main-header.compact .ape-app-logo {
-  padding: 0.5rem;
-  border-radius: 12px;
+  padding: 0.375rem;
+  border-radius: 10px;
 }
 
 .ape-main-header.compact .ape-app-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+}
+
+/* Mobile Navigation (Hamburger) */
+.ape-mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #ffd700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.ape-mobile-nav-toggle:hover {
+  background: rgba(255, 215, 0, 0.1);
 }
 
 /* Responsive Design */
@@ -271,33 +288,47 @@
   .ape-user-info {
     display: none;
   }
+  
+  .ape-mobile-nav-toggle {
+    display: block;
+  }
 }
 
 @media (max-width: 768px) {
   .ape-header-content {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
   }
   
   .ape-app-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
   
   .ape-app-title::after {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
+    margin-top: 0.125rem;
+  }
+  
+  .ape-xp-indicator {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+  }
+  
+  .ape-header-actions {
+    gap: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .ape-header-content {
-    padding: 0.75rem;
+    padding: 0.563rem 0.75rem;
   }
   
   .ape-app-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   
   .ape-app-logo {
-    padding: 0.5rem;
+    padding: 0.375rem;
   }
   
   .ape-app-title::after {
@@ -305,8 +336,116 @@
   }
   
   .ape-header-actions {
-    gap: 0.5rem;
+    gap: 0.375rem;
   }
+  
+  .ape-xp-indicator {
+    display: none;
+  }
+  
+  .ape-mobile-nav-toggle {
+    font-size: 1rem;
+    padding: 0.375rem;
+  }
+}
+
+/* Mobile Navigation Menu */
+.ape-mobile-nav {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background: rgba(26, 31, 46, 0.98);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 215, 0, 0.2);
+  z-index: 1001;
+  transition: right 0.3s ease;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ape-mobile-nav.open {
+  right: 0;
+}
+
+.ape-mobile-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ape-mobile-nav-title {
+  color: #ffd700;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ape-mobile-nav-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.ape-mobile-nav-close:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.ape-mobile-nav-item {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ape-mobile-nav-item:hover,
+.ape-mobile-nav-item.active {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateX(5px);
+}
+
+.ape-mobile-user-info {
+  margin-top: auto;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Overlay for mobile nav */
+.ape-mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.ape-mobile-nav-overlay.open {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Reduced Motion Support */
@@ -328,13 +467,18 @@
   .ape-header-progress-fill::after {
     animation: none;
   }
+  
+  .ape-mobile-nav,
+  .ape-mobile-nav-overlay {
+    transition: none;
+  }
 }
 
 /* Loading State */
 .ape-main-header.loading .ape-app-title {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  min-height: 1.8rem;
+  border-radius: 6px;
+  min-height: 1.4rem;
   animation: pulse 1.5s infinite;
 }
 
@@ -344,5 +488,22 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .ape-main-header {
+    border-bottom-width: 2px;
+  }
+  
+  .ape-nav-item,
+  .ape-user-info,
+  .ape-xp-indicator {
+    border-width: 2px;
+  }
+  
+  .ape-app-logo {
+    border-width: 2px;
   }
 }

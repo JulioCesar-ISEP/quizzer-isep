@@ -4,7 +4,6 @@ import { useTimer } from './hooks/useTimer';
 import { useProgress } from './hooks/useProgress';
 import { useReports } from './hooks/useReports';
 import { useAchievements } from './hooks/useAchievements';
-import Header from './components/ui/Header';
 import CadeirasView from './components/views/CadeirasView';
 import LevelsView from './components/views/LevelsView';
 import QuizView from './components/views/QuizView';
@@ -461,18 +460,7 @@ const QuizzerIsep = () => {
 
   return (
     <div className={`ape-quizzer-app ${isDark ? 'dark-theme' : 'light-theme'}`}>
-      <Header 
-        isDark={isDark}
-        toggleTheme={toggleTheme}
-        currentView={currentView}
-        onBack={currentView !== 'cadeiras' ? 
-          (currentView === 'knowledge-tree' ? goToLevels : goToCadeiras) : null}
-        showBackButton={currentView !== 'cadeiras'}
-        user={{ name: 'Símio', xp: totalXP }}
-        xp={totalXP}
-        progress={Math.round((Object.values(completedLevels).flat().length / 
-          (cadeiras.reduce((acc, c) => acc + c.levels.length, 0))) * 100)}
-      />
+      {/* Header removido conforme solicitado */}
       
       {/* Session Stats */}
       {currentView === 'quiz' && (
