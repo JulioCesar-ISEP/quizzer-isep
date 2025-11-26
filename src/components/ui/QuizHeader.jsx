@@ -8,7 +8,11 @@ import {
   CheckCircle, 
   Zap,
   Minus,
-  X
+  X,
+  TrendingUp,
+  Award,
+  Battery,
+  BarChart3
 } from 'lucide-react';
 import '../../styles/ui/QuizHeader.css';
 
@@ -39,6 +43,8 @@ const QuizHeader = ({
 
   const progressPercentage = ((currentExercise + 1) / totalExercises) * 100;
   const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
+  const accuracy = totalExercises > 0 ? Math.round((score / totalExercises) * 100) : 0;
+  const remainingExercises = totalExercises - (currentExercise + 1);
 
   // Sticky header effect
   useEffect(() => {
@@ -52,11 +58,11 @@ const QuizHeader = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sticky]);
 
-  // Celebration effects
+  // Celebration effects for score and streak improvements
   useEffect(() => {
     if (score > previousScore) {
       setIsCelebrating(true);
-      setTimeout(() => setIsCelebrating(false), 500);
+      setTimeout(() => setIsCelebrating(false), 800);
     }
     setPreviousScore(score);
   }, [score, previousScore]);
@@ -64,7 +70,7 @@ const QuizHeader = ({
   useEffect(() => {
     if (streak > previousStreak && streak > 1) {
       setIsCelebrating(true);
-      setTimeout(() => setIsCelebrating(false), 500);
+      setTimeout(() => setIsCelebrating(false), 800);
     }
     setPreviousStreak(streak);
   }, [streak, previousStreak]);
@@ -80,20 +86,37 @@ const QuizHeader = ({
     }
   };
 
-  const getRankByProgress = () => {
-    if (progressPercentage >= 90) return 'HOMO SAPIENS';
-    if (progressPercentage >= 75) return 'GORILA';
-    if (progressPercentage >= 50) return 'CHIMPANZÉ';
-    if (progressPercentage >= 25) return 'MACACO-PREGO';
-    return 'INICIANTE';
+  const getDifficultyIcon = () => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return '🟢';
+      case 'hard':
+        return '🔴';
+      default:
+        return '🟡';
+    }
   };
 
   const getAchievement = () => {
-    if (streak >= 10) return '🔥 LENDA';
-    if (streak >= 5) return '⭐ ESTRELA';
-    if (score === totalExercises) return '🏆 PERFEITO';
-    if (score >= totalExercises * 0.8) return '🎯 PRECISÃO';
+    if (streak >= 10) return { text: '🔥 LENDA', level: 'legendary' };
+    if (streak >= 5) return { text: '⭐ ESTRELA', level: 'epic' };
+    if (score === totalExercises && totalExercises > 0) return { text: '🏆 PERFEITO', level: 'perfect' };
+    if (accuracy >= 80) return { text: '🎯 PRECISÃO', level: 'accurate' };
     return null;
+  };
+
+  const getPerformanceLevel = () => {
+    if (accuracy >= 90) return { level: 'Excelente', color: '#10b981' };
+    if (accuracy >= 70) return { level: 'Bom', color: '#f59e0b' };
+    if (accuracy >= 50) return { level: 'Regular', color: '#f97316' };
+    return { level: 'Em progresso', color: '#ef4444' };
+  };
+
+  const getStreakLevel = () => {
+    if (streak >= 10) return { level: 'Lendário', color: '#f59e0b', icon: '🔥' };
+    if (streak >= 5) return { level: 'Quente', color: '#ef4444', icon: '⭐' };
+    if (streak >= 3) return { level: 'Consecutivo', color: '#84cc16', icon: '⚡' };
+    return { level: 'Iniciando', color: '#6b7280', icon: '🎯' };
   };
 
   const handleStatsMinimize = () => {
@@ -107,6 +130,8 @@ const QuizHeader = ({
   };
 
   const achievement = getAchievement();
+  const performance = getPerformanceLevel();
+  const streakInfo = getStreakLevel();
 
   return (
     <div className={`ape-quiz-header ${compact ? 'compact' : ''} ${isSticky ? 'sticky' : ''}`}>
@@ -127,8 +152,7 @@ const QuizHeader = ({
             </span>
             
             <span className={`ape-difficulty ${getDifficultyColor()}`}>
-              <Clock size={14} />
-              {difficulty}
+              {getDifficultyIcon()} {difficulty}
             </span>
             
             {xpReward > 0 && (
@@ -137,10 +161,6 @@ const QuizHeader = ({
                 +{xpReward} XP
               </span>
             )}
-            
-            <span className="ape-rank-badge">
-              {getRankByProgress()}
-            </span>
           </div>
         </div>
 
@@ -163,7 +183,15 @@ const QuizHeader = ({
           {!isStatsMinimized ? (
             <>
               <div className="ape-stats-header">
-                <span className="ape-stats-title">Estatísticas da Sessão</span>
+                <div className="ape-stats-title-section">
+                  <BarChart3 size={16} />
+                  <span className="ape-stats-title">Painel de Performance</span>
+                  {achievement && (
+                    <div className={`ape-achievement-badge ${achievement.level}`}>
+                      {achievement.text}
+                    </div>
+                  )}
+                </div>
                 <div className="ape-stats-actions">
                   <button 
                     onClick={handleStatsMinimize}
@@ -183,60 +211,117 @@ const QuizHeader = ({
               </div>
 
               <div className="ape-stats-grid">
+                {/* Score & Accuracy */}
                 <div className="ape-stat-badge score">
-                  <Target size={20} />
-                  <div className="ape-stat-content">
-                    <span className="ape-stat-value">{score}</span>
-                    <span className="ape-stat-label">Pontuação</span>
+                  <div className="ape-stat-icon">
+                    <Target size={24} />
                   </div>
-                  {achievement === '🏆 PERFEITO' && (
-                    <div className="ape-achievement-badge">PERFEITO!</div>
-                  )}
+                  <div className="ape-stat-content">
+                    <span className="ape-stat-value">{score}<span>/{totalExercises}</span></span>
+                    <span className="ape-stat-label">Pontuação</span>
+                    <div className="ape-stat-progress">
+                      <div className="ape-stat-progress-bar">
+                        <div 
+                          className="ape-stat-progress-fill" 
+                          style={{ width: `${accuracy}%` }}
+                        />
+                      </div>
+                      <span className="ape-stat-percentage">{accuracy}%</span>
+                    </div>
+                  </div>
+                  <div className="ape-performance-indicator" style={{ color: performance.color }}>
+                    {performance.level}
+                  </div>
                 </div>
 
+                {/* Streak */}
                 <div className="ape-stat-badge streak">
-                  <Flame size={20} />
+                  <div className="ape-stat-icon">
+                    <Flame size={24} />
+                    {streak > 0 && <div className="ape-streak-count">{streak}</div>}
+                  </div>
                   <div className="ape-stat-content">
                     <span className="ape-stat-value">{streak}</span>
-                    <span className="ape-stat-label">Sequência</span>
-                  </div>
-                  {streak > 1 && <div className="ape-streak-fire" />}
-                  {(achievement === '🔥 LENDA' || achievement === '⭐ ESTRELA') && (
-                    <div className="ape-achievement-badge">
-                      {achievement === '🔥 LENDA' ? 'LENDA!' : 'ESTRELA!'}
+                    <span className="ape-stat-label">Sequência Atual</span>
+                    <div className="ape-streak-info">
+                      <span className="ape-streak-level" style={{ color: streakInfo.color }}>
+                        {streakInfo.icon} {streakInfo.level}
+                      </span>
                     </div>
-                  )}
+                  </div>
+                  {streak >= 3 && <div className="ape-streak-fire" />}
                 </div>
 
+                {/* Time */}
                 <div className="ape-stat-badge time">
-                  <Clock size={20} />
+                  <div className="ape-stat-icon">
+                    <Clock size={24} />
+                  </div>
                   <div className="ape-stat-content">
                     <span className="ape-stat-value">{displayTime}</span>
-                    <span className="ape-stat-label">Tempo</span>
+                    <span className="ape-stat-label">Tempo de Lab</span>
+                    <div className="ape-time-details">
+                      <TrendingUp size={12} />
+                      <span>Eficiência temporal</span>
+                    </div>
                   </div>
                 </div>
 
+                {/* Progress */}
                 <div className="ape-stat-badge progress">
-                  <CheckCircle size={20} />
-                  <div className="ape-stat-content">
-                    <span className="ape-stat-value">
-                      {currentExercise + 1}/{totalExercises}
-                    </span>
-                    <span className="ape-stat-label">Progresso</span>
+                  <div className="ape-stat-icon">
+                    <Battery size={24} />
                   </div>
-                  {achievement === '🎯 PRECISÃO' && (
-                    <div className="ape-achievement-badge">PRECISÃO!</div>
-                  )}
+                  <div className="ape-stat-content">
+                    <span className="ape-stat-value">{currentExercise + 1}<span>/{totalExercises}</span></span>
+                    <span className="ape-stat-label">Progresso</span>
+                    <div className="ape-progress-details">
+                      <span>{remainingExercises} restantes</span>
+                      <span>{Math.round(progressPercentage)}%</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              {/* Performance Summary */}
+              <div className="ape-performance-summary">
+                <div className="ape-summary-item">
+                  <Award size={14} />
+                  <span>Nível: <strong style={{ color: performance.color }}>{performance.level}</strong></span>
+                </div>
+                <div className="ape-summary-item">
+                  <TrendingUp size={14} />
+                  <span>Precisão: <strong>{accuracy}%</strong></span>
+                </div>
+                {achievement && (
+                  <div className="ape-summary-item">
+                    <Zap size={14} />
+                    <span>Conquista: <strong>{achievement.text}</strong></span>
+                  </div>
+                )}
               </div>
             </>
           ) : (
             <div className="ape-stats-minimized-content">
               <div className="ape-stats-minimized-info">
-                <Target size={16} />
-                <span className="ape-stats-minimized-text">
-                  {score}P • {streak}🔥 • {displayTime} • {currentExercise + 1}/{totalExercises}
-                </span>
+                <div className="ape-minimized-stats">
+                  <span className="ape-mini-stat">
+                    <Target size={12} />
+                    {score}/{totalExercises}
+                  </span>
+                  <span className="ape-mini-stat">
+                    <Flame size={12} />
+                    {streak}🔥
+                  </span>
+                  <span className="ape-mini-stat">
+                    <Clock size={12} />
+                    {displayTime}
+                  </span>
+                  <span className="ape-mini-stat">
+                    <Battery size={12} />
+                    {Math.round(progressPercentage)}%
+                  </span>
+                </div>
               </div>
               <div className="ape-stats-minimized-actions">
                 <button 
@@ -244,7 +329,7 @@ const QuizHeader = ({
                   className="ape-stats-expand"
                   aria-label="Expandir estatísticas"
                 >
-                  <CheckCircle size={14} />
+                  <BarChart3 size={14} />
                 </button>
                 <button 
                   onClick={handleStatsClose}
@@ -264,7 +349,7 @@ const QuizHeader = ({
         <div className="ape-progress-labels">
           <span>Progresso do Desafio</span>
           <span>
-            {currentExercise + 1}/{totalExercises} • {Math.round(progressPercentage)}%
+            {currentExercise + 1}/{totalExercises} • {Math.round(progressPercentage)}% • {remainingExercises} restantes
           </span>
         </div>
         <div className="ape-progress-bar">

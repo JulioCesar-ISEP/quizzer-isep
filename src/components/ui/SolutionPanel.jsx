@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Lightbulb, ArrowRight, Trophy, ArrowLeft, Zap, Flame, Star, Target } from 'lucide-react';
+import React from 'react';
+import { CheckCircle, XCircle, Lightbulb, Zap, Flame, Star, Target } from 'lucide-react';
 import '../../styles/ui/SolutionPanel.css';
 
 const SolutionPanel = ({ 
@@ -8,28 +8,12 @@ const SolutionPanel = ({
   code, 
   theoryPoints, 
   hasComment, 
-  comment, 
-  onNext, 
-  isLastExercise,
-  allQuestionsAnswered,
-  onPrevious,
+  comment,
   currentStreak = 0,
-  xpReward = 0,
   compact = false
 }) => {
-  const [showCelebration, setShowCelebration] = useState(false);
-
-  useEffect(() => {
-    if (isCorrect) {
-      setShowCelebration(true);
-      const timer = setTimeout(() => setShowCelebration(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [isCorrect]);
-
   const getAchievement = () => {
     if (currentStreak >= 5) return '🔥 SEQUÊNCIA QUENTE!';
-    if (isCorrect && xpReward >= 20) return '⭐ RESPOSTA PERFEITA!';
     if (isCorrect) return '🎯 ACERTOU!';
     return '📚 OPORTUNIDADE DE APRENDIZADO';
   };
@@ -141,7 +125,7 @@ const SolutionPanel = ({
 
         {/* Learning Tip for Incorrect Answers */}
         {!isCorrect && (
-          <div className="ape-theory-section">
+          <div className="ape-learning-tip">
             <h4>
               <Lightbulb size={20} />
               Dica de Aprendizado
@@ -153,49 +137,6 @@ const SolutionPanel = ({
             </p>
           </div>
         )}
-      </div>
-
-      {/* Actions */}
-      <div className="ape-solution-actions">
-        {onPrevious && (
-          <button 
-            onClick={onPrevious} 
-            className="ape-solution-btn secondary"
-            aria-label="Voltar para questão anterior"
-          >
-            <ArrowLeft size={20} />
-            Questão Anterior
-          </button>
-        )}
-        
-        <button 
-          onClick={onNext} 
-          className={`ape-solution-btn ${allQuestionsAnswered ? 'success' : 'primary'}`}
-          aria-label={
-            allQuestionsAnswered 
-              ? "Ver resultados finais" 
-              : isLastExercise 
-              ? "Ver resultados do desafio" 
-              : "Próximo desafio"
-          }
-        >
-          {allQuestionsAnswered ? (
-            <>
-              Ver Resultados Finais
-              <Trophy size={20} />
-            </>
-          ) : isLastExercise ? (
-            <>
-              Concluir Desafio
-              <Trophy size={20} />
-            </>
-          ) : (
-            <>
-              Próximo Desafio
-              <ArrowRight size={20} />
-            </>
-          )}
-        </button>
       </div>
     </div>
   );

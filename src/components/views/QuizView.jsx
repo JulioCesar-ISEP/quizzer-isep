@@ -41,6 +41,10 @@ const QuizView = ({
   const showTheoryButton = shouldShowTheoryButton(exercise);
   const isLastExercise = currentExerciseIndex === totalExercises - 1;
   const allQuestionsAnswered = answers.length === totalExercises && answers.every(answer => answer !== undefined);
+  const currentStreak = answers.reduce((streak, answer, index) => {
+    if (index > currentExerciseIndex) return streak;
+    return answer === level.exercises[index]?.correct ? streak + 1 : 0;
+  }, 0);
 
   // Garantir que timeSpent sempre tenha um valor válido
   const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
@@ -103,7 +107,19 @@ const QuizView = ({
               </div>
             </div>
           </div>
-
+          <div className="ape-results-actions">
+            <button 
+              onClick={() => onGoToExercise(0)} 
+              className="ape-btn ape-btn-secondary"
+            >
+              <ArrowLeft size={20} />
+              Revisar Desafios
+            </button>
+            <button onClick={onFinishQuiz} className="ape-btn ape-btn-primary">
+              <CheckSquare size={20} />
+              Concluir Lab
+            </button>
+          </div>
           <div className="ape-questions-review">
             <h3 className="ape-review-title">
               <Star size={24} />
@@ -145,20 +161,6 @@ const QuizView = ({
                 );
               })}
             </div>
-          </div>
-
-          <div className="ape-results-actions">
-            <button 
-              onClick={() => onGoToExercise(0)} 
-              className="ape-btn ape-btn-secondary"
-            >
-              <ArrowLeft size={20} />
-              Revisar Desafios
-            </button>
-            <button onClick={onFinishQuiz} className="ape-btn ape-btn-primary">
-              <CheckSquare size={20} />
-              Concluir Lab
-            </button>
           </div>
         </div>
       </div>
@@ -277,10 +279,7 @@ const QuizView = ({
             theoryPoints={exercise.theoryPoints}
             hasComment={hasComment}
             comment={comments[commentKey]}
-            onNext={onNext}
-            onPrevious={onPrevious}
-            isLastExercise={isLastExercise}
-            allQuestionsAnswered={allQuestionsAnswered}
+            currentStreak={currentStreak}
           />
         )}
 

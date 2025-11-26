@@ -1,4 +1,4 @@
-/* SolutionPanel.css - Versão Otimizada */
+/* SolutionPanel.css - Versão Corrigida */
 .ape-solution-panel {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 16px;
@@ -19,6 +19,14 @@
   background: linear-gradient(90deg, #ffd700, #ffed4e);
 }
 
+.ape-solution-panel.correct {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.ape-solution-panel.incorrect {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
 /* Solution Header */
 .ape-solution-header {
   padding: 1.5rem 1.5rem 0.75rem 1.5rem;
@@ -31,6 +39,60 @@
   gap: 0.75rem;
   font-size: 1.1rem;
   font-weight: 800;
+}
+
+.ape-solution-result.correct {
+  color: #22c55e;
+}
+
+.ape-solution-result.incorrect {
+  color: #ef4444;
+}
+
+.ape-achievement-badge {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: auto;
+}
+
+/* Streak Indicator */
+.ape-streak-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+/* XP Reward */
+.ape-xp-reward {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 800;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.ape-xp-reward span:last-child {
+  margin-left: auto;
+  font-weight: 600;
 }
 
 /* Solution Content */
@@ -62,20 +124,29 @@
 
 .ape-explanation-section p {
   color: #e2e8f0;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 0.75rem;
   font-size: 0.9rem;
 }
 
-/* Code Block */
+/* CORREÇÃO: Texto em negrito com melhor contraste */
+.ape-explanation-section strong,
+.ape-theory-section strong,
+.ape-comment-review strong {
+  color: #ffd700;
+  font-weight: 700;
+}
+
+/* Code Block - CORREÇÃO COMPLETA */
 .ape-code-block {
-  background: #0d1117;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   padding: 1.25rem;
   margin: 0.75rem 0;
   overflow-x: auto;
   position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .ape-code-block::before {
@@ -83,24 +154,34 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 215, 0, 0.2);
-  color: #ffd700;
-  padding: 0.2rem 0.6rem;
-  border-radius: 0 0 6px 0;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1f2e;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0 0 8px 0;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .ape-code-block code {
-  color: #e2e8f0;
-  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
+  color: #cbd5e1;
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
   font-size: 0.85rem;
-  line-height: 1.4;
+  line-height: 1.5;
   display: block;
-  margin-top: 1.25rem;
+  margin-top: 0.5rem;
 }
+
+/* CORREÇÃO: Syntax highlighting básico para código */
+.ape-code-block code .keyword { color: #ff79c6; font-weight: 600; }
+.ape-code-block code .function { color: #50fa7b; }
+.ape-code-block code .string { color: #f1fa8c; }
+.ape-code-block code .comment { color: #6272a4; font-style: italic; }
+.ape-code-block code .number { color: #bd93f9; }
+.ape-code-block code .operator { color: #ff79c6; }
+.ape-code-block code .variable { color: #8be9fd; }
+.ape-code-block code .class { color: #8be9fd; font-weight: 600; }
 
 /* Theory Section */
 .ape-theory-section {
@@ -121,6 +202,13 @@
   margin-bottom: 0.75rem;
 }
 
+.ape-theory-section p {
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
 /* Key Points List */
 .ape-keypoints-list {
   list-style: none;
@@ -134,13 +222,21 @@
   gap: 0.6rem;
   padding: 0.6rem 0;
   color: #cbd5e1;
-  line-height: 1.4;
+  line-height: 1.5;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.85rem;
 }
 
 .ape-keypoints-list li:last-child {
   border-bottom: none;
+}
+
+.ape-keypoints-list li::before {
+  content: '•';
+  color: #22c55e;
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 /* Comment Review */
@@ -164,50 +260,54 @@
 
 .ape-comment-review p {
   color: #e2e8f0;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 0.6rem;
   font-style: italic;
   font-size: 0.9rem;
 }
 
-/* XP Reward */
-.ape-xp-reward {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #1a1f2e;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  font-weight: 800;
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
+.ape-comment-hint {
+  color: #94a3b8 !important;
+  font-size: 0.8rem !important;
+  font-style: normal !important;
+  margin-bottom: 0 !important;
 }
 
-/* Solution Actions */
-.ape-solution-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  gap: 0.75rem;
-}
-
-.ape-solution-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.25rem;
-  border: none;
+/* Learning Tip */
+.ape-learning-tip {
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.ape-learning-tip h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
   font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
-  justify-content: center;
+  color: #f59e0b;
+  margin-bottom: 0.75rem;
+}
+
+.ape-learning-tip p {
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* Animações */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Compact Version */
@@ -222,12 +322,9 @@
 
 .ape-solution-panel.compact .ape-explanation-section,
 .ape-solution-panel.compact .ape-theory-section,
-.ape-solution-panel.compact .ape-comment-review {
+.ape-solution-panel.compact .ape-comment-review,
+.ape-solution-panel.compact .ape-learning-tip {
   padding: 1rem;
-}
-
-.ape-solution-panel.compact .ape-solution-actions {
-  padding: 1rem 1.25rem;
 }
 
 /* Responsive Design */
@@ -245,15 +342,15 @@
     gap: 1.25rem;
   }
   
-  .ape-solution-actions {
-    padding: 1rem 1.25rem;
-    flex-direction: column;
-    gap: 0.6rem;
+  .ape-solution-result {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
   
-  .ape-solution-btn {
+  .ape-achievement-badge {
+    margin-left: 0;
     width: 100%;
-    min-width: auto;
+    text-align: center;
   }
 }
 
@@ -269,19 +366,16 @@
   
   .ape-explanation-section,
   .ape-theory-section,
-  .ape-comment-review {
+  .ape-comment-review,
+  .ape-learning-tip {
     padding: 1rem;
   }
   
   .ape-code-block {
-    padding: 1rem;
+    padding: 1rem 0.75rem;
   }
   
   .ape-code-block code {
     font-size: 0.8rem;
-  }
-  
-  .ape-solution-actions {
-    padding: 0.75rem 1rem;
   }
 }

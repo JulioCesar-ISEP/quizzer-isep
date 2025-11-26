@@ -10,7 +10,7 @@ import QuizView from './components/views/QuizView';
 import KnowledgeTreeView from './components/views/KnowledgeTreeView';
 import CompletionView from './components/views/CompletionView';
 import AchievementPopup from './components/ui/AchievementPopup';
-import SessionStats from './components/ui/SessionStats';
+// import SessionStats from './components/ui/SessionStats';
 import cadeiras from '../data/cadeiras';
 import './styles/QuizzerIsep.css';
 
@@ -474,17 +474,6 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
 
   return (
     <div className={`ape-quizzer-app ${isDark ? 'dark-theme' : 'light-theme'}`}>
-      {/* Session Stats */}
-      {currentView === 'quiz' && (
-        <SessionStats
-          score={score}
-          streak={maxStreak}
-          timeSpent={timeSpent}
-          currentExercise={quizState.currentExercise + 1}
-          totalExercises={getCurrentLevelData()?.exercises.length || 0}
-        />
-      )}
-
       {/* Main Content */}
       <div className="ape-quizzer-content">
         {renderCurrentView()}
