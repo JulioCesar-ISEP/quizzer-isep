@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/quizzer-isep/', // IMPORTANTE: substitua pelo nome do seu repositório
+  base: '/',
   build: {
     outDir: 'dist',
     sourcemap: false,
