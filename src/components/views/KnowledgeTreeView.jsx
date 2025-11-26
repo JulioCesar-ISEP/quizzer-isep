@@ -200,8 +200,8 @@ const ImageZoomModal = ({ image, onClose }) => {
   );
 };
 
-// ======================== MODAL DE CONTEÚDO ========================
-const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
+// ======================== PÁGINA DE CONTEÚDO COMPLETA ========================
+const ContentPage = ({ node, onClose, onMarkAsStudied, isStudied }) => {
   const [zoomedImage, setZoomedImage] = useState(null);
 
   useEffect(() => {
@@ -240,27 +240,63 @@ const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
     }
   }, [node?.content]);
 
+  // Função para verificar se os filhos contêm elementos de bloco
+  const shouldWrapInParagraph = (children) => {
+    const childrenArray = React.Children.toArray(children);
+    
+    const hasBlockElement = childrenArray.some(child => {
+      if (React.isValidElement(child)) {
+        const blockElements = ['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'ul', 'ol', 'pre', 'iframe', 'figure', 'blockquote'];
+        return blockElements.includes(child.type) || 
+               child.props?.className === 'image-container' ||
+               child.props?.className === 'video-container' ||
+               child.props?.className === 'table-container' ||
+               child.props?.className === 'code-block-container' ||
+               child.props?.className === 'mermaid-container';
+      }
+      return false;
+    });
+
+    return !hasBlockElement;
+  };
+
   return (
     <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content expanded" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>{node.title}</h2>
-            <button onClick={onClose} className="modal-close">
-              <X size={28} />
-            </button>
+      <div className="content-page-container">
+        {/* Header Fixo */}
+        <div className="content-page-header">
+          <button onClick={onClose} className="content-page-back">
+            <ChevronLeft size={24} />
+            Voltar para a Árvore
+          </button>
+          
+          <div className="content-page-title-section">
+            <h1 className="content-page-title">{node.title}</h1>
+            <div className="content-page-meta">
+              <span className="content-level">{getNodeDescription(node.level)}</span>
+              <span className="content-time">{getStudyTime(node.level)}</span>
+            </div>
           </div>
 
-          <div className="modal-body">
-            {node.content ? (
+          <button
+            className={`content-page-action ${isStudied ? 'studied' : 'not-studied'}`}
+            onClick={() => onMarkAsStudied(node.id)}
+          >
+            <CheckCircle size={20} />
+            {isStudied ? 'Conteúdo Revisado' : 'Marcar como Estudado'}
+          </button>
+        </div>
+
+        {/* Conteúdo Principal */}
+        <div className="content-page-body">
+          {node.content ? (
+            <div className="content-page-content">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
                 rehypePlugins={[rehypeKatex, rehypeRaw]}
                 components={{
-                  // SOLUÇÃO DIRETA: Substituir p por div para evitar nesting issues
-                  p: ({ children, node }) => {
-                    // Verifica se há elementos de bloco nos filhos
-                    const hasBlockElements = node?.children?.some(child => 
+                  p: ({ children, node: markdownNode }) => {
+                    const hasBlockElements = markdownNode?.children?.some(child => 
                       child.type === 'element' && 
                       ['div', 'img', 'iframe', 'table', 'pre', 'ul', 'ol', 'blockquote', 'figure'].includes(child.tagName)
                     );
@@ -338,12 +374,12 @@ const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
                   h1: ({ children }) => <h1 className="content-h1">{children}</h1>,
                   h2: ({ children }) => <h2 className="content-h2">{children}</h2>,
                   h3: ({ children }) => <h3 className="content-h3">{children}</h3>,
+                  h4: ({ children }) => <h4 className="content-h4">{children}</h4>,
                   a: ({ href, children }) => (
                     <a href={href} target="_blank" rel="noopener noreferrer" className="content-link">
                       {children}
                     </a>
                   ),
-                  // Adicionar wrappers para outros elementos de bloco
                   ul: ({ children }) => <div className="list-container"><ul className="content-ul">{children}</ul></div>,
                   ol: ({ children }) => <div className="list-container"><ol className="content-ol">{children}</ol></div>,
                   blockquote: ({ children }) => <div className="blockquote-container"><blockquote className="content-blockquote">{children}</blockquote></div>,
@@ -351,23 +387,25 @@ const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
               >
                 {node.content}
               </ReactMarkdown>
-            ) : (
-              <div className="no-content">
-                <p>Conteúdo em desenvolvimento...</p>
-                <small>Esta seção estará disponível em breve</small>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="no-content">
+              <BookOpen size={64} />
+              <h3>Conteúdo em desenvolvimento</h3>
+              <p>Esta seção estará disponível em breve</p>
+            </div>
+          )}
+        </div>
 
-          <div className="modal-footer">
-            <button
-              className={`action-button ${isStudied ? 'studied' : 'not-studied'}`}
-              onClick={() => onMarkAsStudied(node.id)}
-            >
-              <CheckCircle size={20} />
-              {isStudied ? 'Revisado' : 'Marcar como estudado'}
-            </button>
+        {/* Footer Fixo */}
+        <div className="content-page-footer">
+          <div className="progress-info">
+            <span>Status: {isStudied ? 'Revisado' : 'A estudar'}</span>
           </div>
+          <button onClick={onClose} className="content-page-close">
+            <X size={20} />
+            Fechar
+          </button>
         </div>
       </div>
 
@@ -379,7 +417,7 @@ const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
 // ======================== COMPONENTE PRINCIPAL ========================
 const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
   const [selectedNode, setSelectedNode] = useState(null);
-  const [modalNode, setModalNode] = useState(null);
+  const [contentPageNode, setContentPageNode] = useState(null);
   const [studyProgress, setStudyProgress] = useState({});
   const flowchartRef = useRef(null);
   const nodeRefs = useRef({});
@@ -451,7 +489,7 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
   const handleNodeClick = (node) => {
     setSelectedNode(node);
     if (node.type === 'CONTENT') {
-      setModalNode(node);
+      setContentPageNode(node);
     }
   };
 
@@ -517,6 +555,19 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
     return () => window.removeEventListener('resize', handler);
   }, [knowledgeTree]);
 
+  // Se estiver na página de conteúdo, renderiza apenas ela
+  if (contentPageNode) {
+    return (
+      <ContentPage
+        node={contentPageNode}
+        onClose={() => setContentPageNode(null)}
+        onMarkAsStudied={markAsStudied}
+        isStudied={!!studyProgress[contentPageNode.id]?.studied}
+      />
+    );
+  }
+
+  // Renderização normal da árvore
   return (
     <div className="knowledge-tree-container">
       <div className="tree-header">
@@ -586,15 +637,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
           </div>
         </div>
       </div>
-
-      {modalNode && (
-        <ContentModal
-          node={modalNode}
-          onClose={() => setModalNode(null)}
-          onMarkAsStudied={markAsStudied}
-          isStudied={!!studyProgress[modalNode.id]?.studied}
-        />
-      )}
 
       <div className="quiz-fab">
         <button onClick={onStartQuiz}>
