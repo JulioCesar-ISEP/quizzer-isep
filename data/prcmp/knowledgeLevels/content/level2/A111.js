@@ -10,7 +10,7 @@ Linux é um sistema operacional de código aberto baseado em Unix, criado por Li
 ## 🎯 Conceitos Fundamentais
 
 ### Definição
-Linux é tecnicamente apenas o **kernel** (núcleo) do sistema operacional, responsável por:
+Linux é tecnicamente apenas o kernel (núcleo) do sistema operacional, responsável por:
 - Gerenciar recursos de hardware (CPU, memória, dispositivos)
 - Fornecer interface entre hardware e software
 - Controlar processos e permissões
@@ -18,26 +18,26 @@ Linux é tecnicamente apenas o **kernel** (núcleo) do sistema operacional, resp
 
 ### Distribuições Linux
 Uma distribuição Linux combina o kernel Linux com software adicional:
-- **Ubuntu/Debian**: Foco em facilidade de uso
-- **Fedora/RHEL/CentOS**: Empresarial e estável
-- **Arch Linux**: Minimalista e personalizável
-- **Alpine Linux**: Leve para containers
+- Ubuntu/Debian: Foco em facilidade de uso
+- Fedora/RHEL/CentOS: Empresarial e estável
+- Arch Linux: Minimalista e personalizável
+- Alpine Linux: Leve para containers
 
 ---
 
 ## 💡 Características Principais
 
-### 1. **Código Aberto**
+### 1. Código Aberto
 - Código fonte disponível gratuitamente
 - Licença GPL (GNU General Public License)
 - Comunidade ativa de desenvolvimento
 
-### 2. **Multiusuário e Multitarefa**
+### 2. Multiusuário e Multitarefa
 - Múltiplos usuários simultâneos
 - Isolamento de processos
 - Sistema de permissões robusto
 
-### 3. **Portabilidade**
+### 3. Portabilidade
 - Roda em diversas arquiteturas (x86, ARM, RISC-V)
 - Do smartphone ao supercomputador
 
@@ -126,7 +126,7 @@ $$
 valor = r \\times 4 + w \\times 2 + x \\times 1
 $$
 
-**Exemplo:**
+Exemplo:
 Para permissões \`rwxr-xr--\` (755):
 - User: $4 + 2 + 1 = 7$
 - Group: $4 + 0 + 1 = 5$
@@ -162,12 +162,12 @@ Para permissões \`rwxr-xr--\` (755):
 
 | Característica | Linux | Unix | Windows |
 |---------------|-------|------|---------|
-| **Licença** | Open Source | Proprietário | Proprietário |
-| **Custo** | Gratuito | Pago | Pago |
-| **Código Fonte** | Disponível | Não disponível | Não disponível |
-| **Interface** | CLI/GUI | CLI/GUI | Principalmente GUI |
-| **Customização** | Alta | Média | Baixa |
-| **Uso** | Servidores, IoT, Desktop | Servidores empresariais | Desktop, Servidores |
+| Licença | Open Source | Proprietário | Proprietário |
+| Custo | Gratuito | Pago | Pago |
+| Código Fonte | Disponível | Não disponível | Não disponível |
+| Interface | CLI/GUI | CLI/GUI | Principalmente GUI |
+| Customização | Alta | Média | Baixa |
+| Uso | Servidores, IoT, Desktop | Servidores empresariais | Desktop, Servidores |
 
 ---
 
@@ -192,7 +192,7 @@ Para permissões \`rwxr-xr--\` (755):
 
 ## 📌 Resumo
 
-**Pontos-Chave:**
+Pontos-Chave:
 - ✅ Linux é um kernel de código aberto criado por Linus Torvalds
 - ✅ Forma a base de diversas distribuições
 - ✅ Amplamente usado em servidores e sistemas embarcados

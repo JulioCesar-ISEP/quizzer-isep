@@ -37,7 +37,7 @@ function App() {
           isDark={isDark}
         />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

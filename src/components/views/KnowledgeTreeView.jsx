@@ -9,12 +9,10 @@ import {
   BookOpen as BookIcon,
   Lightbulb,
   Home,
-  Brain,
   Network,
   X,
   ZoomIn,
   ZoomOut,
-  Move,
   RotateCcw
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -54,7 +52,7 @@ const getStudyTime = (level) => {
   return times[level] || '10min';
 };
 
-// ======================== COMPONENTE NÓ ========================
+// ======================== COMPONENTE NÓ (TÍTULO LIMPO) ========================
 const TreeNode = React.memo(({ node, nodeRefs, onNodeClick, selectedNode, studyProgress }) => {
   const isContentNode = node.type === 'CONTENT';
 
@@ -69,10 +67,7 @@ const TreeNode = React.memo(({ node, nodeRefs, onNodeClick, selectedNode, studyP
       >
         <div className="node-header">
           {getNodeIcon(node)}
-          <h4
-            className="node-title"
-            dangerouslySetInnerHTML={{ __html: node.title.replace(/<br\/?>/gi, '<br/>') }}
-          />
+          <h4 className="node-title">{node.title}</h4>
         </div>
         <p className="node-description">{getNodeDescription(node.level)}</p>
         <div className="node-time">{getStudyTime(node.level)}</div>
@@ -108,57 +103,7 @@ const TreeNode = React.memo(({ node, nodeRefs, onNodeClick, selectedNode, studyP
   );
 });
 
-// ======================== MODAL DE CONTEÚDO COM ZOOM AVANÇADO ========================
-const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
-  const [zoomedImage, setZoomedImage] = useState(null);
-
-  useEffect(() => {
-    const handleEsc = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
-
-  // Inicializa o Mermaid
-  useEffect(() => {
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'dark',
-      securityLevel: 'loose',
-      fontFamily: 'inherit',
-      flowchart: { 
-        htmlLabels: true,
-        curve: 'basis'
-      },
-    });
-  }, []);
-
-  // Renderiza diagramas Mermaid
-  useEffect(() => {
-    if (node?.content) {
-      setTimeout(() => {
-        mermaid.contentLoaded();
-        const mermaidElements = document.querySelectorAll('.mermaid:not([data-processed])');
-        mermaidElements.forEach((element, index) => {
-          try {
-            const code = element.textContent.trim();
-            mermaid.render(`mermaid-${Date.now()}-${index}`, code, (svgCode) => {
-              element.innerHTML = svgCode;
-              element.setAttribute('data-processed', 'true');
-            });
-          } catch (error) {
-            console.error('Mermaid rendering error:', error);
-            element.innerHTML = `<div style="color: #ef4444; padding: 1rem; text-align: center;">
-              ❌ Erro ao renderizar diagrama Mermaid
-            </div>`;
-            element.setAttribute('data-processed', 'true');
-          }
-        });
-      }, 500);
-    }
-  }, [node?.content]);
-
-  // Modal de imagem ampliada com controles avançados
-  // ======================== MODAL DE IMAGEM COM ZOOM CORRIGIDO ========================
+// ======================== MODAL DE ZOOM DE IMAGEM ========================
 const ImageZoomModal = ({ image, onClose }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -172,77 +117,42 @@ const ImageZoomModal = ({ image, onClose }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  // Reset ao abrir
   useEffect(() => {
     setScale(1);
     setPosition({ x: 0, y: 0 });
   }, [image]);
 
-  const handleZoomIn = () => {
-    setScale(prev => Math.min(prev + 0.25, 3)); // Máximo 300%
-  };
-
-  const handleZoomOut = () => {
-    setScale(prev => Math.max(prev - 0.25, 0.25)); // Mínimo 25%
-  };
-
-  const handleReset = () => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
-  };
+  const handleZoomIn = () => setScale(prev => Math.min(prev + 0.25, 3));
+  const handleZoomOut = () => setScale(prev => Math.max(prev - 0.25, 0.25));
+  const handleReset = () => { setScale(1); setPosition({ x: 0, y: 0 }); };
 
   const handleMouseDown = (e) => {
     if (scale > 1) {
       setIsDragging(true);
       setLastMousePos({ x: e.clientX, y: e.clientY });
-      e.currentTarget.style.cursor = 'grabbing';
     }
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || scale <= 1) return;
-
+    if (!isDragging) return;
     const deltaX = e.clientX - lastMousePos.x;
     const deltaY = e.clientY - lastMousePos.y;
-
-    setPosition(prev => ({
-      x: prev.x + deltaX,
-      y: prev.y + deltaY
-    }));
-
+    setPosition(prev => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
     setLastMousePos({ x: e.clientX, y: e.clientY });
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    if (containerRef.current) {
-      containerRef.current.style.cursor = scale > 1 ? 'grab' : 'default';
-    }
-  };
+  const handleMouseUp = () => setIsDragging(false);
 
   const handleWheel = (e) => {
     e.preventDefault();
-    const zoomFactor = 0.1;
-    
-    if (e.deltaY < 0) {
-      // Zoom in
-      setScale(prev => Math.min(prev + zoomFactor, 3));
-    } else {
-      // Zoom out
-      setScale(prev => Math.max(prev - zoomFactor, 0.25));
-    }
+    const delta = e.deltaY < 0 ? 0.1 : -0.1;
+    setScale(prev => Math.min(Math.max(prev + delta, 0.25), 3));
   };
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.style.cursor = scale > 1 ? 'grab' : 'default';
-    }
-  }, [scale]);
 
   return (
     <div className="image-zoom-overlay" onClick={onClose}>
-      <div 
-        className="image-zoom-container" 
+      <div
+        className="image-zoom-container"
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -250,35 +160,23 @@ const ImageZoomModal = ({ image, onClose }) => {
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
         onClick={(e) => e.stopPropagation()}
+        style={{ cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
       >
         <button className="image-zoom-close" onClick={onClose}>
           <X size={24} />
         </button>
 
         <div className="zoom-controls-panel">
-          <button 
-            className="zoom-control-btn" 
-            onClick={handleZoomIn}
-            disabled={scale >= 3}
-          >
+          <button className="zoom-control-btn" onClick={handleZoomIn} disabled={scale >= 3}>
             <ZoomIn size={18} />
           </button>
-          <button 
-            className="zoom-control-btn" 
-            onClick={handleZoomOut}
-            disabled={scale <= 0.25}
-          >
+          <button className="zoom-control-btn" onClick={handleZoomOut} disabled={scale <= 0.25}>
             <ZoomOut size={18} />
           </button>
-          <button 
-            className="zoom-control-btn" 
-            onClick={handleReset}
-          >
+          <button className="zoom-control-btn" onClick={handleReset}>
             <RotateCcw size={18} />
           </button>
-          <div className="zoom-percentage">
-            {Math.round(scale * 100)}%
-          </div>
+          <div className="zoom-percentage">{Math.round(scale * 100)}%</div>
         </div>
 
         <div className="image-wrapper">
@@ -288,31 +186,66 @@ const ImageZoomModal = ({ image, onClose }) => {
             className="zoomed-image"
             style={{
               transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-              cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default'
             }}
           />
         </div>
 
-        {image.alt && (
-          <div className="image-caption-zoom">
-            {image.alt}
-          </div>
-        )}
+        {image.alt && <div className="image-caption-zoom">{image.alt}</div>}
 
         <div className="zoom-help">
-          <span>🖱️ Use o mouse para navegar • 🔍 Rodinha para zoom • ESC para sair</span>
+          <span>Use o mouse • Rodinha para zoom • ESC para sair</span>
         </div>
       </div>
     </div>
   );
 };
 
+// ======================== MODAL DE CONTEÚDO ========================
+const ContentModal = ({ node, onClose, onMarkAsStudied, isStudied }) => {
+  const [zoomedImage, setZoomedImage] = useState(null);
+
+  useEffect(() => {
+    const handleEsc = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { htmlLabels: true, curve: 'basis' },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (node?.content) {
+      setTimeout(() => {
+        mermaid.contentLoaded();
+        document.querySelectorAll('.mermaid:not([data-processed])').forEach((el, i) => {
+          try {
+            const code = el.textContent.trim();
+            mermaid.render(`mermaid-${Date.now()}-${i}`, code, (svg) => {
+              el.innerHTML = svg;
+              el.setAttribute('data-processed', 'true');
+            });
+          } catch (err) {
+            el.innerHTML = `<div style="color:#ef4444;padding:1rem;text-align:center;">Erro ao renderizar diagrama</div>`;
+            el.setAttribute('data-processed', 'true');
+          }
+        });
+      }, 500);
+    }
+  }, [node?.content]);
+
   return (
     <>
       <div className="modal-overlay" onClick={onClose}>
         <div className="modal-content expanded" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
-            <h2 dangerouslySetInnerHTML={{ __html: node.title }} />
+            <h2>{node.title}</h2>
             <button onClick={onClose} className="modal-close">
               <X size={28} />
             </button>
@@ -324,179 +257,121 @@ const ImageZoomModal = ({ image, onClose }) => {
                 remarkPlugins={[remarkGfm, remarkMath]}
                 rehypePlugins={[rehypeKatex, rehypeRaw]}
                 components={{
-                  // PARÁGRAFO CORRIGIDO - evita div dentro de p
-                  p: ({ children }) => {
-                    const childrenArray = React.Children.toArray(children);
-                    if (childrenArray.some(child => 
-                      React.isValidElement(child) && 
-                      (child.props?.src?.includes('youtube.com') || child.type === 'iframe')
-                    )) {
-                      return <>{children}</>;
+                  // SOLUÇÃO DIRETA: Substituir p por div para evitar nesting issues
+                  p: ({ children, node }) => {
+                    // Verifica se há elementos de bloco nos filhos
+                    const hasBlockElements = node?.children?.some(child => 
+                      child.type === 'element' && 
+                      ['div', 'img', 'iframe', 'table', 'pre', 'ul', 'ol', 'blockquote', 'figure'].includes(child.tagName)
+                    );
+
+                    if (hasBlockElements) {
+                      return <div className="content-block">{children}</div>;
                     }
+                    
                     return <p className="content-paragraph">{children}</p>;
                   },
-
-                  // MERMAID CORRIGIDO
-                  code({ node, inline, className, children, ...props }) {
-                    const match = /language-mermaid/.exec(className || '');
-                    if (match) {
+                  code({ inline, className, children }) {
+                    if (className === 'language-mermaid') {
                       return (
                         <div className="mermaid-container">
                           <pre className="mermaid-source" style={{ display: 'none' }}>
                             {String(children).trim()}
                           </pre>
-                          <div className="mermaid">
-                            {String(children).trim()}
-                          </div>
-                          <div className="mermaid-caption">
-                            Diagrama Mermaid - Role para visualizar completamente
-                          </div>
+                          <div className="mermaid">{String(children).trim()}</div>
+                          <div className="mermaid-caption">Diagrama Mermaid</div>
                         </div>
                       );
                     }
-
-                    // CÓDIGO NORMAL
-                    const isCodeBlock = !inline && className;
-                    if (isCodeBlock) {
+                    if (!inline && className) {
                       return (
                         <div className="code-block-container">
                           <pre className="code-block">
-                            <code className={className} {...props}>
-                              {children}
-                            </code>
+                            <code className={className}>{children}</code>
                           </pre>
-                          <div className="code-caption">
-                            Bloco de código - Role horizontalmente para visualizar
-                          </div>
+                          <div className="code-caption">Bloco de código</div>
                         </div>
                       );
                     }
-
-                    return (
-                      <code className="inline-code" {...props}>
-                        {children}
-                      </code>
-                    );
+                    return <code className="inline-code">{children}</code>;
                   },
-
-                  // IMAGENS COM ZOOM
-                  img({ src, alt }) {
+                  img: ({ src, alt }) => {
                     return (
                       <div className="image-container">
                         <img
                           src={src}
-                          alt={alt || 'Imagem do conteúdo'}
+                          alt={alt || 'Imagem'}
                           className="content-image zoomable-image"
                           onClick={() => setZoomedImage({ src, alt })}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'block';
-                          }}
                           style={{ cursor: 'zoom-in' }}
                         />
-                        <div className="image-fallback" style={{display: 'none'}}>
-                          🖼️ {alt || 'Imagem não disponível'}
-                        </div>
                         {alt && (
                           <div className="image-caption">
                             {alt}
-                            <div className="zoom-hint-small">🔍 Clique para ampliar e explorar a imagem</div>
+                            <div className="zoom-hint-small">Clique para ampliar</div>
                           </div>
                         )}
                       </div>
                     );
                   },
-
-                  // YOUTUBE CORRIGIDO
-                  iframe({ src, title, ...props }) {
+                  iframe: ({ src, title }) => {
                     if (src?.includes('youtube.com') || src?.includes('youtu.be')) {
                       return (
                         <div className="video-container">
                           <iframe
                             src={src}
-                            title={title || 'Vídeo do YouTube'}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            title={title || 'Vídeo'}
                             allowFullScreen
                             className="youtube-iframe"
-                            {...props}
                           />
-                          <div className="video-caption">
-                            {title || 'Vídeo incorporado do YouTube'}
-                          </div>
+                          <div className="video-caption">{title || 'Vídeo do YouTube'}</div>
                         </div>
                       );
                     }
-                    return <iframe src={src} title={title} {...props} />;
+                    return <iframe src={src} title={title} />;
                   },
-
-                  // TABELAS
-                  table({ children }) {
-                    return (
-                      <div className="table-container">
-                        <table className="content-table">
-                          {children}
-                        </table>
-                      </div>
-                    );
-                  },
-
-                  // HEADERS
-                  h1({ children }) { return <h1 className="content-h1">{children}</h1>; },
-                  h2({ children }) { return <h2 className="content-h2">{children}</h2>; },
-                  h3({ children }) { return <h3 className="content-h3">{children}</h3>; },
-
-                  // LINKS
-                  a({ href, children }) {
-                    return (
-                      <a href={href} target="_blank" rel="noopener noreferrer" className="content-link">
-                        {children}
-                      </a>
-                    );
-                  },
-
-                  // FOOTNOTES - tratamento para notas de rodapé
-                  sup({ children }) {
-                    const footnoteMatch = children && children[0] && children[0].match(/\^(\d+)/);
-                    if (footnoteMatch) {
-                      return (
-                        <sup className="footnote-ref">
-                          [{footnoteMatch[1]}]
-                        </sup>
-                      );
-                    }
-                    return <sup>{children}</sup>;
-                  }
+                  table: ({ children }) => (
+                    <div className="table-container">
+                      <table className="content-table">{children}</table>
+                    </div>
+                  ),
+                  h1: ({ children }) => <h1 className="content-h1">{children}</h1>,
+                  h2: ({ children }) => <h2 className="content-h2">{children}</h2>,
+                  h3: ({ children }) => <h3 className="content-h3">{children}</h3>,
+                  a: ({ href, children }) => (
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="content-link">
+                      {children}
+                    </a>
+                  ),
+                  // Adicionar wrappers para outros elementos de bloco
+                  ul: ({ children }) => <div className="list-container"><ul className="content-ul">{children}</ul></div>,
+                  ol: ({ children }) => <div className="list-container"><ol className="content-ol">{children}</ol></div>,
+                  blockquote: ({ children }) => <div className="blockquote-container"><blockquote className="content-blockquote">{children}</blockquote></div>,
                 }}
               >
                 {node.content}
               </ReactMarkdown>
             ) : (
               <div className="no-content">
-                <p>📝 Conteúdo em desenvolvimento...</p>
+                <p>Conteúdo em desenvolvimento...</p>
                 <small>Esta seção estará disponível em breve</small>
               </div>
             )}
           </div>
 
           <div className="modal-footer">
-            <button 
+            <button
               className={`action-button ${isStudied ? 'studied' : 'not-studied'}`}
               onClick={() => onMarkAsStudied(node.id)}
             >
               <CheckCircle size={20} />
-              {isStudied ? '✅ Revisado' : '📚 Marcar como estudado'}
+              {isStudied ? 'Revisado' : 'Marcar como estudado'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Modal de Zoom de Imagem Avançado */}
-      {zoomedImage && (
-        <ImageZoomModal
-          image={zoomedImage}
-          onClose={() => setZoomedImage(null)}
-        />
-      )}
+      {zoomedImage && <ImageZoomModal image={zoomedImage} onClose={() => setZoomedImage(null)} />}
     </>
   );
 };
@@ -580,7 +455,7 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
     }
   };
 
-  // ======================== LINHAS ========================
+  // ======================== LINHAS DE CONEXÃO ========================
   const [lines, setLines] = useState([]);
   const [labels, setLabels] = useState([]);
 
@@ -599,21 +474,19 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
       const cRect = toEl.getBoundingClientRect();
       const fRect = flowchartRef.current.getBoundingClientRect();
 
-      let x1 = pRect.left + pRect.width / 2 - fRect.left;
-      let y1 = pRect.bottom - fRect.top;
-      let x2 = cRect.left + cRect.width / 2 - fRect.left;
-      let y2 = cRect.top - fRect.top;
+      const x1 = pRect.left + pRect.width / 2 - fRect.left;
+      const y1 = pRect.bottom - fRect.top;
+      const x2 = cRect.left + cRect.width / 2 - fRect.left;
+      const y2 = cRect.top - fRect.top;
 
       const dy = y2 - y1;
       const offset = Math.max(60, Math.abs(dy) * 0.35);
 
-      const d =
-        dy >= 0
-          ? `M ${x1} ${y1} L ${x1} ${y1 + offset} L ${x2} ${y2 - offset} L ${x2} ${y2}`
-          : `M ${x1} ${y1} L ${x1} ${y1 - offset} L ${x2} ${y2 + offset} L ${x2} ${y2}`;
+      const d = dy >= 0
+        ? `M ${x1} ${y1} L ${x1} ${y1 + offset} L ${x2} ${y2 - offset} L ${x2} ${y2}`
+        : `M ${x1} ${y1} L ${x1} ${y1 - offset} L ${x2} ${y2 + offset} L ${x2} ${y2}`;
 
       newLines.push({ d, dash, color });
-
       if (label) {
         const midX = (x1 + x2) / 2;
         const midY = (y1 + y2) / 2;
@@ -646,7 +519,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
 
   return (
     <div className="knowledge-tree-container">
-      {/* HEADER */}
       <div className="tree-header">
         <button onClick={onBack} className="back-button">
           <ChevronLeft size={20} /> Voltar
@@ -666,7 +538,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
       <div className="main-layout">
         <div className="diagram-container">
           <div className="flowchart" ref={flowchartRef}>
@@ -716,7 +587,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
         </div>
       </div>
 
-      {/* MODAL */}
       {modalNode && (
         <ContentModal
           node={modalNode}
@@ -726,7 +596,6 @@ const KnowledgeTreeView = ({ level, onBack, onStartQuiz }) => {
         />
       )}
 
-      {/* QUIZ FAB */}
       <div className="quiz-fab">
         <button onClick={onStartQuiz}>
           <Target size={28} />
