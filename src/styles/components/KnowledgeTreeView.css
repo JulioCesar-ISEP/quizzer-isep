@@ -894,7 +894,7 @@
   backdrop-filter: blur(8px);
   font-size: 1rem;
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
-}
+}mermaid-container
 
 .image-zoom-close:hover {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
@@ -956,7 +956,13 @@
     0 0 0 0 rgba(245, 158, 11, 0.7);
   border: 2px solid rgba(251, 191, 36, 0.5);
   cursor: pointer;
-  color: white;
+  color: white;.ape-code-block,
+.ape-code-block pre,
+.ape-code-block code {
+  background: #0a0f1c !important;
+  color: #c2c1c1;
+}
+
   font-size: 1rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: pulse-glow 2s infinite;
@@ -1701,4 +1707,9 @@
   .content-page-content .content-h2 {
     font-size: 1.6rem;
   }
+}
+
+pre {
+  background: #0a0f1c !important;
+  color: #ffffff !important;
 }

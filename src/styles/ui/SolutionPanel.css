@@ -1,4 +1,4 @@
-/* SolutionPanel.css - Versão Corrigida */
+/* SolutionPanel.css - Versão com Code Block Corrigido */
 .ape-solution-panel {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 16px;
@@ -123,7 +123,7 @@
 }
 
 .ape-explanation-section p {
-  color: #e2e8f0;
+  color: #ffffff;
   line-height: 1.6;
   margin-bottom: 0.75rem;
   font-size: 0.9rem;
@@ -132,21 +132,22 @@
 /* CORREÇÃO: Texto em negrito com melhor contraste */
 .ape-explanation-section strong,
 .ape-theory-section strong,
-.ape-comment-review strong {
+.ape-comment-review strong,
+.ape-learning-tip strong {
   color: #ffd700;
   font-weight: 700;
 }
 
-/* Code Block - CORREÇÃO COMPLETA */
+/* CODE BLOCK CORRIGIDO - Fundo mais escuro e texto mais claro */
 .ape-code-block {
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #000000;
+  border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 8px;
   padding: 1.25rem;
   margin: 0.75rem 0;
   overflow-x: auto;
   position: relative;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .ape-code-block::before {
@@ -165,23 +166,71 @@
 }
 
 .ape-code-block code {
-  color: #cbd5e1;
+  color: #000000;
   font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
   display: block;
   margin-top: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* CORREÇÃO: Syntax highlighting básico para código */
-.ape-code-block code .keyword { color: #ff79c6; font-weight: 600; }
-.ape-code-block code .function { color: #50fa7b; }
-.ape-code-block code .string { color: #f1fa8c; }
-.ape-code-block code .comment { color: #6272a4; font-style: italic; }
-.ape-code-block code .number { color: #bd93f9; }
-.ape-code-block code .operator { color: #ff79c6; }
-.ape-code-block code .variable { color: #8be9fd; }
-.ape-code-block code .class { color: #8be9fd; font-weight: 600; }
+/* CORREÇÃO: Syntax highlighting com cores vibrantes */
+.ape-code-block code .keyword { 
+  color: #ff79c6; 
+  font-weight: 600; 
+}
+.ape-code-block code .function { 
+  color: #50fa7b; 
+  font-weight: 600;
+}
+.ape-code-block code .string { 
+  color: #f1fa8c; 
+}
+.ape-code-block code .comment { 
+  color: #6272a4; 
+  font-style: italic;
+}
+.ape-code-block code .number { 
+  color: #bd93f9; 
+  font-weight: 600;
+}
+.ape-code-block code .operator { 
+  color: #ff79c6; 
+}
+.ape-code-block code .variable { 
+  color: #8be9fd; 
+}
+.ape-code-block code .class { 
+  color: #8be9fd; 
+  font-weight: 600;
+}
+.ape-code-block code .import { 
+  color: #ffb86c; 
+}
+.ape-code-block code .export { 
+  color: #ffb86c; 
+  font-weight: 600;
+}
+
+/* CORREÇÃO: Scrollbar personalizada para o code block */
+.ape-code-block::-webkit-scrollbar {
+  height: 16px;
+}
+
+.ape-code-block::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.ape-code-block::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.5);
+  border-radius: 4px;
+}
+
+.ape-code-block::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.7);
+}
 
 /* Theory Section */
 .ape-theory-section {
@@ -378,4 +427,11 @@
   .ape-code-block code {
     font-size: 0.8rem;
   }
+}
+
+.ape-code-block,
+.ape-code-block pre,
+.ape-code-block code {
+  background: #0a0f1c !important;
+  color: #c2c1c1;
 }
