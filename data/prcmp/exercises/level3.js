@@ -1,650 +1,380 @@
-const ex5 = [
-    {
-      id: 1,
-      question: "Qual comando usar para procurar linhas com 'Silva' em ficheiro e mostrar apenas nome e telefone?",
-      code: "// Ficheiro contactos.txt\nAbel Silva\\t970222986\\tabel.silva@mail.pt\nAna Silva\\t950098297\\tana.silva@mail.pt",
-      options: [
-        "grep 'Silva' contactos.txt | cut -f1,2",
-        "grep 'Silva' contactos.txt | cut -f2,3", 
-        "find 'Silva' contactos.txt",
-        "search 'Silva' contactos.txt"
+const ex3 = [
+  {
+    id: 1,
+    question: "Qual é a forma direta mais precisa (ou seja, com menor erro) de representar o número -2,6 num computador?",
+    code: "",
+    options: [
+      "Número inteiro sem sinal de 32 bits",
+      "Número inteiro com sinal (complemento para 2) de 32 bits",
+      "Número em vírgula flutuante (IEEE 754) de 32 bits",
+      "Número em vírgula flutuante (IEEE 754) de 64 bits"
+    ],
+    correct: 3,
+    explanation: "IEEE 754 de 64 bits (double precision) tem maior precisão que 32 bits (single precision). Números fracionários devem usar vírgula flutuante, não representação inteira.",
+    theoryPoints: {
+      title: "IEEE 754 - Ponto Flutuante",
+      content: "Padrão IEEE 754 para números reais: single precision (32 bits) tem 23 bits de mantissa, double (64 bits) tem 52 bits. Maior precisão para números fracionários.",
+      keyPoints: [
+        "32 bits: 1 sinal, 8 expoente, 23 mantissa",
+        "64 bits: 1 sinal, 11 expoente, 52 mantissa",
+        "Precisão dupla: ~15-17 dígitos decimais",
+        "Números inteiros podem ser representados exatamente se couberem na mantissa"
       ],
-      correct: 0,
-      explanation: "grep filtra linhas com 'Silva', cut -f1,2 extrai primeira e segunda colunas (nome e telefone), assumindo separação por TAB.",
-      theoryPoints: {
-        title: "Processamento de Texto com Pipe",
-        content: "Unix permite encadear comandos com pipe (|). Cada comando faz uma coisa bem: grep filtra, cut corta colunas, sort ordena, etc.",
-        keyPoints: [
-          "grep: pesquisa padrões em texto",
-          "cut: extrai colunas por delimitador",
-          "sort: ordena linhas",
-          "pipe: conecta saída de um comando à entrada do outro"
-        ],
-        examples: "grep 'error' log.txt | cut -f1,3 | sort -u\ncat file.txt | head -20 | tail -10\nwho | grep 'user' | cut -f1 -d' '"
-      },
-      hints: ["Precisa filtrar e depois extrair colunas", "Que colunas contêm nome e telefone?"]
+      examples: "-2,6 em IEEE 754 double: 1 (sinal negativo) + expoente + mantissa binária de 2,6. Erro de arredondamento menor que em single."
     },
-    {
-      id: 2,
-      question: "Como filtrar apenas linhas com email e ordenar alfabeticamente?",
-      code: "// contactos.txt contém: nome TAB telefone TAB email\ncurl -s URL | grep '@' | sort",
-      options: [
-        "grep '@' contactos.txt | sort",
-        "sort contactos.txt | grep '@'",
-        "find '@' contactos.txt | sort",
-        "cut -f3 contactos.txt | sort"
+    hints: ["Qual formato tem mais bits para precisão?", "Números decimais fracionários são representados exatamente em binário?"]
+  },
+  {
+    id: 2,
+    question: "Observe a seguinte representação de um valor inteiro de 8 bits: 10001100. Se for uma representação sem sinal, este número é:",
+    code: "// Valor binário: 10001100\n// Conversão para decimal: 1×2⁷ + 0×2⁶ + 0×2⁵ + 0×2⁴ + 1×2³ + 1×2² + 0×2¹ + 0×2⁰",
+    options: [
+      "Negativo",
+      "Positivo",
+      "Zero",
+      "Impossível determinar"
+    ],
+    correct: 1,
+    explanation: "Em representação sem sinal, todos os 8 bits representam magnitude. 10001100₂ = 140₁₀, que é positivo. Em complemento para 2 seria negativo.",
+    theoryPoints: {
+      title: "Representação sem Sinal vs com Sinal",
+      content: "Sem sinal: todos os bits representam magnitude (0 a 2ⁿ-1). Com sinal: bit mais significativo indica sinal (0=positivo, 1=negativo). Complemento para 2 é padrão para inteiros com sinal.",
+      keyPoints: [
+        "Sem sinal: range 0 a (2ⁿ - 1)",
+        "Complemento para 2: range -2ⁿ⁻¹ a (2ⁿ⁻¹ - 1)",
+        "Bit mais significativo: 0=positivo, 1=negativo (em complemento 2)",
+        "10001100 sem sinal: 140, com sinal (comp 2): -116"
       ],
-      correct: 0,
-      explanation: "grep '@' filtra linhas que contêm o símbolo @ (presente em emails), e sort ordena o resultado alfabeticamente.",
-      theoryPoints: {
-        title: "Filtros e Ordenação",
-        content: "Combinar grep com sort é comum para filtrar e organizar dados. grep seleciona linhas baseadas em padrões, sort organiza.",
-        keyPoints: [
-          "grep com padrões simples: '@', 'silva', '^A'",
-          "sort ordena lexicograficamente",
-          "sort -n para ordenação numérica",
-          "sort -r para ordem reversa"
-        ],
-        examples: "grep 'error' log.txt | sort -u\ngrep '^A' nomes.txt | sort\nps aux | grep 'chrome' | sort -k3 -n"
-      },
-      hints: ["Qual símbolo identifica emails?", "A ordem dos comandos no pipe importa?"]
+      examples: "8 bits sem sinal: 0 a 255. 8 bits com sinal (comp 2): -128 a 127. 10001100 = 140 (sem sinal) = -116 (comp 2)."
     },
-    {
-      id: 3,
-      question: "Qual é o significado do exit status em Unix?",
-      code: "// Execução de comandos\n$ mkdir temp\necho $?  # Mostra exit status\n0        # Sucesso\n$ rmdir nonexistent\necho $?\n1        # Erro",
-      options: [
-        "Tempo de execução do comando",
-        "Número que indica sucesso (0) ou falha (≠0)",
-        "Quantidade de memória usada",
-        "Número de linhas de output"
+    hints: ["O que significa 'sem sinal'?", "Como interpretar o bit mais à esquerda em cada representação?"]
+  },
+  {
+    id: 3,
+    question: "A norma IEEE 754 permite:",
+    code: "",
+    options: [
+      "representar conjuntos de caracteres que permitem formar texto",
+      "representar números inteiros com sinal, com uma única representação do valor zero",
+      "representar números inteiros com sinal, havendo duas representações para o valor zero",
+      "representar números reais com sinal em vírgula flutuante"
+    ],
+    correct: 3,
+    explanation: "IEEE 754 é o padrão para representação de números reais (racionais) em vírgula flutuante em computadores, incluindo formatos para precisão simples e dupla.",
+    theoryPoints: {
+      title: "Padrão IEEE 754",
+      content: "Padroniza representação de números de ponto flutuante: formato, operações aritméticas, arredondamento, tratamento de exceções (NaN, infinito). Usado em hardware e software.",
+      keyPoints: [
+        "Formatos: binary32 (single), binary64 (double), binary128 (quad)",
+        "Componentes: sinal, expoente (biased), mantissa (significando)",
+        "Valores especiais: ±0, ±infinito, NaN (Not a Number)",
+        "Subnormal numbers: números muito próximos de zero"
       ],
-      correct: 1,
-      explanation: "Exit status 0 indica sucesso, qualquer outro valor indica falha. Pode ser verificado com $? e usado em condições if, while, etc.",
-      theoryPoints: {
-        title: "Exit Status e Controle de Fluxo",
-        content: "Cada comando retorna status ao terminar. Scripts podem tomar decisões baseadas nesses valores usando && (AND), || (OR), if, etc.",
-        keyPoints: [
-          "0 = sucesso",
-          "1-255 = códigos de erro",
-          "$? = último exit status",
-          "&& executa se anterior sucedeu",
-          "|| executa se anterior falhou"
-        ],
-        examples: "mkdir dir && cd dir  # Só entra se criar\ncomando || echo 'Falhou'  # Mensagem se erro\nif [ $? -eq 0 ]; then echo 'OK'; fi"
-      },
-      hints: ["O que significa retorno 0?", "Como verificar se comando funcionou?"]
+      examples: "Float em C (32 bits), double em C (64 bits). Valores: 1.5, -3.14159, 2.0×10³⁸. Especial: NaN para resultados inválidos (√-1)."
     },
-    {
-      id: 4,
-      question: "Como baixar um arquivo remoto e salvar localmente?",
-      code: "// Download e salvamento\ncurl -s https://exemplo.com/script.sh > local.sh",
-      options: [
-        "curl URL > arquivo",
-        "wget URL -o arquivo", 
-        "download URL arquivo",
-        "get URL > arquivo"
+    hints: ["IEEE 754 é para que tipo de números?", "Qual a diferença entre inteiros e números reais em computação?"]
+  },
+  {
+    id: 4,
+    question: "Nas operações lógicas binárias com cadeias de bits (bitwise operations), qual operador é selecionado para forçar o bit UM (1) em determinadas posições da cadeia?",
+    code: "// Exemplo: forçar bit 3 (0-indexed)\nvalor = 00101100\nmascara = 00001000  // bit 3 = 1\nresultado = valor OR mascara = 00101100",
+    options: [
+      "Operador AND",
+      "Operador OR",
+      "Operador NOT",
+      "Operador XOR"
+    ],
+    correct: 1,
+    explanation: "OR com máscara onde bits desejados são 1 força esses bits para 1, independentemente do valor original. AND com 0 limpa bits, XOR alterna bits.",
+    theoryPoints: {
+      title: "Operações Bitwise",
+      content: "Operações lógicas aplicadas bit-a-bit: AND (&), OR (|), XOR (^), NOT (~). Usadas para manipulação de flags, máscaras, otimização.",
+      keyPoints: [
+        "AND: limpa bits (máscara com 0s)",
+        "OR: seta bits (máscara com 1s)",
+        "XOR: alterna bits (1 alterna, 0 mantém)",
+        "NOT: inverte todos os bits",
+        "Deslocamentos: << (esquerda), >> (direita)"
       ],
-      correct: 0,
-      explanation: "curl -s faz download silencioso, > redireciona output para arquivo local. Alternativamente: curl -o arquivo URL",
-      theoryPoints: {
-        title: "Download e Redirecionamento",
-        content: "curl/wget transferem dados de URLs. Redirecionamento > cria/sobrescreve arquivo, >> append.",
-        keyPoints: [
-          "curl -s: modo silencioso",
-          ">: redireciona stdout para arquivo",
-          ">>: adiciona ao final do arquivo",
-          "2>: redireciona stderr"
-        ],
-        examples: "curl -s URL > arquivo\nwget -O arquivo URL\nls > lista.txt 2> erros.txt"
-      },
-      hints: ["Qual comando faz download?", "Como salvar output em arquivo?"]
+      examples: "Setar bit 3: valor | (1 << 3)\nLimpar bit 3: valor & ~(1 << 3)\nAlternar bit 3: valor ^ (1 << 3)\nTestar bit 3: (valor & (1 << 3)) != 0"
     },
-    {
-      id: 5,
-      question: "Como contar quantos processos do usuário estão em execução?",
-      code: "// Lista de processos\n$ ps -u $USER | wc -l\n15",
-      options: [
-        "ps -u $USER | wc -l",
-        "ps -a | grep $USER",
-        "count -p $USER",
-        "ps aux | count"
+    hints: ["Qual operação com 1 resulta sempre em 1?", "Como garantir que um bit específico fique em 1?"]
+  },
+  {
+    id: 5,
+    question: "Qual é a forma mais precisa de representar o número π num computador?",
+    code: "",
+    options: [
+      "Número inteiro sem sinal de 32 bits",
+      "Número inteiro com sinal (complemento para 2) de 32 bits",
+      "Número em vírgula flutuante (IEEE 754) de 32 bits",
+      "Número em vírgula flutuante (IEEE 754) de 64 bits"
+    ],
+    correct: 3,
+    explanation: "π é um número real irracional. IEEE 754 double (64 bits) tem maior precisão (~15-17 dígitos decimais) que single (32 bits, ~7-8 dígitos).",
+    theoryPoints: {
+      title: "Representação de Números Irracionais",
+      content: "Números irracionais (π, e, √2) não têm representação exata finita em nenhuma base. Precisamos de aproximação. Mais bits = melhor aproximação.",
+      keyPoints: [
+        "π ≈ 3.141592653589793...",
+        "Float (32 bits): ~3.1415927 (7 dígitos)",
+        "Double (64 bits): ~3.141592653589793 (15 dígitos)",
+        "Erro de arredondamento inevitável"
       ],
-      correct: 0,
-      explanation: "ps -u $USER lista processos do usuário, wc -l conta linhas. Subtrair 1 do resultado para excluir o cabeçalho.",
-      theoryPoints: {
-        title: "Contagem com wc e Listagem de Processos",
-        content: "wc (word count) conta linhas, palavras e caracteres. ps lista processos do sistema.",
-        keyPoints: [
-          "wc -l: conta linhas",
-          "ps -u user: processos de usuário específico",
-          "ps aux: todos os processos",
-          "grep -c: conta ocorrências"
-        ],
-        examples: "ps aux | grep chrome | wc -l\nwho | wc -l  # usuários logados\nfind . -name '*.txt' | wc -l"
-      },
-      hints: ["Qual comando conta linhas?", "Como listar apenas processos do usuário atual?"]
+      examples: "Em C: float pi = 3.1415927f; double pi = 3.141592653589793; Em Python: pi é float de 64 bits por padrão."
     },
-    {
-      id: 6,
-      question: "Como encontrar todos os ficheiros .txt modificados nos últimos 2 dias?",
-      code: "// Encontrar ficheiros por data\nfind . -name '*.txt' -mtime -2",
-      options: [
-        "find . -name '*.txt' -mtime -2",
-        "find . -type txt -time 2",
-        "ls -l *.txt | grep '2 days'",
-        "search *.txt -modified 2"
+    hints: ["π tem infinitas casas decimais. Como aproximar?", "Qual formato tem mais precisão: 32 ou 64 bits?"]
+  },
+  {
+    id: 6,
+    question: "É necessário colocar a UM os 16 bits mais significativos de uma palavra de 32 bits, deixando os restantes 16 menos significativos inalterados. Uma solução é:",
+    code: "// Palavra original: 0x12345678\n// Resultado desejado: 0xFFFF5678\n// Operação: OR com 0xFFFF0000",
+    options: [
+      "Aplicar 16 deslocamentos lógicos para a direita seguidos de 16 deslocamentos lógicos para a esquerda",
+      "Aplicar a operação lógica AND com a máscara 0xFFFF0000",
+      "Aplicar a operação lógica OR com a máscara 0xFFFF0000",
+      "Aplicar a operação lógica AND com a máscara 0x0000FFFF"
+    ],
+    correct: 2,
+    explanation: "OR com 0xFFFF0000 seta os 16 bits superiores para 1 (todos F) e mantém os inferiores inalterados (0s na máscara). AND limparia os bits inferiores.",
+    theoryPoints: {
+      title: "Manipulação de Bits com Máscaras",
+      content: "Máscaras são padrões de bits usados para isolar, setar, limpar ou alternar bits específicos. OR seta bits onde a máscara tem 1, AND limpa onde tem 0.",
+      keyPoints: [
+        "Bits mais significativos: posições altas (leftmost)",
+        "OR com 1 seta bit para 1",
+        "AND com 0 limpa bit para 0",
+        "Hexadecimal útil para máscaras: cada dígito = 4 bits"
       ],
-      correct: 0,
-      explanation: "find . -name '*.txt' -mtime -2 procura recursivamente ficheiros .txt modificados há menos de 2 dias.",
-      theoryPoints: {
-        title: "Busca Avançada com find",
-        content: "find é poderoso para buscar ficheiros por nome, tipo, tamanho, data, permissões, etc.",
-        keyPoints: [
-          "-name: busca por nome",
-          "-mtime: data de modificação",
-          "-type: tipo de ficheiro",
-          "-size: tamanho do ficheiro"
-        ],
-        examples: "find /var/log -name '*.log' -mtime -7\nfind . -size +1M -type f\nfind /home -user john -perm 644"
-      },
-      hints: ["Qual comando busca ficheiros?", "Como especificar extensão e data?"]
+      examples: "Setar bits 31-16: valor | 0xFFFF0000\nLimpar bits 15-0: valor & 0xFFFF0000\nExtrair bits 15-0: valor & 0x0000FFFF\nExtrair bits 31-16: (valor >> 16) & 0xFFFF"
     },
-    {
-      id: 7,
-      question: "Como substituir todas as vírgulas por pontos num ficheiro CSV?",
-      code: "// Substituição de caracteres\ncat data.csv | tr ',' '.' > new_data.csv",
-      options: [
-        "tr ',' '.' < data.csv > new_data.csv",
-        "sed 's/,/./g' data.csv",
-        "replace ',' '.' data.csv",
-        "Ambas A e B estão corretas"
+    hints: ["Qual operação 'força' bits para 1?", "Que máscara tem 1s nos 16 bits superiores e 0s nos inferiores?"]
+  },
+  {
+    id: 7,
+    question: "Utiliza-se a representação em complemento para 2:",
+    code: "",
+    options: [
+      "para representar números com sinal em vírgula flutuante",
+      "para representar números inteiros com sinal, com uma única representação do valor zero",
+      "para representar números inteiros com sinal, havendo duas representações para o valor zero",
+      "para representar os valores lógicos verdadeiro e falso"
+    ],
+    correct: 1,
+    explanation: "Complemento para 2 é o padrão para representação de inteiros com sinal em computadores modernos. Tem representação única do zero e aritmética simples.",
+    theoryPoints: {
+      title: "Complemento para 2",
+      content: "Representação de inteiros com sinal: 1) Inverter todos os bits do valor absoluto, 2) Adicionar 1. Vantagens: representação única do zero, aritmética simples (soma/subtração iguais), range simétrico em torno do zero.",
+      keyPoints: [
+        "Zero: 000...0 (apenas uma representação)",
+        "Número negativo: complemento do positivo + 1",
+        "Range: -2ⁿ⁻¹ a 2ⁿ⁻¹-1 para n bits",
+        "Overflow: quando resultado excede range"
       ],
-      correct: 3,
-      explanation: "Ambos tr e sed podem fazer a substituição. tr traduz caracteres, sed usa expressões regulares para substituição.",
-      theoryPoints: {
-        title: "Manipulação de Texto com tr e sed",
-        content: "tr substitui ou remove caracteres. sed é mais poderoso para edição de texto com expressões regulares.",
-        keyPoints: [
-          "tr 'a' 'b': substitui caracteres",
-          "sed 's/old/new/g': substituição global",
-          "tr -d: remove caracteres",
-          "sed -i: edição in-place"
-        ],
-        examples: "tr '[:lower:]' '[:upper:]' < file\nsed 's/foo/bar/g' file.txt\ntr -d '\\r' < file > newfile"
-      },
-      hints: ["Quais comandos manipulam texto?", "Como fazer substituição global?"]
+      examples: "8 bits: +5 = 00000101, -5 = 11111010 + 1 = 11111011\nSoma: 5 + (-3) = 00000101 + 11111101 = 00000010 (2) com carry ignorado."
     },
-    {
-      id: 8,
-      question: "Como matar um processo específico pelo PID?",
-      code: "// Terminar processo\n$ kill 12345",
-      options: [
-        "kill 12345",
-        "stop 12345",
-        "kill -9 12345",
-        "Ambas A e C estão corretas"
+    hints: ["Quantas representações de zero existem em complemento para 2?", "Por que complemento para 2 é melhor que sinal e magnitude?"]
+  },
+  {
+    id: 8,
+    question: "Observe a representação 10001100. Se for uma representação com sinal em complemento para 2, este número é:",
+    code: "// Binário: 10001100\n// Complemento para 2: bit mais significativo = 1 → negativo\n// Para achar magnitude: complementar e somar 1",
+    options: [
+      "Negativo",
+      "Positivo",
+      "Zero",
+      "Impossível determinar sem mais informação"
+    ],
+    correct: 0,
+    explanation: "Em complemento para 2, o bit mais significativo (MSB) indica sinal: 0 = positivo, 1 = negativo. 10001100 tem MSB=1, portanto é negativo.",
+    theoryPoints: {
+      title: "Interpretação de Complemento para 2",
+      content: "Para determinar valor de número negativo em complemento 2: 1) Inverter todos os bits, 2) Somar 1, 3) Resultado é magnitude (positiva), 4) Aplicar sinal negativo.",
+      keyPoints: [
+        "MSB = 1 → número negativo",
+        "MSB = 0 → número positivo ou zero",
+        "Para negativo: magnitude = ~valor + 1",
+        "10001100: MSB=1 → negativo, magnitude = 01110011 + 1 = 01110100 = 116 → valor = -116"
       ],
-      correct: 3,
-      explanation: "kill PID envia sinal TERM (15) para terminação graciosa. kill -9 PID força terminação imediata com sinal KILL.",
-      theoryPoints: {
-        title: "Gestão de Processos com kill",
-        content: "kill envia sinais para processos. Sinais comuns: TERM (15) para terminação normal, KILL (9) para forçar terminação.",
-        keyPoints: [
-          "kill PID: sinal TERM (15)",
-          "kill -9 PID: sinal KILL",
-          "kill -l: lista sinais",
-          "pkill: mata por nome"
-        ],
-        examples: "kill 1234  # terminação normal\nkill -9 1234  # força terminação\npkill firefox  # mata por nome"
-      },
-      hints: ["Qual sinal para terminação normal?", "E para forçar terminação?"]
+      examples: "10001100: inverter → 01110011, +1 → 01110100 = 116, negativo → -116\n00001100: MSB=0 → positivo = 12"
     },
-    {
-      id: 9,
-      question: "Como ver as 10 linhas mais frequentes num ficheiro de log?",
-      code: "// Análise de logs\ncat access.log | sort | uniq -c | sort -nr | head -10",
-      options: [
-        "sort access.log | uniq -c | sort -nr | head -10",
-        "cat access.log | freq -top 10",
-        "grep -c '' access.log | head -10",
-        "count access.log | sort -n"
+    hints: ["O que o bit mais à esquerda indica em complemento para 2?", "Como converter um número negativo em complemento 2 para decimal?"]
+  },
+  {
+    id: 9,
+    question: "A conversão de um número fraccionário exacto em decimal para binário:",
+    code: "// Exemplo: 0,1 (decimal) para binário\n// 0,1 × 2 = 0,2 → 0\n// 0,2 × 2 = 0,4 → 0\n// 0,4 × 2 = 0,8 → 0\n// 0,8 × 2 = 1,6 → 1\n// 0,6 × 2 = 1,2 → 1 (repetição)\n// Resultado: 0,0001100110011... (periódico)",
+    options: [
+      "resulta sempre num número fraccionário também exacto (sem erro)",
+      "pode resultar num número binário com erro de representação",
+      "só é possível para números inteiros",
+      "requer conversão prévia para hexadecimal"
+    ],
+    correct: 1,
+    explanation: "Muitas frações decimais exatas têm representação binária infinita periódica (ex: 0,1 decimal = 0,0001100110011... binário). Com bits limitados, há erro de arredondamento.",
+    theoryPoints: {
+      title: "Erros de Representação em Binário",
+      content: "Decimal exato ≠ Binário exato. Fração decimal finita pode ser binária infinita periódica se denominador não for potência de 2. Ex: 1/10 = 0,1 decimal periódico em binário.",
+      keyPoints: [
+        "Decimal exato: denominador é potência de 10",
+        "Binário exato: denominador é potência de 2",
+        "Interseção: denominador é potência de 2 e 5 (2×5=10)",
+        "1/10 = 1/(2×5) → binário infinito periódico"
       ],
-      correct: 0,
-      explanation: "sort ordena, uniq -c conta ocorrências, sort -nr ordena numericamente em ordem reversa, head -10 mostra top 10.",
-      theoryPoints: {
-        title: "Análise de Dados com sort, uniq e head",
-        content: "Combinar sort, uniq e head/tail é poderoso para análise de dados e logs.",
-        keyPoints: [
-          "uniq -c: conta ocorrências únicas",
-          "sort -n: ordenação numérica",
-          "sort -r: ordem reversa",
-          "head/tail: primeiras/últimas linhas"
-        ],
-        examples: "cat file | sort | uniq -c | sort -nr\nps aux | sort -k4 -nr | head -5  # top 5 memória"
-      },
-      hints: ["Como contar ocorrências únicas?", "Como ordenar por frequência?"]
+      examples: "Exatos em ambos: 0,5 = 1/2 = 0,1₂; 0,25 = 1/4 = 0,01₂; 0,125 = 1/8 = 0,001₂\nPeriódico: 0,1 = 0,0001100110011...₂; 0,2 = 0,001100110011...₂"
     },
-    {
-      id: 10,
-      question: "Como criar um script que monitoriza mudanças num ficheiro?",
-      code: "// Monitorização em tempo real\ntail -f /var/log/syslog | grep --line-buffered 'error'",
-      options: [
-        "tail -f ficheiro | grep 'padrao'",
-        "watch 'grep padrao ficheiro'",
-        "monitor ficheiro for 'padrao'",
-        "Ambas A e B estão corretas"
+    hints: ["0,1 em decimal é exato. E em binário?", "Que frações têm representação finita em binário?"]
+  },
+  {
+    id: 10,
+    question: "É necessário colocar a zero os 16 bits menos significativos de uma palavra de 32 bits. Uma solução é:",
+    code: "// Palavra original: 0xABCD1234\n// Resultado desejado: 0xABCD0000\n// Operação: AND com 0xFFFF0000",
+    options: [
+      "Aplicar 16 deslocamentos lógicos para a direita seguidos de 16 deslocamentos lógicos para a esquerda",
+      "Aplicar a operação lógica AND com a máscara 0xFFFF0000",
+      "Aplicar a operação lógica OR com a máscara 0xFFFF0000",
+      "Aplicar a operação lógica XOR com a máscara 0x0000FFFF"
+    ],
+    correct: 1,
+    explanation: "AND com 0xFFFF0000 mantém os 16 bits superiores (AND com 1) e limpa os 16 bits inferiores (AND com 0). Deslocamentos perderiam dados ou introduziriam zeros em ambos os lados.",
+    theoryPoints: {
+      title: "Limpeza de Bits com AND",
+      content: "AND bitwise é usado para limpar (clear) bits específicos. Padrão: máscara com 0s onde quer limpar, 1s onde quer preservar. AND com 0 sempre resulta em 0, AND com 1 preserva o bit original.",
+      keyPoints: [
+        "Limpar bits: AND com máscara que tem 0s nessas posições",
+        "Preservar bits: AND com máscara que tem 1s nessas posições",
+        "Máscara para limpar bits 15-0: 0xFFFF0000",
+        "Deslocamentos alternativos mas menos eficientes"
       ],
-      correct: 3,
-      explanation: "tail -f mostra novas linhas em tempo real. watch executa comando periodicamente. Ambas são válidas para monitorização.",
-      theoryPoints: {
-        title: "Monitorização e Debugging",
-        content: "tail -f e watch são ferramentas úteis para monitorizar ficheiros e processos em tempo real.",
-        keyPoints: [
-          "tail -f: segue novas linhas",
-          "watch: executa comando repetidamente",
-          "grep --line-buffered: buffer por linha",
-          ">: redirecionamento em tempo real"
-        ],
-        examples: "tail -f /var/log/auth.log | grep 'Failed'\nwatch -n 1 'ps aux | grep python'\ntail -f log.txt > monitor.log &"
-      },
-      hints: ["Como ver novas linhas automaticamente?", "Como executar comando periodicamente?"]
+      examples: "Limpar byte baixo: valor & 0xFFFFFF00\nLimpar nibble baixo: valor & 0xFFFFFFF0\nLimpar bit 0: valor & 0xFFFFFFFE"
     },
-    {
-      id: 11,
-      question: "Como alterar as permissões de um ficheiro para rwx para owner, r-x para group, e r-- para others?",
-      code: "// Alteração de permissões usando modo octal\n$ chmod 754 script.sh\n$ ls -l script.sh\n-rwxr-xr-- 1 user group 1024 Jan 1 10:00 script.sh",
-      options: [
-        "chmod 754 ficheiro",
-        "chmod u=rwx,g=rx,o=r ficheiro",
-        "chmod 755 ficheiro",
-        "Ambas A e B estão corretas"
+    hints: ["Qual operação sempre produz 0 quando um operando é 0?", "Como 'zerar' bits específicos mantendo outros inalterados?"]
+  },
+  {
+    id: 11,
+    question: "A representação de um valor inteiro em binário:",
+    code: "",
+    options: [
+      "pode não ser exacta (apresenta erro), mesmo que sejam utilizados bits suficientes",
+      "requer tantos algarismos quantos a representação do mesmo valor em hexadecimal",
+      "resulta sempre numa representação exacta se houver bits suficientes",
+      "é sempre mais compacta que a representação decimal"
+    ],
+    correct: 2,
+    explanation: "Inteiros podem ser representados exatamente em binário se houver bits suficientes para a magnitude. Diferente de números reais que podem ter erros de arredondamento.",
+    theoryPoints: {
+      title: "Representação Exata de Inteiros",
+      content: "Inteiros têm representação finita em qualquer base inteira (binário, decimal, hexadecimal). N bits podem representar exatamente 2ⁿ valores distintos. Overflow ocorre se valor excede capacidade, mas dentro do range é exato.",
+      keyPoints: [
+        "Inteiros: representação exata possível",
+        "Reais: podem exigir representação infinita",
+        "Range: n bits sem sinal → 0 a 2ⁿ-1",
+        "Range: n bits com sinal (comp2) → -2ⁿ⁻¹ a 2ⁿ⁻¹-1"
       ],
-      correct: 3,
-      explanation: "754 em octal equivale a rwxr-xr--. Também pode ser especificado com mnemónicos: u=rwx,g=rx,o=r. Ambas as formas são válidas.",
-      theoryPoints: {
-        title: "Permissões de Ficheiros com chmod",
-        content: "chmod altera permissões usando modo octal (3 dígitos) ou mnemónicos (u,g,o + r,w,x). Cada dígito octal representa: owner(4+2+1), group(4+0+1), others(4+0+0).",
-        keyPoints: [
-          "Modo octal: 3 dígitos para owner/group/others",
-          "r=4, w=2, x=1, soma para cada categoria",
-          "u=user, g=group, o=others, a=all",
-          "+ adiciona, - remove, = define exatamente"
-        ],
-        examples: "chmod 644 file.txt  # rw-r--r--\nchmod u+x script.sh  # adiciona execução ao owner\nchmod go-w file.conf  # remove escrita de group e others"
-      },
-      hints: ["Como calcular 754 em binário?", "Qual a equivalência entre octal e rwx?"]
+      examples: "Inteiro 42 em 8 bits: 00101010 (exato)\nInteiro 1000 em 16 bits: 0000001111101000 (exato)\nInteiro 10⁹ em 32 bits: cabe (exato), em 16 bits: overflow"
     },
-    {
-      id: 12,
-      question: "Como procurar ficheiros que contenham a palavra 'error' ignorando maiúsculas/minúsculas?",
-      code: "// Busca case-insensitive\ngrep -i 'error' /var/log/syslog",
-      options: [
-        "grep -i 'error' ficheiro",
-        "grep 'error' ficheiro --ignore-case",
-        "grep -I 'error' ficheiro",
-        "find 'error' ficheiro -i"
+    hints: ["Inteiros são discretos ou contínuos?", "Qual a diferença entre overflow e erro de arredondamento?"]
+  },
+  {
+    id: 12,
+    question: "Qual operador bitwise é selecionado para forçar o bit ZERO (0) em determinadas posições?",
+    code: "// Exemplo: limpar bit 2\nvalor = 00101101\nmascara = 11111011  // bit 2 = 0\nresultado = valor AND mascara = 00101001",
+    options: [
+      "Operador AND",
+      "Operador OR",
+      "Operador XOR",
+      "Operador NOT"
+    ],
+    correct: 0,
+    explanation: "AND com máscara onde bits desejados são 0 força esses bits para 0, independentemente do valor original. AND com 0 sempre resulta em 0.",
+    theoryPoints: {
+      title: "Limpeza de Bits com AND",
+      content: "Para limpar bits específicos: criar máscara com 1s em todas as posições EXCETO nas que quer limpar (onde coloca 0s). Aplicar AND bitwise.",
+      keyPoints: [
+        "AND com 0 → 0 (limpa)",
+        "AND com 1 → preserva bit original",
+        "Máscara de limpeza: bits a limpar = 0, outros = 1",
+        "Máscara = ~(1 << posição) para limpar bit único"
       ],
-      correct: 0,
-      explanation: "A opção -i do grep faz busca case-insensitive, encontrando 'Error', 'ERROR', 'error', etc. Útil para logs onde a formatação pode variar.",
-      theoryPoints: {
-        title: "Busca Avançada com grep",
-        content: "grep oferece várias opções para buscas flexíveis: -i ignora case, -v inverte busca, -n mostra números de linha, -c conta ocorrências.",
-        keyPoints: [
-          "-i: ignore case",
-          "-v: inverte match (linhas que NÃO contêm)",
-          "-n: mostra número da linha",
-          "-c: conta ocorrências",
-          "-r: recursivo em diretórios"
-        ],
-        examples: "grep -rin 'error' /var/log/\ngrep -c 'warning' app.log\ngrep -v '^#' config.conf  # exclui comentários"
-      },
-      hints: ["Qual opção controla sensibilidade a maiúsculas?", "Como encontrar todas as variações de 'error'?"]
+      examples: "Limpar bit 3: valor & ~(1 << 3)\nLimpar bits 3-0: valor & 0xFFFFFFF0\nLimpar bits 7-4: valor & 0xFFFFFF0F"
     },
-    {
-      id: 13,
-      question: "Como comprimir um diretório inteiro mantendo a estrutura de paths?",
-      code: "// Compressão recursiva\ntar -czf backup.tar.gz /home/user/documents/",
-      options: [
-        "tar -czf backup.tar.gz diretorio/",
-        "zip -r backup.zip diretorio/",
-        "gzip -r diretorio/ backup.gz",
-        "Ambas A e B estão corretas"
+    hints: ["Qual operação sempre produz 0 quando um operando é 0?", "Como 'zerar' bits específicos?"]
+  },
+  {
+    id: 13,
+    question: "A representação de um qualquer valor em binário requer:",
+    code: "",
+    options: [
+      "tantos algarismos quantos a representação do mesmo valor em hexadecimal",
+      "mais algarismos que a representação decimal",
+      "menos algarismos que a representação octal",
+      "exatamente 8, 16, 32 ou 64 bits dependendo do tipo"
+    ],
+    correct: 1,
+    explanation: "Binário usa apenas dígitos 0 e 1, então precisa de mais posições que decimal (0-9) ou hexadecimal (0-9,A-F) para representar o mesmo valor. Hexadecimal é mais compacto: 1 dígito hex = 4 bits.",
+    theoryPoints: {
+      title: "Comparação de Bases Numéricas",
+      content: "Base b usa b símbolos. Para representar valor N: número de dígitos ≈ log_b(N). Base maior → menos dígitos. Binário (b=2) precisa de mais dígitos que decimal (b=10) que precisa de mais que hexadecimal (b=16).",
+      keyPoints: [
+        "Binário: 2 símbolos (0,1), ~3,32× dígitos vs decimal",
+        "Decimal: 10 símbolos (0-9)",
+        "Hexadecimal: 16 símbolos (0-9,A-F), 1 dígito = 4 bits",
+        "Octal: 8 símbolos (0-7), 1 dígito = 3 bits"
       ],
-      correct: 3,
-      explanation: "tar -czf cria tarball comprimido com gzip, mantendo estrutura. zip -r também funciona mas com formato diferente. Ambos são válidos para compressão recursiva.",
-      theoryPoints: {
-        title: "Compressão e Arquivos tar",
-        content: "tar agrupa múltiplos ficheiros, gzip comprime. Combinações comuns: -czf (create zip file), -xzf (extract zip file). zip é alternativa comum.",
-        keyPoints: [
-          "tar -c: create, -x: extract, -z: gzip, -f: file",
-          "tar -czf: cria tarball comprimido",
-          "tar -xzf: extrai tarball comprimido",
-          "zip -r: comprime recursivamente",
-          "unzip: extrai arquivos zip"
-        ],
-        examples: "tar -czf projeto.tar.gz src/ docs/\ntar -xzf backup.tar.gz\nzip -r site.zip public_html/\nunzip arquivo.zip"
-      },
-      hints: ["Qual comando para agrupar + comprimir?", "Como incluir subdiretórios?"]
+      examples: "255 decimal = 11111111₂ (8 dígitos) = FF₁₆ (2 dígitos) = 377₈ (3 dígitos)\n4095 = 111111111111₂ (12 dígitos) = FFF₁₆ (3 dígitos)"
     },
-    {
-      id: 14,
-      question: "Como verificar o espaço em disco usado por um diretório específico?",
-      code: "// Análise de uso de disco\ndu -sh /home/user/projetos/\n4.2G    /home/user/projetos/",
-      options: [
-        "du -sh diretorio/",
-        "df -h diretorio/",
-        "ls -la diretorio/ | grep total",
-        "size -r diretorio/"
+    hints: ["Qual base tem mais símbolos: binário ou hexadecimal?", "Por que endereços de memória são mostrados em hex?"]
+  },
+  {
+    id: 14,
+    question: "Um número racional com representação finita em decimal:",
+    code: "// Exemplo: 0,2 decimal = 1/5\n// Binário: 0,2 × 2 = 0,4 → 0\n// 0,4 × 2 = 0,8 → 0\n// 0,8 × 2 = 1,6 → 1\n// 0,6 × 2 = 1,2 → 1\n// 0,2 × 2 = 0,4 → 0 (repetição)\n// Resultado: 0,001100110011... (periódico)",
+    options: [
+      "é sempre convertido num número racional também com representação finita em binário",
+      "pode ser convertido num número racional com representação infinita periódica em binário",
+      "tem que ser convertido em número inteiro para representação binária",
+      "nunca pode ser representado exatamente em computador"
+    ],
+    correct: 1,
+    explanation: "Frações decimais finitas podem ter representação binária infinita se o denominador (na forma reduzida) tiver fatores primos diferentes de 2. Ex: 1/5 = 0,2 decimal finito, mas binário periódico.",
+    theoryPoints: {
+      title: "Frações em Diferentes Bases",
+      content: "Fração a/b tem representação finita na base b se todos os fatores primos de b (após simplificação) estão entre os fatores primos da base. Decimal: fatores 2 e 5. Binário: apenas fator 2.",
+      keyPoints: [
+        "Decimal finito → denominador tem apenas fatores 2 e 5",
+        "Binário finito → denominador tem apenas fator 2",
+        "Decimal finito pode ser binário infinito se denominador tiver fator 5",
+        "Exceção: se denominador for potência de 2 → binário finito"
       ],
-      correct: 0,
-      explanation: "du -sh mostra uso de disco de forma legível (human-readable) para um diretório específico. df mostra espaço livre em filesystems.",
-      theoryPoints: {
-        title: "Gestão de Espaço em Disco",
-        content: "du (disk usage) mostra espaço usado por ficheiros/diretórios. df (disk free) mostra espaço disponível em filesystems montados.",
-        keyPoints: [
-          "du -s: summary (total apenas)",
-          "du -h: human readable (K,M,G)",
-          "du -sh: summary human readable",
-          "df -h: disk free human readable",
-          "df -i: inodes livres"
-        ],
-        examples: "du -sh /var/log/  # tamanho do diretório\ndu -h --max-depth=1 /home/  # top-level apenas\ndf -h /  # espaço livre na root"
-      },
-      hints: ["Qual comando mostra uso real de disco?", "Como formatar saída para humanos?"]
+      examples: "1/2 = 0,5 decimal finito = 0,1₂ binário finito\n1/5 = 0,2 decimal finito = 0,00110011...₂ binário periódico\n1/10 = 0,1 decimal finito = 0,000110011...₂ binário periódico"
     },
-    {
-      id: 15,
-      question: "Como substituir 'foo' por 'bar' apenas na primeira ocorrência de cada linha?",
-      code: "// Substituição seletiva com sed\nsed 's/foo/bar/' ficheiro.txt",
-      options: [
-        "sed 's/foo/bar/' ficheiro",
-        "sed 's/foo/bar/g' ficheiro",
-        "tr 'foo' 'bar' < ficheiro",
-        "replace 'foo' 'bar' ficheiro --first"
+    hints: ["Que fatores primos tem o denominador 10?", "E o denominador 8?"]
+  },
+  {
+    id: 15,
+    question: "O operador XOR em operações bitwise:",
+    code: "// XOR: 1 se bits diferentes, 0 se iguais\n// 0 XOR 0 = 0\n// 0 XOR 1 = 1\n// 1 XOR 0 = 1\n// 1 XOR 1 = 0",
+    options: [
+      "força o bit UM (1) em determinadas posições",
+      "força o bit ZERO (0) em determinadas posições",
+      "alterna (inverte) bits em determinadas posições",
+      "preserva os bits originais"
+    ],
+    correct: 2,
+    explanation: "XOR com 1 inverte o bit (0→1, 1→0), XOR com 0 preserva o bit. Usado para alternar (toggle) bits específicos.",
+    theoryPoints: {
+      title: "Operação XOR (OU Exclusivo)",
+      content: "XOR retorna 1 se os bits de entrada forem diferentes, 0 se forem iguais. Propriedades: A XOR A = 0, A XOR 0 = A, A XOR 1 = NOT A. Usado em criptografia, checksums, gráficos.",
+      keyPoints: [
+        "XOR com 1: inverte bit",
+        "XOR com 0: mantém bit",
+        "Auto-inverso: (A XOR B) XOR B = A",
+        "Troca sem variável temporária: a = a XOR b; b = a XOR b; a = a XOR b"
       ],
-      correct: 0,
-      explanation: "sed 's/old/new/' substitui apenas a primeira ocorrência por linha. O 'g' no final faria substituição global em cada linha.",
-      theoryPoints: {
-        title: "Edição Seletiva com sed",
-        content: "sed (stream editor) permite edição poderosa baseada em padrões. Sem 'g' substitui apenas primeira ocorrência, com 'g' substitui todas.",
-        keyPoints: [
-          "s/old/new/: substitui primeira ocorrência",
-          "s/old/new/g: substitui todas ocorrências",
-          "s/old/new/2: substitui segunda ocorrência",
-          "/padrao/s/old/new/: só em linhas com padrão"
-        ],
-        examples: "sed 's/cat/dog/' file.txt  # só primeira\nsed 's/cat/dog/g' file.txt  # todas\nsed 's/cat/dog/2' file.txt  # só segunda\nsed '/error/s/warning/ALERT/' log.txt"
-      },
-      hints: ["Qual a diferença entre s/old/new/ e s/old/new/g?", "Como limitar a substituições?"]
+      examples: "Alternar bit 3: valor ^ (1 << 3)\nChecksum simples: XOR de todos os bytes\nMascaramento: valor ^ máscara inverte bits onde máscara tem 1"
     },
-    {
-      id: 16,
-      question: "Como executar um comando periodicamente a cada 5 segundos?",
-      code: "// Execução periódica\nwatch -n 5 'ps aux | grep python | wc -l'",
-      options: [
-        "watch -n 5 'comando'",
-        "sleep 5 && comando",
-        "repeat 5s 'comando'",
-        "cron '*/5 * * * *' comando"
-      ],
-      correct: 0,
-      explanation: "watch -n 5 executa o comando a cada 5 segundos, atualizando o output no terminal. Útil para monitorização em tempo real.",
-      theoryPoints: {
-        title: "Agendamento e Monitorização",
-        content: "watch executa comandos periodicamente mostrando output atualizado. cron agenda tarefas em horários específicos. sleep pausa execução.",
-        keyPoints: [
-          "watch -n N: executa a cada N segundos",
-          "cron: agendamento baseado em tempo",
-          "sleep N: pausa por N segundos",
-          "at: execução única agendada"
-        ],
-        examples: "watch -n 2 'free -h'  # memória a cada 2s\nwatch -d 'ls -l'  # destaca mudanças\n* * * * * comando  # cron a cada minuto"
-      },
-      hints: ["Qual comando para execução contínua?", "Como especificar intervalo em segundos?"]
-    },
-    {
-      id: 17,
-      question: "Como encontrar ficheiros com mais de 100MB e eliminá-los interativamente?",
-      code: "// Busca e eliminação condicional\nfind . -size +100M -ok rm {} \\;",
-      options: [
-        "find . -size +100M -ok rm {} \\;",
-        "find . -size +100M -exec rm {} \\;",
-        "ls -l | grep 'M' | rm -i",
-        "du -h | grep '100M' | xargs rm"
-      ],
-      correct: 0,
-      explanation: "find . -size +100M encontra ficheiros >100MB, -ok pede confirmação antes de executar rm para cada ficheiro. Mais seguro que -exec.",
-      theoryPoints: {
-        title: "Busca Condicional com Ações",
-        content: "find pode executar comandos nos ficheiros encontrados. -ok pede confirmação, -exec executa diretamente. {} é substituído pelo nome do ficheiro.",
-        keyPoints: [
-          "-exec comando {} \\;: executa comando",
-          "-ok comando {} \\;: pede confirmação",
-          "{}: placeholder para nome do ficheiro",
-          "\\;: termina o comando -exec/-ok"
-        ],
-        examples: "find . -name '*.tmp' -exec rm {} \\;\nfind /tmp -mtime +30 -ok rm {} \\;\nfind . -size +1G -exec ls -lh {} \\;"
-      },
-      hints: ["Como pedir confirmação antes de eliminar?", "Qual a sintaxe para -exec/-ok?"]
-    },
-    {
-      id: 18,
-      question: "Como redirecionar stdout e stderr para ficheiros diferentes?",
-      code: "// Redirecionamento separado\ncomando > output.log 2> error.log",
-      options: [
-        "comando > output.log 2> error.log",
-        "comando 1> output.log 2> error.log",
-        "comando > output.log 2>&1 error.log",
-        "Ambas A e B estão corretas"
-      ],
-      correct: 3,
-      explanation: "Ambas as formas redirecionam stdout para output.log e stderr para error.log. 2>&1 redirecionaria stderr para o mesmo local que stdout.",
-      theoryPoints: {
-        title: "Redirecionamento Avançado",
-        content: "Unix usa file descriptors: 0=stdin, 1=stdout, 2=stderr. Podem ser redirecionados separadamente ou combinados.",
-        keyPoints: [
-          "> ou 1>: redireciona stdout",
-          "2>: redireciona stderr",
-          "2>&1: redireciona stderr para stdout",
-          "&>: redireciona stdout e stderr",
-          ">/dev/null: descarta output"
-        ],
-        examples: "cmd > out.txt 2> err.txt  # separados\ncmd > log.txt 2>&1  # combinados\ncmd &> /dev/null  # descarta tudo\ncmd 2> >(grep -v debug)  # filtra stderr"
-      },
-      hints: ["Qual file descriptor para stderr?", "Como redirecionar para ficheiros separados?"]
-    },
-    {
-      id: 19,
-      question: "Como extrair apenas as linhas únicas de um ficheiro, ordenadas?",
-      code: "// Remoção de duplicados\nsort ficheiro.txt | uniq",
-      options: [
-        "sort ficheiro | uniq",
-        "uniq ficheiro | sort",
-        "sort -u ficheiro",
-        "Ambas A e C estão corretas"
-      ],
-      correct: 3,
-      explanation: "sort | uniq e sort -u produzem o mesmo resultado: linhas únicas ordenadas. uniq sozinho só remove duplicados consecutivos.",
-      theoryPoints: {
-        title: "Processamento de Dados Únicos",
-        content: "uniq remove linhas duplicadas consecutivas. sort ordena linhas. sort -u combina ordenação e remoção de duplicados.",
-        keyPoints: [
-          "uniq: remove duplicados consecutivos",
-          "sort: ordena linhas",
-          "sort -u: ordena e remove duplicados",
-          "uniq -c: conta ocorrências",
-          "uniq -d: mostra apenas duplicados"
-        ],
-        examples: "sort file.txt | uniq  # único ordenado\nsort -u file.txt  # equivalente\nuniq -c file.txt  # conta frequências\nsort file.txt | uniq -d  # apenas duplicados"
-      },
-      hints: ["uniq funciona apenas em linhas consecutivas?", "Há atalho para sort + uniq?"]
-    },
-    {
-      id: 20,
-      question: "Como criar um link simbólico para um ficheiro ou diretório?",
-      code: "// Criação de links simbólicos\nln -s /caminho/original /caminho/link",
-      options: [
-        "ln -s alvo link",
-        "link -s alvo link",
-        "symlink alvo link",
-        "cp -s alvo link"
-      ],
-      correct: 0,
-      explanation: "ln -s cria link simbólico (soft link) que aponta para o alvo. Links simbólicos podem cruzar filesystems e apontar para diretórios.",
-      theoryPoints: {
-        title: "Links Simbólicos e Hard Links",
-        content: "ln cria links: -s para simbólicos (apontadores), sem -s para hard links (mesmo inode). Links simbólicos são mais flexíveis.",
-        keyPoints: [
-          "ln -s: link simbólico (soft link)",
-          "ln: hard link (mesmo inode)",
-          "Links simbólicos: podem cruzar filesystems",
-          "Hard links: só mesmo filesystem, não para diretórios"
-        ],
-        examples: "ln -s /usr/bin/python3 /usr/local/bin/python\nln file.txt hardlink.txt  # hard link\nreadlink link_simbolico  # mostra destino"
-      },
-      hints: ["Qual opção para link simbólico?", "Links simbólicos podem apontar para diretórios?"]
-      },
-        {
-      id: 21,
-      question: "Qual é a forma mais direta e limpa de encontrar apenas os Process IDs (PIDs) de um serviço chamado 'nginx', sem mostrar o próprio comando 'grep'?",
-      code: "// Método 1: Clássico, mas mostra o 'grep'\n$ ps aux | grep 'nginx'\nnginx     1234 ...\nuser      5678 grep nginx\n\n// Método 2: Direto\n$ pgrep nginx\n1234",
-      options: [
-        "ps aux | grep 'nginx'",
-        "pgrep nginx",
-        "who | grep 'nginx'",
-        "find --pid 'nginx'"
-      ],
-      correct: 1,
-      explanation: "O comando 'pgrep' (process grep) é desenhado especificamente para procurar processos pelo nome e retornar apenas os seus PIDs. O método 'ps aux | grep' funciona, mas polui a saída com o próprio processo 'grep', o que 'pgrep' evita.",
-      theoryPoints: {
-        title: "Gestão de Processos Eficiente",
-        content: "Enquanto 'ps | grep' é comum, 'pgrep' é uma ferramenta mais limpa para encontrar PIDs. 'pkill' é o seu equivalente para enviar sinais (como 'kill') diretamente pelo nome.",
-        keyPoints: [
-          "ps: mostra snapshot dos processos",
-          "grep: filtra texto",
-          "ps aux | grep 'nome': método clássico, mas 'sujo'",
-          "pgrep 'nome': método moderno, retorna PIDs",
-          "pkill 'nome': envia sinal (default TERM) para PIDs"
-        ],
-        examples: "pgrep sshd\npgrep -u root chrome\nps aux | grep '[s]shd' # Truque para evitar 'grep'\npkill -9 nginx"
-      },
-      hints: [
-        "Como evitar que o 'grep' se encontre a si mesmo?",
-        "Existe um comando 'grep' específico para processos?"
-      ]
-    },
-    {
-      id: 22,
-      question: "Como encontrar linhas em 'config.conf' que começam com a palavra 'Listen' (ex: 'Listen 80', 'Listen 443')?",
-      code: "// Exemplo de config.conf\n# Ouve na porta 80\nListen 80\nListen 443\n\nErrorLog /var/log/error.log",
-      options: [
-        "grep 'Listen$' config.conf",
-        "grep 'Listen' config.conf",
-        "grep '^Listen' config.conf",
-        "grep 'Listen.*' config.conf"
-      ],
-      correct: 2,
-      explanation: "O acento circunflexo '^' é uma expressão regular que significa 'início da linha'. Isso garante que apenas linhas *começando* com 'Listen' sejam encontradas, ignorando linhas onde 'Listen' possa aparecer no meio (como em comentários).",
-      theoryPoints: {
-        title: "Expressões Regulares (Regex) Básicas",
-        content: "O 'grep' usa expressões regulares para padrões. '^' (início da linha) e '$' (fim da linha) são os mais básicos e úteis para ancorar buscas.",
-        keyPoints: [
-          "^: ancora no início da linha",
-          "$: ancora no fim da linha",
-          ".: qualquer caractere único",
-          "*: zero ou mais do caractere anterior",
-          "[abc]: um caractere da lista"
-        ],
-        examples: "grep '^root' /etc/passwd # Linhas que começam com 'root'\ngrep 'sh$' /etc/passwd   # Linhas que terminam com 'sh'\ngrep '^#' config.conf     # Linhas de comentário"
-      },
-      hints: [
-        "Como o 'grep' sabe onde a linha começa?",
-        "Qual caractere especial representa o 'início'?"
-      ]
-    },
-    {
-      id: 23,
-      question: "O comando 'ls -l' produz colunas separadas por *vários espaços*. Como extrair de forma fiável apenas a 9ª coluna (nome do ficheiro)?",
-      code: "// Saída de 'ls -l' (espaços variados)\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\ndrwxr-xr-x 2 user group   4096 Feb 15 12:30 pasta\n\n// Comando corrigido\nls -l | tr -s ' ' | cut -d' ' -f9",
-      options: [
-        "ls -l | cut -d' ' -f9",
-        "ls -l | tr -s ' ' | cut -d' ' -f9",
-        "ls -l | cut -f9",
-        "ls -l | grep -f9"
-      ],
-      correct: 1,
-      explanation: "'ls -l' usa espaços inconsistentes. 'cut -d' ' -f9' (Opção A) falha porque trata cada espaço como um delimitador. 'tr -s ' '' ('squeeze') comprime múltiplos espaços num só. Depois disso, 'cut -d' ' -f9' pode usar o espaço único como delimitador para extrair o 9º campo.",
-      theoryPoints: {
-        title: "Limpeza de Saída com 'tr'",
-        content: "Muitos comandos (como 'ls -l' ou 'ps') usam múltiplos espaços para alinhamento. Para processar esta saída com 'cut', é essencial primeiro 'espremer' (squeeze) os espaços repetidos num só usando 'tr -s'.",
-        keyPoints: [
-          "tr: translitera ou apaga caracteres",
-          "tr -s 'char': 'squeeze' (comprime) 'char' repetidos",
-          "tr -d 'char': 'delete' (apaga) 'char'",
-          "Pipeline: ls -l | tr -s ' ' | cut -d' ' -f<N>"
-        ],
-        examples: "ls -l | tr -s ' ' | cut -d' ' -f1,9\nps aux | tr -s ' ' | cut -d' ' -f2,11"
-      },
-      hints: [
-        "O 'cut' funciona bem com múltiplos espaços?",
-        "Como posso reduzir '    ' para ' '?"
-      ]
-    },
-    {
-      id: 24,
-      question: "Qual o efeito do comando 'ls -l | tee file_list.txt | grep 'Jan''?",
-      code: "// O comando 'tee' divide o fluxo\n$ ls -l | tee file_list.txt | grep 'Jan'\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\n\n$ cat file_list.txt\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\ndrwxr-xr-x 2 user group   4096 Feb 15 12:30 pasta",
-      options: [
-        "Guarda a lista *completa* de 'ls -l' em 'file_list.txt' E mostra no terminal apenas as linhas que contêm 'Jan'.",
-        "Guarda a lista *filtrada* (apenas linhas com 'Jan') em 'file_list.txt' E mostra o mesmo no terminal.",
-        "Apenas guarda a lista completa em 'file_list.txt', não mostrando nada no terminal.",
-        "Mostra um erro, pois 'tee' não pode ser usado com 'grep'."
-      ],
-      correct: 0,
-      explanation: "O comando 'tee' é usado para duplicar um stream. Ele recebe a saída de 'ls -l', guarda uma cópia *completa* em 'file_list.txt' E, simultaneamente, passa a mesma saída completa para o 'grep 'Jan'', que filtra e mostra o resultado no terminal.",
-      theoryPoints: {
-        title: "Dividindo Streams com 'tee'",
-        content: "'tee' lê da entrada padrão e escreve na saída padrão *e* em um ou mais ficheiros. É útil para guardar resultados intermédios de um pipeline sem o interromper.",
-        keyPoints: [
-          "tee <ficheiro>: escreve para stdout E para o <ficheiro>",
-          "tee -a <ficheiro>: (append) adiciona ao ficheiro em vez de sobrescrever",
-          "Útil para logar e ver ao mesmo tempo"
-        ],
-        examples: "who | tee users.log | wc -l\ndate | tee current_date.txt\nls | tee file_list.txt | sort -r"
-      },
-      hints: [
-        "O 'tee' vem antes ou depois do 'grep'?",
-        "O que o 'tee' faz com o pipeline?"
-      ]
-    },
-    {
-      id: 25,
-      question: "Qual comando é mais *eficiente* para apagar milhares de ficheiros '.tmp' encontrados pelo 'find'?",
-      code: "// Opção 1: Lenta, um 'rm' por ficheiro\n$ find . -name '*.tmp' -exec rm {} \\;\n\n// Opção 2: Rápida, um 'rm' para muitos ficheiros\n$ find . -name '*.tmp' | xargs rm\n\n// Opção 3: Rápida, mas com '+'\n$ find . -name '*.tmp' -exec rm {} +",
-      options: [
-        "find . -name '*.tmp' -exec rm {} \\;",
-        "find . -name '*.tmp' | xargs rm",
-        "rm $(find . -name '*.tmp')",
-        "Ambas B e C (se -exec rm {} + for opção) são mais eficientes que A"
-      ],
-      correct: 1,
-      explanation: "O comando 'xargs' é mais eficiente. 'find ... -exec ... \\;' (Opção A) lança um novo processo 'rm' para *cada* ficheiro. 'xargs' (Opção B) agrupa muitos nomes de ficheiros e passa-os de uma só vez para o 'rm' (ex: 'rm file1 file2...'), reduzindo o número de processos criados. (A Opção C, `rm $(...)`, pode falhar se a lista for muito longa - 'Argument list too long').",
-      theoryPoints: {
-        title: "Processamento em Lote com 'xargs'",
-        content: "'xargs' lê itens da entrada padrão e constrói e executa linhas de comando com esses itens. É a forma padrão de 'x-args' (eXtended arguments) e é muito mais eficiente do que 'find -exec ... \\;' para operações em massa.",
-        keyPoints: [
-          "find | xargs <cmd>: pipeline padrão para eficiência.",
-          "find ... -exec <cmd> {} \\;: um processo <cmd> por ficheiro.",
-          "find ... -exec <cmd> {} +: (Alternativa moderna a xargs) um processo <cmd> para múltiplos ficheiros.",
-          "$(...): substituição de comando, pode falhar com 'Argument list too long'."
-        ],
-        examples: "find . -name '*.log' | xargs grep 'ERROR'\nfind . -name '*.bak' | xargs rm\nfind . -type f -print0 | xargs -0 chown user:group"
-      },
-      hints: [
-        "Como 'find -exec' lida com 10.000 ficheiros?",
-        "Existe uma forma de agrupar os ficheiros antes de chamar o 'rm'?"
-      ]
-    }
+    hints: ["O que XOR faz quando um operando é 1?", "Como inverter um bit específico?"]
+  }
 ];
-export default ex5;
+
+export default ex3;

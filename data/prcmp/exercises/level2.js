@@ -1,650 +1,379 @@
-const ex5 = [
-    {
-      id: 1,
-      question: "Qual comando usar para procurar linhas com 'Silva' em ficheiro e mostrar apenas nome e telefone?",
-      code: "// Ficheiro contactos.txt\nAbel Silva\\t970222986\\tabel.silva@mail.pt\nAna Silva\\t950098297\\tana.silva@mail.pt",
-      options: [
-        "grep 'Silva' contactos.txt | cut -f1,2",
-        "grep 'Silva' contactos.txt | cut -f2,3", 
-        "find 'Silva' contactos.txt",
-        "search 'Silva' contactos.txt"
+const ex2 = [
+  {
+    id: 1,
+    question: "Qual das seguintes opções é uma característica da arquitetura de von Neumann?",
+    code: "",
+    options: [
+      "Estabelece uma separação física entre a memória de instruções e a memória de dados",
+      "Os dados e as instruções partilham espaço na mesma memória física",
+      "A execução de múltiplos programas simultaneamente em núcleos distintos",
+      "A Unidade Aritmética e Lógica coordena as operações do processador"
+    ],
+    correct: 1,
+    explanation: "Na arquitetura von Neumann, dados e instruções são armazenados na mesma memória física, diferenciados apenas pela forma como são interpretados pelo processador.",
+    theoryPoints: {
+      title: "Arquitetura de von Neumann",
+      content: "Modelo proposto por John von Neumann em 1945, caracterizado por: 1) Memória única para dados e instruções, 2) Unidade de controle que busca instruções da memória, 3) Execução sequencial de instruções, 4) Computador com programa armazenado.",
+      keyPoints: [
+        "Memória unificada para dados e instruções",
+        "CPU com UC (busca/decodifica) e UAL (executa)",
+        "Execução sequencial (uma instrução de cada vez)",
+        "Programa armazenado na memória (não hardwired)"
       ],
-      correct: 0,
-      explanation: "grep filtra linhas com 'Silva', cut -f1,2 extrai primeira e segunda colunas (nome e telefone), assumindo separação por TAB.",
-      theoryPoints: {
-        title: "Processamento de Texto com Pipe",
-        content: "Unix permite encadear comandos com pipe (|). Cada comando faz uma coisa bem: grep filtra, cut corta colunas, sort ordena, etc.",
-        keyPoints: [
-          "grep: pesquisa padrões em texto",
-          "cut: extrai colunas por delimitador",
-          "sort: ordena linhas",
-          "pipe: conecta saída de um comando à entrada do outro"
-        ],
-        examples: "grep 'error' log.txt | cut -f1,3 | sort -u\ncat file.txt | head -20 | tail -10\nwho | grep 'user' | cut -f1 -d' '"
-      },
-      hints: ["Precisa filtrar e depois extrair colunas", "Que colunas contêm nome e telefone?"]
+      examples: "Quase todos os computadores modernos seguem este modelo. Harvard architecture (usada em alguns microcontroladores) tem memórias separadas."
     },
-    {
-      id: 2,
-      question: "Como filtrar apenas linhas com email e ordenar alfabeticamente?",
-      code: "// contactos.txt contém: nome TAB telefone TAB email\ncurl -s URL | grep '@' | sort",
-      options: [
-        "grep '@' contactos.txt | sort",
-        "sort contactos.txt | grep '@'",
-        "find '@' contactos.txt | sort",
-        "cut -f3 contactos.txt | sort"
+    hints: ["Pense na diferença entre programa e dados", "Como a CPU sabe se um valor na memória é instrução ou dado?"]
+  },
+  {
+    id: 2,
+    question: "Superscalar é uma técnica de optimização do desempenho de uma CPU em que...",
+    code: "",
+    options: [
+      "as três fases do ciclo fetch-decode-execute são executadas simultaneamente para uma única instrução",
+      "instruções de programas distintos são executadas simultaneamente em núcleos de processamento (cores) diferentes",
+      "se pode observar uma diminuição na taxa de instruções concluídas por unidade de tempo",
+      "duas ou mais instruções do mesmo programa são executadas simultaneamente em unidades de execução distintas da CPU"
+    ],
+    correct: 3,
+    explanation: "Arquitetura superscalar permite executar múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução dentro de uma única CPU.",
+    theoryPoints: {
+      title: "Arquitetura Superscalar",
+      content: "CPU superscalar pode executar mais de uma instrução por ciclo de clock, explorando paralelismo a nível de instrução (ILP). Requer múltiplas unidades funcionais e lógica de despacho complexa.",
+      keyPoints: [
+        "Múltiplas instruções por ciclo de clock",
+        "Paralelismo a nível de instrução (ILP)",
+        "Múltiplas unidades de execução (ALU, FPU, load/store)",
+        "Despacho dinâmico de instruções"
       ],
-      correct: 0,
-      explanation: "grep '@' filtra linhas que contêm o símbolo @ (presente em emails), e sort ordena o resultado alfabeticamente.",
-      theoryPoints: {
-        title: "Filtros e Ordenação",
-        content: "Combinar grep com sort é comum para filtrar e organizar dados. grep seleciona linhas baseadas em padrões, sort organiza.",
-        keyPoints: [
-          "grep com padrões simples: '@', 'silva', '^A'",
-          "sort ordena lexicograficamente",
-          "sort -n para ordenação numérica",
-          "sort -r para ordem reversa"
-        ],
-        examples: "grep 'error' log.txt | sort -u\ngrep '^A' nomes.txt | sort\nps aux | grep 'chrome' | sort -k3 -n"
-      },
-      hints: ["Qual símbolo identifica emails?", "A ordem dos comandos no pipe importa?"]
+      examples: "Processadores Intel Pentium (a partir do P5) e AMD usam superscalar. Pode executar, por exemplo, uma operação inteira e um acesso à memória simultaneamente."
     },
-    {
-      id: 3,
-      question: "Qual é o significado do exit status em Unix?",
-      code: "// Execução de comandos\n$ mkdir temp\necho $?  # Mostra exit status\n0        # Sucesso\n$ rmdir nonexistent\necho $?\n1        # Erro",
-      options: [
-        "Tempo de execução do comando",
-        "Número que indica sucesso (0) ou falha (≠0)",
-        "Quantidade de memória usada",
-        "Número de linhas de output"
+    hints: ["Quantas instruções podem ser executadas ao mesmo tempo?", "O que diferencia superscalar de pipeline simples?"]
+  },
+  {
+    id: 3,
+    question: "Qual é a principal função dos registos de uma CPU num computador?",
+    code: "",
+    options: [
+      "Manter um registo de eventos do sistema operativo",
+      "Facilitar a comunicação entre diferentes periféricos",
+      "Gerir o armazenamento de longo prazo no disco rígido",
+      "Armazenar temporariamente dados e instruções durante a execução de programas"
+    ],
+    correct: 3,
+    explanation: "Registros são pequenas memórias de alta velocidade dentro da CPU usadas para armazenar dados temporários, endereços e resultados intermediários durante a execução.",
+    theoryPoints: {
+      title: "Registros da CPU",
+      content: "Registros são o nível mais rápido da hierarquia de memória. Tipos incluem: 1) Registros de propósito geral (dados), 2) Registros de endereço (ponteiros), 3) Registros de controle (flags, PC), 4) Registros de segmento.",
+      keyPoints: [
+        "Memória mais rápida (acesso em 1 ciclo de clock)",
+        "Tamanho limitado (32, 64 bits típicos)",
+        "Visíveis ao programador em assembly",
+        "PC (Program Counter): endereço da próxima instrução"
       ],
-      correct: 1,
-      explanation: "Exit status 0 indica sucesso, qualquer outro valor indica falha. Pode ser verificado com $? e usado em condições if, while, etc.",
-      theoryPoints: {
-        title: "Exit Status e Controle de Fluxo",
-        content: "Cada comando retorna status ao terminar. Scripts podem tomar decisões baseadas nesses valores usando && (AND), || (OR), if, etc.",
-        keyPoints: [
-          "0 = sucesso",
-          "1-255 = códigos de erro",
-          "$? = último exit status",
-          "&& executa se anterior sucedeu",
-          "|| executa se anterior falhou"
-        ],
-        examples: "mkdir dir && cd dir  # Só entra se criar\ncomando || echo 'Falhou'  # Mensagem se erro\nif [ $? -eq 0 ]; then echo 'OK'; fi"
-      },
-      hints: ["O que significa retorno 0?", "Como verificar se comando funcionou?"]
+      examples: "Em x86: EAX/RAX (acumulador), EBX/RBX (base), ECX/RCX (contador), EDX/RDX (dados), ESP/RSP (stack pointer), EBP/RBP (base pointer)"
     },
-    {
-      id: 4,
-      question: "Como baixar um arquivo remoto e salvar localmente?",
-      code: "// Download e salvamento\ncurl -s https://exemplo.com/script.sh > local.sh",
-      options: [
-        "curl URL > arquivo",
-        "wget URL -o arquivo", 
-        "download URL arquivo",
-        "get URL > arquivo"
+    hints: ["Por que a CPU precisa de armazenamento ultrarrápido?", "O que acontece se todos os dados tiverem que vir da RAM?"]
+  },
+  {
+    id: 4,
+    question: "É necessário colocar a zero os 16 bits menos significativos de uma palavra de 32 bits, deixando os restantes 16 mais significativos inalterados. Uma solução é aplicar à palavra...",
+    code: "// Palavra original: 0xABCD1234\n// Resultado desejado: 0xABCD0000",
+    options: [
+      "16 deslocamentos lógicos para a direita seguidos de 16 deslocamentos lógicos para a esquerda",
+      "a operação lógica AND com a máscara de bits 0xFFFF0000",
+      "a operação lógica OR com a máscara de bits 0xFFFF0000",
+      "a operação lógica AND com a máscara de bits 0x0000FFFF"
+    ],
+    correct: 1,
+    explanation: "AND com 0xFFFF0000 mantém os 16 bits superiores (todos 1s nessa parte) e zera os 16 bits inferiores (todos 0s nessa parte).",
+    theoryPoints: {
+      title: "Operações Bitwise (AND, OR, XOR, NOT)",
+      content: "Operações lógicas bit-a-bit são fundamentais para manipulação de bits. AND é usado para limpar bits (com máscara de 0s), OR para setar bits (com máscara de 1s), XOR para alternar bits.",
+      keyPoints: [
+        "AND: bit resultante = 1 se ambos bits de entrada = 1",
+        "OR: bit resultante = 1 se pelo menos um bit de entrada = 1",
+        "XOR: bit resultante = 1 se bits de entrada diferentes",
+        "NOT: inverte cada bit"
       ],
-      correct: 0,
-      explanation: "curl -s faz download silencioso, > redireciona output para arquivo local. Alternativamente: curl -o arquivo URL",
-      theoryPoints: {
-        title: "Download e Redirecionamento",
-        content: "curl/wget transferem dados de URLs. Redirecionamento > cria/sobrescreve arquivo, >> append.",
-        keyPoints: [
-          "curl -s: modo silencioso",
-          ">: redireciona stdout para arquivo",
-          ">>: adiciona ao final do arquivo",
-          "2>: redireciona stderr"
-        ],
-        examples: "curl -s URL > arquivo\nwget -O arquivo URL\nls > lista.txt 2> erros.txt"
-      },
-      hints: ["Qual comando faz download?", "Como salvar output em arquivo?"]
+      examples: "Limpar bits baixos: valor & 0xFFFFFF00\nSetar bits altos: valor | 0xFF000000\nAlternar bits: valor ^ 0x0000FFFF\nMáscara: padrão de bits usado para selecionar bits específicos"
     },
-    {
-      id: 5,
-      question: "Como contar quantos processos do usuário estão em execução?",
-      code: "// Lista de processos\n$ ps -u $USER | wc -l\n15",
-      options: [
-        "ps -u $USER | wc -l",
-        "ps -a | grep $USER",
-        "count -p $USER",
-        "ps aux | count"
+    hints: ["Qual operação 'preserva' bits quando tem 1 e 'limpa' quando tem 0?", "Que máscara mantém os primeiros 16 bits e limpa os últimos 16?"]
+  },
+  {
+    id: 5,
+    question: "Quando abordamos os termos arquitectura do conjunto de instruções (ISA) e microarquitectura...",
+    code: "",
+    options: [
+      "ambos os termos referem-se ao mesmo conceito",
+      "a microarquitectura é a especificação que determina o conjunto de instruções suportado por uma família de processadores",
+      "a ISA estabelece a organização física (electrónica) do processador",
+      "a microarquitectura consiste numa implementação física que atende aos requisitos especificados pela ISA"
+    ],
+    correct: 3,
+    explanation: "ISA é a interface (o que o processador faz), microarquitetura é a implementação (como é feito fisicamente). Várias microarquiteturas podem implementar a mesma ISA.",
+    theoryPoints: {
+      title: "ISA vs Microarquitetura",
+      content: "ISA (Instruction Set Architecture) define: 1) Conjunto de instruções, 2) Modos de endereçamento, 3) Registros visíveis ao programador, 4) Modelo de memória. Microarquitetura define: 1) Pipeline, 2) Cache, 3) Unidades funcionais, 4) Previsão de saltos.",
+      keyPoints: [
+        "ISA: interface software/hardware (ABI)",
+        "Microarquitetura: implementação interna",
+        "Mesma ISA pode ter múltiplas microarquiteturas",
+        "Ex: x86 ISA implementada por Intel e AMD com microarquiteturas diferentes"
       ],
-      correct: 0,
-      explanation: "ps -u $USER lista processos do usuário, wc -l conta linhas. Subtrair 1 do resultado para excluir o cabeçalho.",
-      theoryPoints: {
-        title: "Contagem com wc e Listagem de Processos",
-        content: "wc (word count) conta linhas, palavras e caracteres. ps lista processos do sistema.",
-        keyPoints: [
-          "wc -l: conta linhas",
-          "ps -u user: processos de usuário específico",
-          "ps aux: todos os processos",
-          "grep -c: conta ocorrências"
-        ],
-        examples: "ps aux | grep chrome | wc -l\nwho | wc -l  # usuários logados\nfind . -name '*.txt' | wc -l"
-      },
-      hints: ["Qual comando conta linhas?", "Como listar apenas processos do usuário atual?"]
+      examples: "ARM ISA: implementada por Cortex-A, Cortex-M (diferentes microarquiteturas). x86: implementada por Intel (Core, Atom) e AMD (Ryzen, EPYC)."
     },
-    {
-      id: 6,
-      question: "Como encontrar todos os ficheiros .txt modificados nos últimos 2 dias?",
-      code: "// Encontrar ficheiros por data\nfind . -name '*.txt' -mtime -2",
-      options: [
-        "find . -name '*.txt' -mtime -2",
-        "find . -type txt -time 2",
-        "ls -l *.txt | grep '2 days'",
-        "search *.txt -modified 2"
+    hints: ["Pense em especificação vs implementação", "Por que diferentes CPUs podem executar os mesmos programas?"]
+  },
+  {
+    id: 6,
+    question: "Na arquitectura de Von Neumann, qual das seguintes afirmações é verdadeira?",
+    code: "",
+    options: [
+      "o programa é executado a partir da leitura sequencial das instruções em fita magnética ou disco",
+      "a memória ROM pertence ao subsistema de I/O, enquanto a memória RAM pertence ao subsistema de memória",
+      "o programa é armazenado na memória como uma sequência de números, que representam os códigos das instruções a executar",
+      "o programa é implementado através de ligações eléctricas, estabelecendo a sequência de circuitos aritméticos pretendida"
+    ],
+    correct: 2,
+    explanation: "Na arquitetura von Neumann, o programa é armazenado na memória como números binários (opcodes), que a CPU busca, decodifica e executa sequencialmente.",
+    theoryPoints: {
+      title: "Programa Armazenado",
+      content: "Conceito fundamental: o programa é armazenado na memória como dados, permitindo: 1) Programas auto-modificáveis, 2) Carregamento dinâmico de programas, 3) Compiladores e sistemas operacionais.",
+      keyPoints: [
+        "Programa = sequência de instruções na memória",
+        "CPU busca instrução do endereço apontado por PC",
+        "PC é incrementado após cada fetch",
+        "Instruções e dados indistinguíveis na memória"
       ],
-      correct: 0,
-      explanation: "find . -name '*.txt' -mtime -2 procura recursivamente ficheiros .txt modificados há menos de 2 dias.",
-      theoryPoints: {
-        title: "Busca Avançada com find",
-        content: "find é poderoso para buscar ficheiros por nome, tipo, tamanho, data, permissões, etc.",
-        keyPoints: [
-          "-name: busca por nome",
-          "-mtime: data de modificação",
-          "-type: tipo de ficheiro",
-          "-size: tamanho do ficheiro"
-        ],
-        examples: "find /var/log -name '*.log' -mtime -7\nfind . -size +1M -type f\nfind /home -user john -perm 644"
-      },
-      hints: ["Qual comando busca ficheiros?", "Como especificar extensão e data?"]
+      examples: "Computadores anteriores (como ENIAC) eram 'programados' por recabulação física. Von Neumann permitiu programas armazenados."
     },
-    {
-      id: 7,
-      question: "Como substituir todas as vírgulas por pontos num ficheiro CSV?",
-      code: "// Substituição de caracteres\ncat data.csv | tr ',' '.' > new_data.csv",
-      options: [
-        "tr ',' '.' < data.csv > new_data.csv",
-        "sed 's/,/./g' data.csv",
-        "replace ',' '.' data.csv",
-        "Ambas A e B estão corretas"
+    hints: ["Como a CPU sabe que um valor na memória é uma instrução?", "O que diferencia arquitetura von Neumann de máquinas programadas por hardware?"]
+  },
+  {
+    id: 7,
+    question: "No ciclo fetch-decode-execute...",
+    code: "// Ciclo básico de instrução:\n// 1. FETCH: buscar instrução da memória\n// 2. DECODE: decodificar opcode\n// 3. EXECUTE: executar operação",
+    options: [
+      "a unidade de controlo lê da memória o código da próxima operação na fase fetch",
+      "os valores dos dados a operar são copiados da memória para os registos internos na fase fetch",
+      "é na fase decode que a CPU determina qual a operação a realizar, a partir do código de operação actual",
+      "a unidade de controlo incrementa o stack pointer na fase fetch"
+    ],
+    correct: 2,
+    explanation: "Na fase decode, a CPU interpreta o opcode (código de operação) para determinar que operação executar e quais operandos são necessários.",
+    theoryPoints: {
+      title: "Ciclo Fetch-Decode-Execute",
+      content: "Ciclo básico de execução de instruções: 1) FETCH: buscar instrução do endereço em PC para IR (Instruction Register), 2) DECODE: decodificar opcode e operandos, 3) EXECUTE: executar operação (UAL, acesso memória, etc.), 4) (opcional) WRITE-BACK: escrever resultado em registrador.",
+      keyPoints: [
+        "PC (Program Counter): aponta para próxima instrução",
+        "IR (Instruction Register): guarda instrução atual",
+        "Ciclo completo pode levar vários clocks",
+        "Pipelining divide ciclo em estágios para execução simultânea de múltiplas instruções"
       ],
-      correct: 3,
-      explanation: "Ambos tr e sed podem fazer a substituição. tr traduz caracteres, sed usa expressões regulares para substituição.",
-      theoryPoints: {
-        title: "Manipulação de Texto com tr e sed",
-        content: "tr substitui ou remove caracteres. sed é mais poderoso para edição de texto com expressões regulares.",
-        keyPoints: [
-          "tr 'a' 'b': substitui caracteres",
-          "sed 's/old/new/g': substituição global",
-          "tr -d: remove caracteres",
-          "sed -i: edição in-place"
-        ],
-        examples: "tr '[:lower:]' '[:upper:]' < file\nsed 's/foo/bar/g' file.txt\ntr -d '\\r' < file > newfile"
-      },
-      hints: ["Quais comandos manipulam texto?", "Como fazer substituição global?"]
+      examples: "Instrução simples (ADD R1, R2): fetch opcode, decode (ADD), execute (soma R1+R2), write-back (resultado em R1)"
     },
-    {
-      id: 8,
-      question: "Como matar um processo específico pelo PID?",
-      code: "// Terminar processo\n$ kill 12345",
-      options: [
-        "kill 12345",
-        "stop 12345",
-        "kill -9 12345",
-        "Ambas A e C estão corretas"
+    hints: ["Quando a CPU 'entende' o que fazer com uma instrução?", "O que acontece entre buscar a instrução e executá-la?"]
+  },
+  {
+    id: 8,
+    question: "Multi-core é um termo que designa a tecnologia que permite que...",
+    code: "",
+    options: [
+      "as três fases do ciclo fetch-decode-execute sejam executadas simultaneamente para uma única instrução",
+      "instruções de programas distintos sejam executadas simultaneamente em núcleos de processamento (cores) diferentes",
+      "permite diminuir a taxa de instruções concluídas por unidade de tempo",
+      "duas ou mais instruções do mesmo programa são executadas simultaneamente em unidades de execução distintas da CPU"
+    ],
+    correct: 1,
+    explanation: "Multi-core refere-se a múltiplos núcleos de processamento (cores) independentes num único chip, permitindo execução paralela de múltiplos programas ou threads.",
+    theoryPoints: {
+      title: "Processadores Multi-core",
+      content: "Cada core é uma CPU independente, com seus próprios registros, UAL e cache L1, mas compartilhando cache L2/L3 e barramento. Permite paralelismo a nível de thread (TLP).",
+      keyPoints: [
+        "Múltiplos cores físicos no mesmo die",
+        "Cada core executa threads independentes",
+        "Compartilham memória e periféricos",
+        "Escalonamento de threads pelo SO"
       ],
-      correct: 3,
-      explanation: "kill PID envia sinal TERM (15) para terminação graciosa. kill -9 PID força terminação imediata com sinal KILL.",
-      theoryPoints: {
-        title: "Gestão de Processos com kill",
-        content: "kill envia sinais para processos. Sinais comuns: TERM (15) para terminação normal, KILL (9) para forçar terminação.",
-        keyPoints: [
-          "kill PID: sinal TERM (15)",
-          "kill -9 PID: sinal KILL",
-          "kill -l: lista sinais",
-          "pkill: mata por nome"
-        ],
-        examples: "kill 1234  # terminação normal\nkill -9 1234  # força terminação\npkill firefox  # mata por nome"
-      },
-      hints: ["Qual sinal para terminação normal?", "E para forçar terminação?"]
+      examples: "Intel Core i7 (4-8 cores), AMD Ryzen (até 16 cores), servidores com 64+ cores. Diferente de hyper-threading (cores lógicos)."
     },
-    {
-      id: 9,
-      question: "Como ver as 10 linhas mais frequentes num ficheiro de log?",
-      code: "// Análise de logs\ncat access.log | sort | uniq -c | sort -nr | head -10",
-      options: [
-        "sort access.log | uniq -c | sort -nr | head -10",
-        "cat access.log | freq -top 10",
-        "grep -c '' access.log | head -10",
-        "count access.log | sort -n"
+    hints: ["Qual a diferença entre multi-core e superscalar?", "Como vários programas podem rodar ao mesmo tempo?"]
+  },
+  {
+    id: 9,
+    question: "Relativamente a uma sistema computacional de 64 bits, qual das seguintes afirmações é falsa?",
+    code: "",
+    options: [
+      "Os registos de uso genérico da CPU têm largura de 64 bits",
+      "A Unidade Aritmética-Lógica está construída para operar palavras de 64 bits",
+      "A maior representação possível de um valor inteiro tem 64 bits",
+      "Permite endereços de memória com largura de 64 bits"
+    ],
+    correct: 2,
+    explanation: "Sistemas 64-bit podem representar inteiros maiores que 64 bits usando múltiplos registradores (ex: 128-bit com dois registradores). A limitação não é de bits, mas de largura dos registradores.",
+    theoryPoints: {
+      title: "Arquitetura 64-bit",
+      content: "Em arquitetura 64-bit: 1) Registros gerais têm 64 bits, 2) Endereços de memória são 64-bit (teoricamente 16 exabytes), 3) UAL opera em 64 bits por padrão, 4) Pode operar em modos de 32 e 16 bits para compatibilidade.",
+      keyPoints: [
+        "Registros de 64 bits (RAX, RBX, etc.)",
+        "Espaço de endereçamento de 2⁶⁴ bytes",
+        "Operações aritméticas nativas de 64 bits",
+        "Suporte a inteiros de 128+ bits via software"
       ],
-      correct: 0,
-      explanation: "sort ordena, uniq -c conta ocorrências, sort -nr ordena numericamente em ordem reversa, head -10 mostra top 10.",
-      theoryPoints: {
-        title: "Análise de Dados com sort, uniq e head",
-        content: "Combinar sort, uniq e head/tail é poderoso para análise de dados e logs.",
-        keyPoints: [
-          "uniq -c: conta ocorrências únicas",
-          "sort -n: ordenação numérica",
-          "sort -r: ordem reversa",
-          "head/tail: primeiras/últimas linhas"
-        ],
-        examples: "cat file | sort | uniq -c | sort -nr\nps aux | sort -k4 -nr | head -5  # top 5 memória"
-      },
-      hints: ["Como contar ocorrências únicas?", "Como ordenar por frequência?"]
+      examples: "x86-64 (AMD64/Intel 64): extensão 64-bit do x86. Diferenças de x86: mais registradores, endereçamento maior, convenções de chamada diferentes."
     },
-    {
-      id: 10,
-      question: "Como criar um script que monitoriza mudanças num ficheiro?",
-      code: "// Monitorização em tempo real\ntail -f /var/log/syslog | grep --line-buffered 'error'",
-      options: [
-        "tail -f ficheiro | grep 'padrao'",
-        "watch 'grep padrao ficheiro'",
-        "monitor ficheiro for 'padrao'",
-        "Ambas A e B estão corretas"
+    hints: ["64 bits é o tamanho nativo, mas pode representar números maiores?", "Como processadores 8-bit faziam matemática de 16 bits?"]
+  },
+  {
+    id: 10,
+    question: "Uma CPU com tecnologia (optimização) superescalar permite executar...",
+    code: "",
+    options: [
+      "instruções de programas distintos, em paralelo, em unidades de execução distintas",
+      "múltiplas instruções do mesmo programa, em paralelo, em unidades de execução distintas",
+      "as três fases do ciclo fetch-decode-execute em paralelo, para uma única instrução",
+      "múltiplas instruções do mesmo programa, em paralelo, na mesma unidade de execução"
+    ],
+    correct: 1,
+    explanation: "Superscalar executa múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução (ALU, FPU, etc.) dentro do mesmo core.",
+    theoryPoints: {
+      title: "Paralelismo a Nível de Instrução (ILP)",
+      content: "Superscalar explora ILP detectando instruções independentes que podem ser executadas simultaneamente. Requer: 1) Múltiplas unidades funcionais, 2) Despacho fora-de-ordem, 3) Previsão de saltos.",
+      keyPoints: [
+        "Window de instruções: buffer de instruções prontas",
+        "Scoreboarding: controle de dependências",
+        "Tomasulo algorithm: renomeação de registradores",
+        "Commit em ordem para manter semântica sequencial"
       ],
-      correct: 3,
-      explanation: "tail -f mostra novas linhas em tempo real. watch executa comando periodicamente. Ambas são válidas para monitorização.",
-      theoryPoints: {
-        title: "Monitorização e Debugging",
-        content: "tail -f e watch são ferramentas úteis para monitorizar ficheiros e processos em tempo real.",
-        keyPoints: [
-          "tail -f: segue novas linhas",
-          "watch: executa comando repetidamente",
-          "grep --line-buffered: buffer por linha",
-          ">: redirecionamento em tempo real"
-        ],
-        examples: "tail -f /var/log/auth.log | grep 'Failed'\nwatch -n 1 'ps aux | grep python'\ntail -f log.txt > monitor.log &"
-      },
-      hints: ["Como ver novas linhas automaticamente?", "Como executar comando periodicamente?"]
+      examples: "CPU pode executar: 1 instrução inteira + 1 FP + 1 load/store simultaneamente. Limitado por dependências de dados e controle."
     },
-    {
-      id: 11,
-      question: "Como alterar as permissões de um ficheiro para rwx para owner, r-x para group, e r-- para others?",
-      code: "// Alteração de permissões usando modo octal\n$ chmod 754 script.sh\n$ ls -l script.sh\n-rwxr-xr-- 1 user group 1024 Jan 1 10:00 script.sh",
-      options: [
-        "chmod 754 ficheiro",
-        "chmod u=rwx,g=rx,o=r ficheiro",
-        "chmod 755 ficheiro",
-        "Ambas A e B estão corretas"
+    hints: ["Como uma CPU sabe que instruções não dependem umas das outras?", "Por que não podemos executar todas as instruções em paralelo?"]
+  },
+  {
+    id: 11,
+    question: "A memória principal de um computador permite dois tipos de operações: leitura e escrita. Qual afirmação é verdadeira?",
+    code: "",
+    options: [
+      "A memória ROM não permite operações de escrita",
+      "Uma operação de escrita na RAM conserva o conteúdo nos endereços acedidos",
+      "Uma operação de leitura na RAM destrói o conteúdo nos endereços acedidos",
+      "Uma operação de acesso à memória, quer seja de leitura ou de escrita, destrói o conteúdo nos endereços acedidos"
+    ],
+    correct: 0,
+    explanation: "ROM (Read-Only Memory) é não-volátil e não permite escrita em condições normais. RAM permite leitura e escrita, mas escrita substitui o conteúdo anterior.",
+    theoryPoints: {
+      title: "Memória: RAM vs ROM",
+      content: "RAM (Random Access Memory): volátil, leitura/escrita rápida, para dados e programas em execução. ROM (Read-Only Memory): não-volátil, apenas leitura (normalmente), para firmware/bootstrap.",
+      keyPoints: [
+        "RAM: DRAM (mais lenta, mais densa) e SRAM (mais rápida, cache)",
+        "ROM: PROM, EPROM, EEPROM, Flash (permite escrita especial)",
+        "Leitura não destrutiva (exceto DRAM que precisa refresh)",
+        "Escrita destrutiva (sobrescreve conteúdo anterior)"
       ],
-      correct: 3,
-      explanation: "754 em octal equivale a rwxr-xr--. Também pode ser especificado com mnemónicos: u=rwx,g=rx,o=r. Ambas as formas são válidas.",
-      theoryPoints: {
-        title: "Permissões de Ficheiros com chmod",
-        content: "chmod altera permissões usando modo octal (3 dígitos) ou mnemónicos (u,g,o + r,w,x). Cada dígito octal representa: owner(4+2+1), group(4+0+1), others(4+0+0).",
-        keyPoints: [
-          "Modo octal: 3 dígitos para owner/group/others",
-          "r=4, w=2, x=1, soma para cada categoria",
-          "u=user, g=group, o=others, a=all",
-          "+ adiciona, - remove, = define exatamente"
-        ],
-        examples: "chmod 644 file.txt  # rw-r--r--\nchmod u+x script.sh  # adiciona execução ao owner\nchmod go-w file.conf  # remove escrita de group e others"
-      },
-      hints: ["Como calcular 754 em binário?", "Qual a equivalência entre octal e rwx?"]
+      examples: "BIOS/UEFI em ROM, sistema operacional carregado em RAM. Cache L1/L2 em SRAM, memória principal em DRAM."
     },
-    {
-      id: 12,
-      question: "Como procurar ficheiros que contenham a palavra 'error' ignorando maiúsculas/minúsculas?",
-      code: "// Busca case-insensitive\ngrep -i 'error' /var/log/syslog",
-      options: [
-        "grep -i 'error' ficheiro",
-        "grep 'error' ficheiro --ignore-case",
-        "grep -I 'error' ficheiro",
-        "find 'error' ficheiro -i"
+    hints: ["O que 'Random Access' significa realmente?", "Por que a RAM perde dados sem energia?"]
+  },
+  {
+    id: 12,
+    question: "Suponha dois processadores de fabricantes diferentes. Qual afirmação é verdadeira?",
+    code: "",
+    options: [
+      "Os dois processadores só podem suportar a mesma arquitectura do conjunto de instruções (ISA) se forem exactamente iguais",
+      "Os dois processadores podem suportar a mesma arquitectura do conjunto de instruções (ISA) mesmo tendo microarquitecturas diferentes",
+      "Para suportarem a mesma arquitectura do conjunto de instruções (ISA), é necessário que ambos os processadores apresentem a mesma configuração de caches",
+      "Os dois processadores podem implementar a mesma arquitectura do conjunto de instruções (ISA), e apresentar conjuntos de registos diferentes"
+    ],
+    correct: 1,
+    explanation: "ISA é uma especificação. Diferentes fabricantes podem implementar a mesma ISA com microarquiteturas diferentes (ex: Intel e AMD com x86).",
+    theoryPoints: {
+      title: "Compatibilidade de ISA",
+      content: "ISA define interface binária (ABI). Microarquiteturas diferentes podem: 1) Ter diferentes números de estágios de pipeline, 2) Tamanhos de cache diferentes, 3) Número de unidades funcionais diferentes, 4) Tecnologias de fabrico diferentes.",
+      keyPoints: [
+        "ISA garante compatibilidade binária",
+        "Microarquitetura afeta desempenho, consumo, custo",
+        "Registros visíveis devem ser os mesmos (ou superconjunto)",
+        "Extensões de ISA (MMX, SSE, AVX) podem ser opcionais"
       ],
-      correct: 0,
-      explanation: "A opção -i do grep faz busca case-insensitive, encontrando 'Error', 'ERROR', 'error', etc. Útil para logs onde a formatação pode variar.",
-      theoryPoints: {
-        title: "Busca Avançada com grep",
-        content: "grep oferece várias opções para buscas flexíveis: -i ignora case, -v inverte busca, -n mostra números de linha, -c conta ocorrências.",
-        keyPoints: [
-          "-i: ignore case",
-          "-v: inverte match (linhas que NÃO contêm)",
-          "-n: mostra número da linha",
-          "-c: conta ocorrências",
-          "-r: recursivo em diretórios"
-        ],
-        examples: "grep -rin 'error' /var/log/\ngrep -c 'warning' app.log\ngrep -v '^#' config.conf  # exclui comentários"
-      },
-      hints: ["Qual opção controla sensibilidade a maiúsculas?", "Como encontrar todas as variações de 'error'?"]
+      examples: "x86: Intel Core vs AMD Ryzen. ARM: Apple M1 vs Qualcomm Snapdragon vs Samsung Exynos (todos ARMv8)."
     },
-    {
-      id: 13,
-      question: "Como comprimir um diretório inteiro mantendo a estrutura de paths?",
-      code: "// Compressão recursiva\ntar -czf backup.tar.gz /home/user/documents/",
-      options: [
-        "tar -czf backup.tar.gz diretorio/",
-        "zip -r backup.zip diretorio/",
-        "gzip -r diretorio/ backup.gz",
-        "Ambas A e B estão corretas"
+    hints: ["Por que programas compilados para x86 rodam em Intel e AMD?", "O que é mais importante para compatibilidade: ISA ou microarquitetura?"]
+  },
+  {
+    id: 13,
+    question: "Qual a função principal da memória primária num computador?",
+    code: "",
+    options: [
+      "Armazenar dados e instruções para a execução imediata de programas",
+      "Permitir a comunicação de eventos assíncronos para o processador",
+      "Fornecer armazenamento de longo prazo para dados e programas, mesmo quando o computador está desligado",
+      "Armazenar temporariamente na CPU os dados usados durante a execução de uma instrução"
+    ],
+    correct: 0,
+    explanation: "Memória primária (RAM) armazena código e dados em execução para acesso rápido pela CPU. É volátil e muito mais rápida que armazenamento secundário.",
+    theoryPoints: {
+      title: "Hierarquia de Memória",
+      content: "Memória organizada em hierarquia: 1) Registros (CPU), 2) Cache L1/L2/L3, 3) RAM (primária), 4) Armazenamento secundário (SSD/HDD), 5) Armazenamento terciário (fita, cloud). Cada nível é maior, mais lento e mais barato.",
+      keyPoints: [
+        "Princípio da localidade: temporal e espacial",
+        "Cache: reduz latência média de acesso à memória",
+        "RAM: volátil, acesso aleatório, ~100ns de latência",
+        "SSD/HDD: não-volátil, acesso em blocos, ~ms de latência"
       ],
-      correct: 3,
-      explanation: "tar -czf cria tarball comprimido com gzip, mantendo estrutura. zip -r também funciona mas com formato diferente. Ambos são válidos para compressão recursiva.",
-      theoryPoints: {
-        title: "Compressão e Arquivos tar",
-        content: "tar agrupa múltiplos ficheiros, gzip comprime. Combinações comuns: -czf (create zip file), -xzf (extract zip file). zip é alternativa comum.",
-        keyPoints: [
-          "tar -c: create, -x: extract, -z: gzip, -f: file",
-          "tar -czf: cria tarball comprimido",
-          "tar -xzf: extrai tarball comprimido",
-          "zip -r: comprime recursivamente",
-          "unzip: extrai arquivos zip"
-        ],
-        examples: "tar -czf projeto.tar.gz src/ docs/\ntar -xzf backup.tar.gz\nzip -r site.zip public_html/\nunzip arquivo.zip"
-      },
-      hints: ["Qual comando para agrupar + comprimir?", "Como incluir subdiretórios?"]
+      examples: "Programa carregado do SSD para RAM, instruções/dados usados frequentemente em cache, valores atuais em registradores."
     },
-    {
-      id: 14,
-      question: "Como verificar o espaço em disco usado por um diretório específico?",
-      code: "// Análise de uso de disco\ndu -sh /home/user/projetos/\n4.2G    /home/user/projetos/",
-      options: [
-        "du -sh diretorio/",
-        "df -h diretorio/",
-        "ls -la diretorio/ | grep total",
-        "size -r diretorio/"
+    hints: ["O que acontece quando abrimos um programa?", "Por que não rodamos programas diretamente do disco?"]
+  },
+  {
+    id: 14,
+    question: "Instruction pipelining é uma técnica de optimização do desempenho de uma CPU em que se...",
+    code: "// Pipeline de 5 estágios:\n// IF: Instruction Fetch\n// ID: Instruction Decode\n// EX: Execute\n// MEM: Memory Access\n// WB: Write Back",
+    options: [
+      "executam as três fases do ciclo fetch-decode-execute em paralelo, para uma única instrução",
+      "executam duas ou mais instruções em paralelo, em unidades de execução distintas",
+      "executam duas ou mais instruções em paralelo, em núcleos de processamento (cores) distintos",
+      "executam as três fases do ciclo fetch-decode-execute em paralelo, para três instruções consecutivas"
+    ],
+    correct: 3,
+    explanation: "Pipeline divide o ciclo de instrução em estágios, permitindo que múltiplas instruções estejam em diferentes estágios ao mesmo tempo (como uma linha de montagem).",
+    theoryPoints: {
+      title: "Pipeline de Instruções",
+      content: "Divide execução de instrução em estágios sequenciais. Cada estágio processa parte de uma instrução diferente a cada ciclo. Aumenta throughput, mas não reduz latência individual.",
+      keyPoints: [
+        "Estágios: Fetch, Decode, Execute, Memory, Write-back",
+        "Throughput ideal: 1 instrução/clock (com pipeline cheio)",
+        "Hazards: estrutural, de dados, de controle (causam stalls)",
+        "Forwarding/By-passing: reduz hazards de dados"
       ],
-      correct: 0,
-      explanation: "du -sh mostra uso de disco de forma legível (human-readable) para um diretório específico. df mostra espaço livre em filesystems.",
-      theoryPoints: {
-        title: "Gestão de Espaço em Disco",
-        content: "du (disk usage) mostra espaço usado por ficheiros/diretórios. df (disk free) mostra espaço disponível em filesystems montados.",
-        keyPoints: [
-          "du -s: summary (total apenas)",
-          "du -h: human readable (K,M,G)",
-          "du -sh: summary human readable",
-          "df -h: disk free human readable",
-          "df -i: inodes livres"
-        ],
-        examples: "du -sh /var/log/  # tamanho do diretório\ndu -h --max-depth=1 /home/  # top-level apenas\ndf -h /  # espaço livre na root"
-      },
-      hints: ["Qual comando mostra uso real de disco?", "Como formatar saída para humanos?"]
+      examples: "Pipeline clássico de 5 estágios (MIPS). Processadores modernos têm 10-20+ estágios (deep pipeline)."
     },
-    {
-      id: 15,
-      question: "Como substituir 'foo' por 'bar' apenas na primeira ocorrência de cada linha?",
-      code: "// Substituição seletiva com sed\nsed 's/foo/bar/' ficheiro.txt",
-      options: [
-        "sed 's/foo/bar/' ficheiro",
-        "sed 's/foo/bar/g' ficheiro",
-        "tr 'foo' 'bar' < ficheiro",
-        "replace 'foo' 'bar' ficheiro --first"
+    hints: ["Como uma fábrica monta vários carros ao mesmo tempo?", "Qual a diferença entre latência e throughput?"]
+  },
+  {
+    id: 15,
+    question: "Os constituintes básicos de um processador são a Unidade de Controlo, a Unidade Aritmética e Lógica, e os registos. Qual afirmação é verdadeira?",
+    code: "",
+    options: [
+      "A Unidade Aritmética e Lógica é responsável pelas operações de acesso à memória",
+      "Os registos são de uso exclusivo da Unidade de Controlo",
+      "Os registos são de uso exclusivo da Unidade Aritmética e Lógica",
+      "A Unidade de Controlo é responsável pela descodificação do código da instrução (opcode) a executar de seguida"
+    ],
+    correct: 3,
+    explanation: "A Unidade de Controle (UC) decodifica as instruções, gera sinais de controle para outros componentes e coordena o fluxo de dados através da CPU.",
+    theoryPoints: {
+      title: "Componentes da CPU",
+      content: "1) UC (Unidade de Controle): decodifica instruções, gera sinais de controle, controla fluxo de execução. 2) UAL (Unidade Aritmética e Lógica): executa operações aritméticas (+, -, ×, ÷) e lógicas (AND, OR, NOT). 3) Registros: armazenamento temporário rápido.",
+      keyPoints: [
+        "UC: sequenciador, decodificador, controlador",
+        "UAL: operações matemáticas e lógicas",
+        "Registros: dados, endereços, status",
+        "Barramento interno: conecta componentes"
       ],
-      correct: 0,
-      explanation: "sed 's/old/new/' substitui apenas a primeira ocorrência por linha. O 'g' no final faria substituição global em cada linha.",
-      theoryPoints: {
-        title: "Edição Seletiva com sed",
-        content: "sed (stream editor) permite edição poderosa baseada em padrões. Sem 'g' substitui apenas primeira ocorrência, com 'g' substitui todas.",
-        keyPoints: [
-          "s/old/new/: substitui primeira ocorrência",
-          "s/old/new/g: substitui todas ocorrências",
-          "s/old/new/2: substitui segunda ocorrência",
-          "/padrao/s/old/new/: só em linhas com padrão"
-        ],
-        examples: "sed 's/cat/dog/' file.txt  # só primeira\nsed 's/cat/dog/g' file.txt  # todas\nsed 's/cat/dog/2' file.txt  # só segunda\nsed '/error/s/warning/ALERT/' log.txt"
-      },
-      hints: ["Qual a diferença entre s/old/new/ e s/old/new/g?", "Como limitar a substituições?"]
+      examples: "Instrução ADD: UC decodifica, sinaliza UAL para somar, UAL opera, resultado vai para registro. Instrução LOAD: UC sinaliza memória, dado vem para registro."
     },
-    {
-      id: 16,
-      question: "Como executar um comando periodicamente a cada 5 segundos?",
-      code: "// Execução periódica\nwatch -n 5 'ps aux | grep python | wc -l'",
-      options: [
-        "watch -n 5 'comando'",
-        "sleep 5 && comando",
-        "repeat 5s 'comando'",
-        "cron '*/5 * * * *' comando"
-      ],
-      correct: 0,
-      explanation: "watch -n 5 executa o comando a cada 5 segundos, atualizando o output no terminal. Útil para monitorização em tempo real.",
-      theoryPoints: {
-        title: "Agendamento e Monitorização",
-        content: "watch executa comandos periodicamente mostrando output atualizado. cron agenda tarefas em horários específicos. sleep pausa execução.",
-        keyPoints: [
-          "watch -n N: executa a cada N segundos",
-          "cron: agendamento baseado em tempo",
-          "sleep N: pausa por N segundos",
-          "at: execução única agendada"
-        ],
-        examples: "watch -n 2 'free -h'  # memória a cada 2s\nwatch -d 'ls -l'  # destaca mudanças\n* * * * * comando  # cron a cada minuto"
-      },
-      hints: ["Qual comando para execução contínua?", "Como especificar intervalo em segundos?"]
-    },
-    {
-      id: 17,
-      question: "Como encontrar ficheiros com mais de 100MB e eliminá-los interativamente?",
-      code: "// Busca e eliminação condicional\nfind . -size +100M -ok rm {} \\;",
-      options: [
-        "find . -size +100M -ok rm {} \\;",
-        "find . -size +100M -exec rm {} \\;",
-        "ls -l | grep 'M' | rm -i",
-        "du -h | grep '100M' | xargs rm"
-      ],
-      correct: 0,
-      explanation: "find . -size +100M encontra ficheiros >100MB, -ok pede confirmação antes de executar rm para cada ficheiro. Mais seguro que -exec.",
-      theoryPoints: {
-        title: "Busca Condicional com Ações",
-        content: "find pode executar comandos nos ficheiros encontrados. -ok pede confirmação, -exec executa diretamente. {} é substituído pelo nome do ficheiro.",
-        keyPoints: [
-          "-exec comando {} \\;: executa comando",
-          "-ok comando {} \\;: pede confirmação",
-          "{}: placeholder para nome do ficheiro",
-          "\\;: termina o comando -exec/-ok"
-        ],
-        examples: "find . -name '*.tmp' -exec rm {} \\;\nfind /tmp -mtime +30 -ok rm {} \\;\nfind . -size +1G -exec ls -lh {} \\;"
-      },
-      hints: ["Como pedir confirmação antes de eliminar?", "Qual a sintaxe para -exec/-ok?"]
-    },
-    {
-      id: 18,
-      question: "Como redirecionar stdout e stderr para ficheiros diferentes?",
-      code: "// Redirecionamento separado\ncomando > output.log 2> error.log",
-      options: [
-        "comando > output.log 2> error.log",
-        "comando 1> output.log 2> error.log",
-        "comando > output.log 2>&1 error.log",
-        "Ambas A e B estão corretas"
-      ],
-      correct: 3,
-      explanation: "Ambas as formas redirecionam stdout para output.log e stderr para error.log. 2>&1 redirecionaria stderr para o mesmo local que stdout.",
-      theoryPoints: {
-        title: "Redirecionamento Avançado",
-        content: "Unix usa file descriptors: 0=stdin, 1=stdout, 2=stderr. Podem ser redirecionados separadamente ou combinados.",
-        keyPoints: [
-          "> ou 1>: redireciona stdout",
-          "2>: redireciona stderr",
-          "2>&1: redireciona stderr para stdout",
-          "&>: redireciona stdout e stderr",
-          ">/dev/null: descarta output"
-        ],
-        examples: "cmd > out.txt 2> err.txt  # separados\ncmd > log.txt 2>&1  # combinados\ncmd &> /dev/null  # descarta tudo\ncmd 2> >(grep -v debug)  # filtra stderr"
-      },
-      hints: ["Qual file descriptor para stderr?", "Como redirecionar para ficheiros separados?"]
-    },
-    {
-      id: 19,
-      question: "Como extrair apenas as linhas únicas de um ficheiro, ordenadas?",
-      code: "// Remoção de duplicados\nsort ficheiro.txt | uniq",
-      options: [
-        "sort ficheiro | uniq",
-        "uniq ficheiro | sort",
-        "sort -u ficheiro",
-        "Ambas A e C estão corretas"
-      ],
-      correct: 3,
-      explanation: "sort | uniq e sort -u produzem o mesmo resultado: linhas únicas ordenadas. uniq sozinho só remove duplicados consecutivos.",
-      theoryPoints: {
-        title: "Processamento de Dados Únicos",
-        content: "uniq remove linhas duplicadas consecutivas. sort ordena linhas. sort -u combina ordenação e remoção de duplicados.",
-        keyPoints: [
-          "uniq: remove duplicados consecutivos",
-          "sort: ordena linhas",
-          "sort -u: ordena e remove duplicados",
-          "uniq -c: conta ocorrências",
-          "uniq -d: mostra apenas duplicados"
-        ],
-        examples: "sort file.txt | uniq  # único ordenado\nsort -u file.txt  # equivalente\nuniq -c file.txt  # conta frequências\nsort file.txt | uniq -d  # apenas duplicados"
-      },
-      hints: ["uniq funciona apenas em linhas consecutivas?", "Há atalho para sort + uniq?"]
-    },
-    {
-      id: 20,
-      question: "Como criar um link simbólico para um ficheiro ou diretório?",
-      code: "// Criação de links simbólicos\nln -s /caminho/original /caminho/link",
-      options: [
-        "ln -s alvo link",
-        "link -s alvo link",
-        "symlink alvo link",
-        "cp -s alvo link"
-      ],
-      correct: 0,
-      explanation: "ln -s cria link simbólico (soft link) que aponta para o alvo. Links simbólicos podem cruzar filesystems e apontar para diretórios.",
-      theoryPoints: {
-        title: "Links Simbólicos e Hard Links",
-        content: "ln cria links: -s para simbólicos (apontadores), sem -s para hard links (mesmo inode). Links simbólicos são mais flexíveis.",
-        keyPoints: [
-          "ln -s: link simbólico (soft link)",
-          "ln: hard link (mesmo inode)",
-          "Links simbólicos: podem cruzar filesystems",
-          "Hard links: só mesmo filesystem, não para diretórios"
-        ],
-        examples: "ln -s /usr/bin/python3 /usr/local/bin/python\nln file.txt hardlink.txt  # hard link\nreadlink link_simbolico  # mostra destino"
-      },
-      hints: ["Qual opção para link simbólico?", "Links simbólicos podem apontar para diretórios?"]
-      },
-        {
-      id: 21,
-      question: "Qual é a forma mais direta e limpa de encontrar apenas os Process IDs (PIDs) de um serviço chamado 'nginx', sem mostrar o próprio comando 'grep'?",
-      code: "// Método 1: Clássico, mas mostra o 'grep'\n$ ps aux | grep 'nginx'\nnginx     1234 ...\nuser      5678 grep nginx\n\n// Método 2: Direto\n$ pgrep nginx\n1234",
-      options: [
-        "ps aux | grep 'nginx'",
-        "pgrep nginx",
-        "who | grep 'nginx'",
-        "find --pid 'nginx'"
-      ],
-      correct: 1,
-      explanation: "O comando 'pgrep' (process grep) é desenhado especificamente para procurar processos pelo nome e retornar apenas os seus PIDs. O método 'ps aux | grep' funciona, mas polui a saída com o próprio processo 'grep', o que 'pgrep' evita.",
-      theoryPoints: {
-        title: "Gestão de Processos Eficiente",
-        content: "Enquanto 'ps | grep' é comum, 'pgrep' é uma ferramenta mais limpa para encontrar PIDs. 'pkill' é o seu equivalente para enviar sinais (como 'kill') diretamente pelo nome.",
-        keyPoints: [
-          "ps: mostra snapshot dos processos",
-          "grep: filtra texto",
-          "ps aux | grep 'nome': método clássico, mas 'sujo'",
-          "pgrep 'nome': método moderno, retorna PIDs",
-          "pkill 'nome': envia sinal (default TERM) para PIDs"
-        ],
-        examples: "pgrep sshd\npgrep -u root chrome\nps aux | grep '[s]shd' # Truque para evitar 'grep'\npkill -9 nginx"
-      },
-      hints: [
-        "Como evitar que o 'grep' se encontre a si mesmo?",
-        "Existe um comando 'grep' específico para processos?"
-      ]
-    },
-    {
-      id: 22,
-      question: "Como encontrar linhas em 'config.conf' que começam com a palavra 'Listen' (ex: 'Listen 80', 'Listen 443')?",
-      code: "// Exemplo de config.conf\n# Ouve na porta 80\nListen 80\nListen 443\n\nErrorLog /var/log/error.log",
-      options: [
-        "grep 'Listen$' config.conf",
-        "grep 'Listen' config.conf",
-        "grep '^Listen' config.conf",
-        "grep 'Listen.*' config.conf"
-      ],
-      correct: 2,
-      explanation: "O acento circunflexo '^' é uma expressão regular que significa 'início da linha'. Isso garante que apenas linhas *começando* com 'Listen' sejam encontradas, ignorando linhas onde 'Listen' possa aparecer no meio (como em comentários).",
-      theoryPoints: {
-        title: "Expressões Regulares (Regex) Básicas",
-        content: "O 'grep' usa expressões regulares para padrões. '^' (início da linha) e '$' (fim da linha) são os mais básicos e úteis para ancorar buscas.",
-        keyPoints: [
-          "^: ancora no início da linha",
-          "$: ancora no fim da linha",
-          ".: qualquer caractere único",
-          "*: zero ou mais do caractere anterior",
-          "[abc]: um caractere da lista"
-        ],
-        examples: "grep '^root' /etc/passwd # Linhas que começam com 'root'\ngrep 'sh$' /etc/passwd   # Linhas que terminam com 'sh'\ngrep '^#' config.conf     # Linhas de comentário"
-      },
-      hints: [
-        "Como o 'grep' sabe onde a linha começa?",
-        "Qual caractere especial representa o 'início'?"
-      ]
-    },
-    {
-      id: 23,
-      question: "O comando 'ls -l' produz colunas separadas por *vários espaços*. Como extrair de forma fiável apenas a 9ª coluna (nome do ficheiro)?",
-      code: "// Saída de 'ls -l' (espaços variados)\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\ndrwxr-xr-x 2 user group   4096 Feb 15 12:30 pasta\n\n// Comando corrigido\nls -l | tr -s ' ' | cut -d' ' -f9",
-      options: [
-        "ls -l | cut -d' ' -f9",
-        "ls -l | tr -s ' ' | cut -d' ' -f9",
-        "ls -l | cut -f9",
-        "ls -l | grep -f9"
-      ],
-      correct: 1,
-      explanation: "'ls -l' usa espaços inconsistentes. 'cut -d' ' -f9' (Opção A) falha porque trata cada espaço como um delimitador. 'tr -s ' '' ('squeeze') comprime múltiplos espaços num só. Depois disso, 'cut -d' ' -f9' pode usar o espaço único como delimitador para extrair o 9º campo.",
-      theoryPoints: {
-        title: "Limpeza de Saída com 'tr'",
-        content: "Muitos comandos (como 'ls -l' ou 'ps') usam múltiplos espaços para alinhamento. Para processar esta saída com 'cut', é essencial primeiro 'espremer' (squeeze) os espaços repetidos num só usando 'tr -s'.",
-        keyPoints: [
-          "tr: translitera ou apaga caracteres",
-          "tr -s 'char': 'squeeze' (comprime) 'char' repetidos",
-          "tr -d 'char': 'delete' (apaga) 'char'",
-          "Pipeline: ls -l | tr -s ' ' | cut -d' ' -f<N>"
-        ],
-        examples: "ls -l | tr -s ' ' | cut -d' ' -f1,9\nps aux | tr -s ' ' | cut -d' ' -f2,11"
-      },
-      hints: [
-        "O 'cut' funciona bem com múltiplos espaços?",
-        "Como posso reduzir '    ' para ' '?"
-      ]
-    },
-    {
-      id: 24,
-      question: "Qual o efeito do comando 'ls -l | tee file_list.txt | grep 'Jan''?",
-      code: "// O comando 'tee' divide o fluxo\n$ ls -l | tee file_list.txt | grep 'Jan'\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\n\n$ cat file_list.txt\n-rw-r--r-- 1 user group   4096 Jan  1 10:00 file1.txt\ndrwxr-xr-x 2 user group   4096 Feb 15 12:30 pasta",
-      options: [
-        "Guarda a lista *completa* de 'ls -l' em 'file_list.txt' E mostra no terminal apenas as linhas que contêm 'Jan'.",
-        "Guarda a lista *filtrada* (apenas linhas com 'Jan') em 'file_list.txt' E mostra o mesmo no terminal.",
-        "Apenas guarda a lista completa em 'file_list.txt', não mostrando nada no terminal.",
-        "Mostra um erro, pois 'tee' não pode ser usado com 'grep'."
-      ],
-      correct: 0,
-      explanation: "O comando 'tee' é usado para duplicar um stream. Ele recebe a saída de 'ls -l', guarda uma cópia *completa* em 'file_list.txt' E, simultaneamente, passa a mesma saída completa para o 'grep 'Jan'', que filtra e mostra o resultado no terminal.",
-      theoryPoints: {
-        title: "Dividindo Streams com 'tee'",
-        content: "'tee' lê da entrada padrão e escreve na saída padrão *e* em um ou mais ficheiros. É útil para guardar resultados intermédios de um pipeline sem o interromper.",
-        keyPoints: [
-          "tee <ficheiro>: escreve para stdout E para o <ficheiro>",
-          "tee -a <ficheiro>: (append) adiciona ao ficheiro em vez de sobrescrever",
-          "Útil para logar e ver ao mesmo tempo"
-        ],
-        examples: "who | tee users.log | wc -l\ndate | tee current_date.txt\nls | tee file_list.txt | sort -r"
-      },
-      hints: [
-        "O 'tee' vem antes ou depois do 'grep'?",
-        "O que o 'tee' faz com o pipeline?"
-      ]
-    },
-    {
-      id: 25,
-      question: "Qual comando é mais *eficiente* para apagar milhares de ficheiros '.tmp' encontrados pelo 'find'?",
-      code: "// Opção 1: Lenta, um 'rm' por ficheiro\n$ find . -name '*.tmp' -exec rm {} \\;\n\n// Opção 2: Rápida, um 'rm' para muitos ficheiros\n$ find . -name '*.tmp' | xargs rm\n\n// Opção 3: Rápida, mas com '+'\n$ find . -name '*.tmp' -exec rm {} +",
-      options: [
-        "find . -name '*.tmp' -exec rm {} \\;",
-        "find . -name '*.tmp' | xargs rm",
-        "rm $(find . -name '*.tmp')",
-        "Ambas B e C (se -exec rm {} + for opção) são mais eficientes que A"
-      ],
-      correct: 1,
-      explanation: "O comando 'xargs' é mais eficiente. 'find ... -exec ... \\;' (Opção A) lança um novo processo 'rm' para *cada* ficheiro. 'xargs' (Opção B) agrupa muitos nomes de ficheiros e passa-os de uma só vez para o 'rm' (ex: 'rm file1 file2...'), reduzindo o número de processos criados. (A Opção C, `rm $(...)`, pode falhar se a lista for muito longa - 'Argument list too long').",
-      theoryPoints: {
-        title: "Processamento em Lote com 'xargs'",
-        content: "'xargs' lê itens da entrada padrão e constrói e executa linhas de comando com esses itens. É a forma padrão de 'x-args' (eXtended arguments) e é muito mais eficiente do que 'find -exec ... \\;' para operações em massa.",
-        keyPoints: [
-          "find | xargs <cmd>: pipeline padrão para eficiência.",
-          "find ... -exec <cmd> {} \\;: um processo <cmd> por ficheiro.",
-          "find ... -exec <cmd> {} +: (Alternativa moderna a xargs) um processo <cmd> para múltiplos ficheiros.",
-          "$(...): substituição de comando, pode falhar com 'Argument list too long'."
-        ],
-        examples: "find . -name '*.log' | xargs grep 'ERROR'\nfind . -name '*.bak' | xargs rm\nfind . -type f -print0 | xargs -0 chown user:group"
-      },
-      hints: [
-        "Como 'find -exec' lida com 10.000 ficheiros?",
-        "Existe uma forma de agrupar os ficheiros antes de chamar o 'rm'?"
-      ]
-    }
+    hints: ["Quem 'manda' na CPU?", "O que acontece quando a CPU encontra uma instrução desconhecida?"]
+  }
 ];
-export default ex5;
+
+export default ex2;
