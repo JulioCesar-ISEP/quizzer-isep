@@ -32,19 +32,44 @@ const QuizView = ({
   currentComment,
   onSaveComment,
   showTheory,
-  onCloseTheory
+  onCloseTheory,
+  shuffledExercises = [],
+  isReviewMode = false,
+  onEnterReviewMode
 }) => {
   if (!exercise || !level) return null;
 
-  const commentKey = `${level.id}-${currentExerciseIndex}`;
+  // Chave do comentário baseada no ID original do exercício
+  const commentKey = `${level.id}-${exercise.originalId || exercise.id}`;
   const hasComment = comments[commentKey];
   const showTheoryButton = shouldShowTheoryButton(exercise);
   const isLastExercise = currentExerciseIndex === totalExercises - 1;
   const allQuestionsAnswered = answers.length === totalExercises && answers.every(answer => answer !== undefined);
-  const currentStreak = answers.reduce((streak, answer, index) => {
-    if (index > currentExerciseIndex) return streak;
-    return answer === level.exercises[index]?.correct ? streak + 1 : 0;
-  }, 0);
+  
+  // Calcular streak atual - corrigido para usar shuffledExercises
+  const currentStreak = React.useMemo(() => {
+    if (shuffledExercises.length > 0) {
+      let streak = 0;
+      let maxCurrentStreak = 0;
+      
+      for (let i = 0; i <= currentExerciseIndex; i++) {
+        if (answers[i] === undefined) {
+          streak = 0;
+          continue;
+        }
+        
+        const exerciseData = shuffledExercises[i];
+        if (exerciseData && answers[i] === exerciseData.correct) {
+          streak++;
+          maxCurrentStreak = Math.max(maxCurrentStreak, streak);
+        } else {
+          streak = 0;
+        }
+      }
+      return maxCurrentStreak;
+    }
+    return 0;
+  }, [currentExerciseIndex, answers, shuffledExercises]);
 
   // Garantir que timeSpent sempre tenha um valor válido
   const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
@@ -58,6 +83,17 @@ const QuizView = ({
       if (score >= 60) return 'Chimpanzé';
       if (score >= 40) return 'Macaco-Prego';
       return 'Iniciante';
+    };
+
+    // Usar exercícios embaralhados se disponíveis, senão os originais
+    const exercisesToShow = shuffledExercises.length > 0 ? shuffledExercises : level.exercises;
+
+    // Função para determinar se uma resposta está correta (considerando embaralhamento)
+    const isAnswerCorrect = (index) => {
+      if (shuffledExercises.length > 0 && shuffledExercises[index]) {
+        return answers[index] === shuffledExercises[index].correct;
+      }
+      return answers[index] === level.exercises[index]?.correct;
     };
 
     return (
@@ -109,7 +145,13 @@ const QuizView = ({
           </div>
           <div className="ape-results-actions">
             <button 
-              onClick={() => onGoToExercise(0)} 
+              onClick={() => {
+                if (onEnterReviewMode) {
+                  onEnterReviewMode();
+                } else {
+                  onGoToExercise(0);
+                }
+              }} 
               className="ape-btn ape-btn-secondary"
             >
               <ArrowLeft size={20} />
@@ -126,9 +168,9 @@ const QuizView = ({
               Análise do Desempenho
             </h3>
             <div className="ape-questions-grid">
-              {level.exercises.map((ex, index) => {
+              {exercisesToShow.map((ex, index) => {
                 const userAnswer = answers[index];
-                const isCorrect = userAnswer !== undefined && userAnswer === ex.correct;
+                const isCorrect = isAnswerCorrect(index);
                 const isAnswered = userAnswer !== undefined;
                 
                 return (
@@ -167,7 +209,7 @@ const QuizView = ({
     );
   }
 
-  // Tela normal do quiz
+  // Tela normal do quiz ou modo de revisão
   return (
     <div className="ape-quiz-screen">
       {showTheory && exercise.theoryPoints && (
@@ -189,6 +231,7 @@ const QuizView = ({
         streak={maxStreak}
         timeSpent={displayTime}
         showStats={true}
+        isReviewMode={isReviewMode}
       />
 
       {/* Navegação entre questões */}
@@ -204,15 +247,25 @@ const QuizView = ({
           </button>
           
           <div className="ape-questions-dots">
-            {level.exercises.map((_, index) => {
+            {Array.from({ length: totalExercises }, (_, index) => {
               const isAnswered = answers[index] !== undefined;
               const isCurrent = index === currentExerciseIndex;
+              
+              // Determinar se a resposta está correta (considerando embaralhamento)
+              let isCorrect = false;
+              if (isAnswered && shuffledExercises.length > 0 && shuffledExercises[index]) {
+                isCorrect = answers[index] === shuffledExercises[index].correct;
+              } else if (isAnswered && level.exercises[index]) {
+                isCorrect = answers[index] === level.exercises[index].correct;
+              }
               
               return (
                 <button
                   key={index}
                   onClick={() => onGoToExercise(index)}
-                  className={`ape-question-dot ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
+                  className={`ape-question-dot ${isCurrent ? 'current' : ''} ${
+                    isAnswered ? (isCorrect ? 'correct' : 'incorrect') : 'unanswered'
+                  }`}
                   title={`Desafio ${index + 1}`}
                 >
                   {index + 1}
@@ -225,7 +278,7 @@ const QuizView = ({
             onClick={onNext} 
             className="ape-nav-btn"
           >
-            {isLastExercise && allQuestionsAnswered ? 'Ver Resultados' : 'Próximo'}
+            {isLastExercise && allQuestionsAnswered && !isReviewMode ? 'Ver Resultados' : 'Próximo'}
             <ArrowRight size={16} />
           </button>
         </div>
@@ -239,7 +292,13 @@ const QuizView = ({
               <span className="ape-question-number-badge">
                 Desafio {currentExerciseIndex + 1} de {totalExercises}
               </span>
-              {answers[currentExerciseIndex] !== undefined && (
+              {isReviewMode ? (
+                <span className={`ape-review-status-badge ${
+                  selectedAnswer === exercise.correct ? 'correct' : 'incorrect'
+                }`}>
+                  {selectedAnswer === exercise.correct ? '✓ Correto' : '✗ Errado'}
+                </span>
+              ) : answers[currentExerciseIndex] !== undefined && (
                 <span className="ape-answered-badge">
                   <CheckCircle size={16} />
                   Resolvido
@@ -248,22 +307,29 @@ const QuizView = ({
             </div>
           </div>
           <div className="ape-options-grid">
-            {exercise.options.map((option, index) => (
-              <OptionButton
-                key={index}
-                option={option}
-                index={index}
-                isSelected={selectedAnswer === index}
-                isCorrect={index === exercise.correct}
-                showSolution={showSolution}
-                onSelect={onAnswer}
-                disabled={showSolution || answers[currentExerciseIndex] !== undefined}
-              />
-            ))}
+            {exercise.options.map((option, index) => {
+              const isUserAnswer = selectedAnswer === index;
+              const isCorrectAnswer = index === exercise.correct;
+              
+              return (
+                <OptionButton
+                  key={index}
+                  option={option}
+                  index={index}
+                  isSelected={isUserAnswer}
+                  isCorrect={isCorrectAnswer}
+                  showSolution={showSolution || isReviewMode}
+                  onSelect={isReviewMode ? () => {} : onAnswer}
+                  disabled={isReviewMode || showSolution || answers[currentExerciseIndex] !== undefined}
+                  isReviewMode={isReviewMode}
+                  isUserAnswer={isUserAnswer && !isCorrectAnswer}
+                />
+              );
+            })}
           </div>
         </div>
 
-        {!showSolution && answers[currentExerciseIndex] === undefined && (
+        {!isReviewMode && !showSolution && answers[currentExerciseIndex] === undefined && (
           <CommentSection
             comment={currentComment}
             onSaveComment={onSaveComment}
@@ -271,7 +337,7 @@ const QuizView = ({
           />
         )}
 
-        {showSolution && (
+        {(showSolution || isReviewMode) && (
           <SolutionPanel
             isCorrect={selectedAnswer === exercise.correct}
             explanation={exercise.explanation}
@@ -280,11 +346,17 @@ const QuizView = ({
             hasComment={hasComment}
             comment={comments[commentKey]}
             currentStreak={currentStreak}
+            isReviewMode={isReviewMode}
+            userAnswer={selectedAnswer}
+            correctAnswer={exercise.correct}
+            options={exercise.options}
+            hints={exercise.hints || []}
+            xpReward={selectedAnswer === exercise.correct ? 10 : 5}
           />
         )}
 
         {/* Botão para ir direto aos resultados quando todas as questões estiverem respondidas */}
-        {allQuestionsAnswered && !showSolution && !showResults && (
+        {!isReviewMode && allQuestionsAnswered && !showSolution && !showResults && (
           <div className="ape-finish-quiz-section">
             <button 
               onClick={onShowResults}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Flame, Zap, Clock, Home, Download, AlertCircle, Star, Target, Award } from 'lucide-react';
+import { Trophy, Flame, Zap, Clock, Home, Download, AlertCircle, Star, Target, Award, BookOpen } from 'lucide-react';
 import { formatTime, calculatePercentage } from '../../utils/formatters';
 import '../../styles/components/CompletionView.css';
 
@@ -15,7 +15,8 @@ const CompletionView = ({
   onBackToLevels,
   onBackToCadeiras,
   onDownloadReport,
-  onResetProgress
+  onResetProgress,
+  onEnterReviewMode
 }) => {
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -46,14 +47,13 @@ const CompletionView = ({
   const percentage = calculatePercentage(score, totalQuestions);
   const { rank, medal, color } = getRank(percentage);
   
-  // Garantir que timeSpent sempre tenha um valor válido
   const displayTime = timeSpent && !timeSpent.includes('NaN') ? timeSpent : '00:00';
 
   const getXPBreakdown = () => {
     const baseXP = score * 10;
     const streakBonus = Math.floor(maxStreak * 2);
     const accuracyBonus = percentage >= 80 ? 50 : percentage >= 60 ? 25 : 0;
-    const timeBonus = 10; // Base time bonus
+    const timeBonus = 10;
     
     return {
       base: baseXP,
@@ -188,6 +188,12 @@ const CompletionView = ({
           <button onClick={onDownloadReport} className="ape-completion-btn success">
             <Download size={20} />
             Exportar Relatório do Lab
+          </button>
+          
+          {/* Botão para revisar erros */}
+          <button onClick={onEnterReviewMode} className="ape-completion-btn primary">
+            <BookOpen size={20} />
+            Revisar Erros e Aprender
           </button>
           
           {isLevelCompleted ? (

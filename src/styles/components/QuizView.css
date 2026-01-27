@@ -722,3 +722,148 @@
     transform: none;
   }
 }
+/* Modo de Revisão */
+.ape-review-mode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ape-review-mode-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.ape-review-status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.ape-review-status-badge.correct {
+  background-color: #10b981;
+  color: white;
+}
+
+.ape-review-status-badge.incorrect {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Análise de resposta */
+.ape-answer-analysis {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border: 2px solid #e2e8f0;
+}
+
+.ape-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: #475569;
+}
+
+.ape-answer-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.ape-wrong-answer,
+.ape-correct-answer {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ape-wrong-answer {
+  border: 2px solid #ef4444;
+}
+
+.ape-correct-answer {
+  border: 2px solid #10b981;
+}
+
+.ape-answer-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.ape-wrong-icon {
+  color: #ef4444;
+}
+
+.ape-correct-icon {
+  color: #10b981;
+}
+
+.ape-answer-text {
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.ape-answer-text.wrong {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-left: 4px solid #dc2626;
+}
+
+.ape-answer-text.correct {
+  background-color: #d1fae5;
+  color: #059669;
+  border-left: 4px solid #059669;
+}
+
+.ape-answer-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #64748b;
+}
+
+/* Estado das questões na navegação */
+.ape-question-dot.correct {
+  background-color: #10b981;
+  color: white;
+}
+
+.ape-question-dot.incorrect {
+  background-color: #ef4444;
+  color: white;
+}
+
+.ape-question-dot.unanswered {
+  background-color: #94a3b8;
+  color: white;
+}
+
+/* Painel de solução em modo de revisão */
+.ape-solution-panel.review-mode {
+  border: 2px solid #3b82f6;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+}

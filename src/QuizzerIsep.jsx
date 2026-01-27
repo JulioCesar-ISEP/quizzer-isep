@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useTimer } from './hooks/useTimer';
 import { useProgress } from './hooks/useProgress';
 import { useReports } from './hooks/useReports';
@@ -13,56 +13,64 @@ import cadeiras from '../data/cadeiras';
 import './styles/QuizzerIsep.css';
 
 const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) => {
+  // Estados de navegação
   const [selectedCadeira, setSelectedCadeira] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
-  const [showTheory, setShowTheory] = useState(false);
-  const [comments, setComments] = useState({});
-  const [currentComment, setCurrentComment] = useState('');
-  const [mistakes, setMistakes] = useState([]);
-  const [sessionStartTime] = useState(new Date());
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Estado para armazenar exercícios com opções embaralhadas
-  const [shuffledExercises, setShuffledExercises] = useState([]);
-  // Mapeamento entre exercício original e embaralhado
-  const [exerciseMapping, setExerciseMapping] = useState([]);
-
-  // Quiz state
+  
+  // Estados do quiz
   const [quizState, setQuizState] = useState({
     currentExercise: 0,
     answers: [],
     showSolution: false,
     showResults: false,
     levelCompleted: false,
-    quizFinished: false
+    quizFinished: false,
+    isReviewMode: false
   });
 
-  const { timeSpent, resetTimer, setStartTime } = useTimer(currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished);
-  const { completedLevels, totalXP, addCompletedLevel, addXP, resetProgress, getCadeiraCompletedLevels } = useProgress();
+  // Estados de dados
+  const [shuffledExercises, setShuffledExercises] = useState([]);
+  const [exerciseMapping, setExerciseMapping] = useState([]);
+  const [mistakes, setMistakes] = useState([]);
+  const [comments, setComments] = useState({});
+  const [currentComment, setCurrentComment] = useState('');
+  
+  // Estados de UI
+  const [showTheory, setShowTheory] = useState(false);
+  const [sessionStartTime] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeAchievements, setActiveAchievements] = useState([]);
+
+  // Hooks personalizados
+  const { timeSpent, resetTimer, setStartTime } = useTimer(
+    currentView === 'quiz' && 
+    !quizState.levelCompleted && 
+    !quizState.quizFinished && 
+    !quizState.isReviewMode
+  );
+  
+  const { 
+    completedLevels, 
+    totalXP, 
+    addCompletedLevel, 
+    addXP, 
+    resetProgress, 
+    getCadeiraCompletedLevels 
+  } = useProgress();
+  
   const { dailyStats, downloadReport, initializeReports } = useReports();
   const { achievements, checkAchievements, unlockAchievement } = useAchievements();
 
-  // Refs para prevenir loop infinito
+  // Refs
   const lastProgressUpdate = useRef({ xp: 0, progress: 0 });
+  const initialShuffleRef = useRef(null); // Para armazenar o embaralhamento inicial
 
-  // Atualizar progresso no App pai - CORRIGIDO PARA EVITAR LOOP
-  useEffect(() => {
-    const totalLevels = cadeiras.reduce((acc, c) => acc + c.levels.length, 0);
-    const completedCount = Object.values(completedLevels).flat().length;
-    const progress = Math.round((completedCount / totalLevels) * 100);
-    
-    if (lastProgressUpdate.current.xp !== totalXP || lastProgressUpdate.current.progress !== progress) {
-      lastProgressUpdate.current = { xp: totalXP, progress };
-      onProgressUpdate(totalXP, progress);
-    }
-  }, [totalXP, completedLevels, onProgressUpdate]);
+  // ==================== FUNÇÕES AUXILIARES ====================
 
-  // Funções auxiliares
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
   const getCurrentLevelData = () => getCurrentCadeiraData()?.levels.find(l => l.id === selectedLevel);
   
-  // Função para obter exercício atual (usando os embaralhados)
   const getCurrentExerciseData = () => {
     if (shuffledExercises.length > 0) {
       return shuffledExercises[quizState.currentExercise];
@@ -70,7 +78,6 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     return null;
   };
 
-  // Função para obter exercício original baseado no mapeamento
   const getOriginalExercise = (shuffledIndex) => {
     if (exerciseMapping.length > 0) {
       const mapping = exerciseMapping.find(m => m.shuffledIndex === shuffledIndex);
@@ -82,7 +89,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     return null;
   };
 
-  // Função para embaralhar array (Fisher-Yates shuffle)
+  // ==================== FUNÇÕES DE EMBARALHAMENTO ====================
+
   const shuffleArray = (array) => {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -92,33 +100,27 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     return newArray;
   };
 
-  // Função para preparar exercícios com opções embaralhadas
-  const prepareShuffledExercises = useCallback(() => {
-    const levelData = getCurrentLevelData();
+  const prepareShuffledExercises = useCallback((levelData, preserveState = false) => {
     if (!levelData) return { exercises: [], mapping: [] };
 
-    // Embaralhar a ordem das questões
+    // Se estamos preservando o estado (modo revisão), usamos o embaralhamento inicial
+    if (preserveState && initialShuffleRef.current) {
+      return initialShuffleRef.current;
+    }
+
     const originalExercises = [...levelData.exercises];
     const shuffledIndices = shuffleArray([...Array(originalExercises.length).keys()]);
     
-    // Criar mapeamento
     const mapping = shuffledIndices.map((originalIndex, shuffledIndex) => ({
       originalIndex,
       shuffledIndex
     }));
 
-    // Para cada questão, criar versão com opções embaralhadas
     const processedExercises = shuffledIndices.map((originalIndex, shuffledIndex) => {
       const exercise = originalExercises[originalIndex];
       const optionsCopy = [...exercise.options];
-      
-      // Guardar a resposta correta original
       const correctAnswer = optionsCopy[exercise.correct];
-      
-      // Embaralhar as opções completamente
       const shuffledOptions = shuffleArray(optionsCopy);
-      
-      // Encontrar a nova posição da resposta correta
       const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
       
       return {
@@ -129,15 +131,24 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
         options: shuffledOptions,
         correct: newCorrectIndex,
         shuffledIndex: shuffledIndex,
-        originalIndex: originalIndex
+        originalIndex: originalIndex,
+        timestamp: Date.now() // Para garantir unicidade
       };
     });
 
-    return { exercises: processedExercises, mapping };
-  }, [selectedLevel]);
+    const result = { exercises: processedExercises, mapping };
+    
+    // Armazena o embaralhamento inicial se for a primeira vez
+    if (!initialShuffleRef.current) {
+      initialShuffleRef.current = result;
+    }
+    
+    return result;
+  }, []);
 
-  // Calcular score baseado nas respostas
-  const calculateScore = useCallback(() => {
+  // ==================== CÁLCULOS (useMemo) ====================
+
+  const score = useMemo(() => {
     if (shuffledExercises.length === 0) return 0;
     
     return quizState.answers.reduce((score, answer, index) => {
@@ -147,8 +158,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     }, 0);
   }, [quizState.answers, shuffledExercises]);
 
-  // Calcular streak
-  const calculateStreak = useCallback(() => {
+  const maxStreak = useMemo(() => {
     if (shuffledExercises.length === 0) return 0;
     
     let currentStreak = 0;
@@ -171,10 +181,21 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     return maxStreak;
   }, [quizState.answers, shuffledExercises]);
 
-  const score = calculateScore();
-  const maxStreak = calculateStreak();
+  // ==================== EFEITOS ====================
 
-  // Efeitos
+  // Atualizar progresso no App pai
+  useEffect(() => {
+    const totalLevels = cadeiras.reduce((acc, c) => acc + c.levels.length, 0);
+    const completedCount = Object.values(completedLevels).flat().length;
+    const progress = Math.round((completedCount / totalLevels) * 100);
+    
+    if (lastProgressUpdate.current.xp !== totalXP || lastProgressUpdate.current.progress !== progress) {
+      lastProgressUpdate.current = { xp: totalXP, progress };
+      onProgressUpdate(totalXP, progress);
+    }
+  }, [totalXP, completedLevels, onProgressUpdate]);
+
+  // Inicializar relatórios
   useEffect(() => {
     const initApp = async () => {
       try {
@@ -189,42 +210,63 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     initApp();
   }, [initializeReports]);
 
+  // Controlar classe do body para modais
   useEffect(() => {
     if (showTheory) {
       document.body.classList.add('ape-modal-open');
     } else {
       document.body.classList.remove('ape-modal-open');
     }
+    
     return () => document.body.classList.remove('ape-modal-open');
   }, [showTheory]);
 
   // Verificar conquistas
   useEffect(() => {
     if (score > 0 || totalXP > 0) {
-      const newAchievements = checkAchievements({ score, totalXP, maxStreak, completedLevels });
-      newAchievements.forEach(achievement => {
-        unlockAchievement(achievement.id);
+      const newAchievements = checkAchievements({ 
+        score, 
+        totalXP, 
+        maxStreak, 
+        completedLevels 
       });
+      
+      if (newAchievements.length > 0) {
+        newAchievements.forEach(achievement => {
+          if (!achievements.find(a => a.id === achievement.id && a.unlocked)) {
+            unlockAchievement(achievement.id);
+            setActiveAchievements(prev => [...prev, achievement]);
+          }
+        });
+      }
     }
-  }, [score, totalXP, maxStreak, completedLevels, checkAchievements, unlockAchievement]);
+  }, [score, totalXP, maxStreak, completedLevels, checkAchievements, unlockAchievement, achievements]);
 
   // Preparar exercícios embaralhados quando um nível é selecionado
   useEffect(() => {
     if (selectedLevel && currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished) {
-      const { exercises, mapping } = prepareShuffledExercises();
+      const levelData = getCurrentLevelData();
+      if (!levelData) return;
+      
+      // Se é modo de revisão, preservamos o estado
+      const preserveState = quizState.isReviewMode;
+      const { exercises, mapping } = prepareShuffledExercises(levelData, preserveState);
       setShuffledExercises(exercises);
       setExerciseMapping(mapping);
     }
-  }, [selectedLevel, currentView, quizState.levelCompleted, quizState.quizFinished, prepareShuffledExercises]);
+  }, [selectedLevel, currentView, quizState.levelCompleted, quizState.quizFinished, quizState.isReviewMode, prepareShuffledExercises]);
 
-  // Funções de navegação
+  // ==================== FUNÇÕES DE NAVEGAÇÃO ====================
+
   const goToCadeiras = useCallback(() => {
     onViewChange('cadeiras');
     setSelectedCadeira(null);
     setSelectedLevel(null);
     setShuffledExercises([]);
     setExerciseMapping([]);
+    initialShuffleRef.current = null; // Limpa o embaralhamento inicial
     resetQuizState();
+    setActiveAchievements([]);
   }, [onViewChange]);
 
   const goToLevels = useCallback(() => {
@@ -232,6 +274,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     setSelectedLevel(null);
     setShuffledExercises([]);
     setExerciseMapping([]);
+    initialShuffleRef.current = null; // Limpa o embaralhamento inicial
+    setActiveAchievements([]);
   }, [onViewChange]);
 
   const startLevel = useCallback((levelId) => {
@@ -240,6 +284,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     resetTimer();
     resetQuizState();
     setStartTime(Date.now());
+    initialShuffleRef.current = null; // Reseta o embaralhamento inicial para novo quiz
   }, [onViewChange, resetTimer, setStartTime]);
 
   const openKnowledgeTree = useCallback((levelId) => {
@@ -254,7 +299,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       showSolution: false,
       showResults: false,
       levelCompleted: false,
-      quizFinished: false
+      quizFinished: false,
+      isReviewMode: false
     });
     setMistakes([]);
     setComments({});
@@ -264,6 +310,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       resetTimer();
     }, 100);
   }, [resetTimer]);
+
+  // ==================== FUNÇÕES DO QUIZ ====================
 
   const handleAnswer = useCallback((selectedIndex) => {
     const currentExerciseData = getCurrentExerciseData();
@@ -395,11 +443,43 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     }
   }, [score, selectedCadeira, selectedLevel, addXP, addCompletedLevel, getCadeiraCompletedLevels]);
 
+  const enterReviewMode = useCallback(() => {
+    // Preserva o embaralhamento original para o modo de revisão
+    if (!initialShuffleRef.current) {
+      const levelData = getCurrentLevelData();
+      if (levelData) {
+        initialShuffleRef.current = prepareShuffledExercises(levelData, true);
+      }
+    }
+    
+    setQuizState(prev => ({ 
+      ...prev, 
+      isReviewMode: true,
+      showSolution: true,
+      showResults: false,
+      levelCompleted: false,
+      quizFinished: false,
+      currentExercise: 0 // Volta para a primeira questão
+    }));
+  }, [prepareShuffledExercises]);
+
+  const exitReviewMode = useCallback(() => {
+    if (quizState.quizFinished) {
+      setQuizState(prev => ({ ...prev, quizFinished: true }));
+    } else if (quizState.levelCompleted) {
+      setQuizState(prev => ({ ...prev, levelCompleted: true }));
+    } else {
+      goToLevels();
+    }
+  }, [quizState.quizFinished, quizState.levelCompleted, goToLevels]);
+
+  // ==================== FUNÇÕES DE GESTÃO ====================
+
   const handleDownloadReport = useCallback(() => {
     const currentLevelData = getCurrentLevelData();
     const sessionData = {
       sessionStartTime,
-      timeSpent,
+      timeSpent: timeSpent || '00:00',
       currentLevelData,
       score: score,
       maxStreak: maxStreak,
@@ -407,7 +487,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       totalPossibleScore: currentLevelData?.exercises.length || 0,
       shuffledExercises: shuffledExercises,
       exerciseMapping: exerciseMapping,
-      wasShuffled: true
+      wasShuffled: true,
+      initialShuffle: initialShuffleRef.current
     };
     downloadReport(sessionData);
   }, [sessionStartTime, timeSpent, score, maxStreak, mistakes, downloadReport, shuffledExercises, exerciseMapping]);
@@ -418,6 +499,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       resetQuizState();
       setShuffledExercises([]);
       setExerciseMapping([]);
+      initialShuffleRef.current = null;
       setSelectedLevel(null);
       setSelectedCadeira(null);
       onViewChange('cadeiras');
@@ -435,7 +517,12 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     }
   }, [selectedLevel, quizState.currentExercise, shuffledExercises]);
 
-  // Componentes de UI
+  const closeAchievement = useCallback((achievementId) => {
+    setActiveAchievements(prev => prev.filter(a => a.id !== achievementId));
+  }, []);
+
+  // ==================== COMPONENTES DE UI ====================
+
   const LoadingScreen = () => (
     <div className="ape-loading-screen">
       <div className="ape-loading-animation">
@@ -464,7 +551,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     </div>
   );
 
-  // Renderização condicional
+  // ==================== RENDERIZAÇÃO PRINCIPAL ====================
+
   const renderCurrentView = () => {
     if (error) return <ErrorScreen />;
     if (loading) return <LoadingScreen />;
@@ -519,6 +607,42 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
         const currentLevelData = getCurrentLevelData();
         const currentExerciseData = getCurrentExerciseData();
         
+        // Se estiver no modo de revisão, mostra o QuizView em modo de revisão
+        if (quizState.isReviewMode) {
+          return currentExerciseData ? (
+            <QuizView
+              level={currentLevelData}
+              exercise={currentExerciseData}
+              currentExerciseIndex={quizState.currentExercise}
+              totalExercises={shuffledExercises.length > 0 ? shuffledExercises.length : currentLevelData.exercises.length}
+              selectedAnswer={quizState.answers[quizState.currentExercise]}
+              showSolution={true}
+              showResults={false}
+              answers={quizState.answers}
+              score={score}
+              maxStreak={maxStreak}
+              timeSpent={timeSpent || '00:00'}
+              onAnswer={() => {}} // Desabilitado em modo de revisão
+              onNext={nextExercise}
+              onPrevious={previousExercise}
+              onGoToExercise={goToExercise}
+              onShowResults={showResultsScreen}
+              onFinishQuiz={exitReviewMode}
+              onBack={exitReviewMode}
+              onShowTheory={() => setShowTheory(true)}
+              comments={comments}
+              currentComment={currentComment}
+              onSaveComment={saveComment}
+              showTheory={showTheory}
+              onCloseTheory={() => setShowTheory(false)}
+              shuffledExercises={shuffledExercises}
+              isReviewMode={true}
+              onEnterReviewMode={enterReviewMode}
+            />
+          ) : <LoadingScreen />;
+        }
+        
+        // Tela de conclusão
         if (quizState.levelCompleted || quizState.quizFinished) {
           return (
             <CompletionView
@@ -527,7 +651,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
               score={score}
               maxStreak={maxStreak}
               totalXP={totalXP}
-              timeSpent={timeSpent}
+              timeSpent={timeSpent || '00:00'}
               isLevelCompleted={quizState.levelCompleted}
               isQuizFinished={quizState.quizFinished}
               onBackToLevels={() => {
@@ -537,10 +661,12 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
               onBackToCadeiras={goToCadeiras}
               onDownloadReport={handleDownloadReport}
               onResetProgress={handleResetProgress}
+              onEnterReviewMode={enterReviewMode}
             />
           );
         }
 
+        // Quiz normal
         return currentExerciseData ? (
           <QuizView
             level={currentLevelData}
@@ -553,7 +679,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
             answers={quizState.answers}
             score={score}
             maxStreak={maxStreak}
-            timeSpent={timeSpent}
+            timeSpent={timeSpent || '00:00'}
             onAnswer={handleAnswer}
             onNext={nextExercise}
             onPrevious={previousExercise}
@@ -567,8 +693,9 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
             onSaveComment={saveComment}
             showTheory={showTheory}
             onCloseTheory={() => setShowTheory(false)}
-            // Propriedade para indicar que as opções estão embaralhadas
-            isShuffled={shuffledExercises.length > 0}
+            shuffledExercises={shuffledExercises}
+            isReviewMode={false}
+            onEnterReviewMode={enterReviewMode}
           />
         ) : <LoadingScreen />;
 
@@ -584,11 +711,12 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
         {renderCurrentView()}
       </div>
       
-      {achievements.map(achievement => (
+      {/* Popups de conquistas */}
+      {activeAchievements.map(achievement => (
         <AchievementPopup
           key={achievement.id}
           achievement={achievement}
-          onClose={() => {}}
+          onClose={() => closeAchievement(achievement.id)}
         />
       ))}
     </div>

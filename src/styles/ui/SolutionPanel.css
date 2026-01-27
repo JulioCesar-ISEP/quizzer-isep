@@ -27,6 +27,10 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
+.ape-solution-panel.review-mode {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
 /* Solution Header */
 .ape-solution-header {
   padding: 1.5rem 1.5rem 0.75rem 1.5rem;
@@ -41,12 +45,16 @@
   font-weight: 800;
 }
 
-.ape-solution-result.correct {
+.ape-solution-icon.correct {
   color: #22c55e;
 }
 
-.ape-solution-result.incorrect {
+.ape-solution-icon.incorrect {
   color: #ef4444;
+}
+
+.ape-solution-text {
+  color: #ffffff;
 }
 
 .ape-achievement-badge {
@@ -59,6 +67,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 /* Streak Indicator */
@@ -101,6 +112,108 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* Análise de Resposta */
+.ape-answer-analysis {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.ape-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 1rem;
+}
+
+.ape-answer-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .ape-answer-comparison {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .ape-answer-arrow {
+    display: flex;
+    justify-content: center;
+    transform: rotate(90deg);
+  }
+}
+
+.ape-wrong-answer,
+.ape-correct-answer {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.ape-wrong-answer {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.ape-correct-answer {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.ape-answer-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.ape-wrong-icon {
+  color: #ef4444;
+}
+
+.ape-correct-icon {
+  color: #22c55e;
+}
+
+.ape-answer-text {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  border-left: 4px solid;
+}
+
+.ape-answer-text.wrong {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border-left-color: #ef4444;
+}
+
+.ape-answer-text.correct {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+  border-left-color: #22c55e;
+}
+
+.ape-answer-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #64748b;
 }
 
 /* Explanation Section */
@@ -165,14 +278,21 @@
   letter-spacing: 0.5px;
 }
 
+.ape-code-block pre {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
 .ape-code-block code {
-  color: #000000;
+  color: #c2c1c1;
   font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
   display: block;
   margin-top: 0.5rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: transparent !important;
 }
 
 /* CORREÇÃO: Syntax highlighting com cores vibrantes */
@@ -434,4 +554,14 @@
 .ape-code-block code {
   background: #0a0f1c !important;
   color: #c2c1c1;
+}
+
+/* Garantir que o fundo do code block seja escuro */
+.ape-code-section {
+  background: transparent;
+}
+
+.ape-code-block pre,
+.ape-code-block code {
+  background: #0a0f1c !important;
 }
