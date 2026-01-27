@@ -1,4 +1,3 @@
-// QuizzerIsep.jsx (versão atualizada sem scroll e sem loop infinito)
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTimer } from './hooks/useTimer';
 import { useProgress } from './hooks/useProgress';
@@ -10,7 +9,6 @@ import QuizView from './components/views/QuizView';
 import KnowledgeTreeView from './components/views/KnowledgeTreeView';
 import CompletionView from './components/views/CompletionView';
 import AchievementPopup from './components/ui/AchievementPopup';
-// import SessionStats from './components/ui/SessionStats';
 import cadeiras from '../data/cadeiras';
 import './styles/QuizzerIsep.css';
 
@@ -24,6 +22,11 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
   const [sessionStartTime] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Estado para armazenar exercícios com opções embaralhadas
+  const [shuffledExercises, setShuffledExercises] = useState([]);
+  // Mapeamento entre exercício original e embaralhado
+  const [exerciseMapping, setExerciseMapping] = useState([]);
 
   // Quiz state
   const [quizState, setQuizState] = useState({
@@ -49,7 +52,6 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     const completedCount = Object.values(completedLevels).flat().length;
     const progress = Math.round((completedCount / totalLevels) * 100);
     
-    // Só atualiza se os valores realmente mudaram
     if (lastProgressUpdate.current.xp !== totalXP || lastProgressUpdate.current.progress !== progress) {
       lastProgressUpdate.current = { xp: totalXP, progress };
       onProgressUpdate(totalXP, progress);
@@ -59,24 +61,95 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
   // Funções auxiliares
   const getCurrentCadeiraData = () => cadeiras.find(c => c.id === selectedCadeira);
   const getCurrentLevelData = () => getCurrentCadeiraData()?.levels.find(l => l.id === selectedLevel);
-  const getCurrentExerciseData = () => getCurrentLevelData()?.exercises[quizState.currentExercise];
+  
+  // Função para obter exercício atual (usando os embaralhados)
+  const getCurrentExerciseData = () => {
+    if (shuffledExercises.length > 0) {
+      return shuffledExercises[quizState.currentExercise];
+    }
+    return null;
+  };
+
+  // Função para obter exercício original baseado no mapeamento
+  const getOriginalExercise = (shuffledIndex) => {
+    if (exerciseMapping.length > 0) {
+      const mapping = exerciseMapping.find(m => m.shuffledIndex === shuffledIndex);
+      if (mapping) {
+        const levelData = getCurrentLevelData();
+        return levelData?.exercises[mapping.originalIndex];
+      }
+    }
+    return null;
+  };
+
+  // Função para embaralhar array (Fisher-Yates shuffle)
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  // Função para preparar exercícios com opções embaralhadas
+  const prepareShuffledExercises = useCallback(() => {
+    const levelData = getCurrentLevelData();
+    if (!levelData) return { exercises: [], mapping: [] };
+
+    // Embaralhar a ordem das questões
+    const originalExercises = [...levelData.exercises];
+    const shuffledIndices = shuffleArray([...Array(originalExercises.length).keys()]);
+    
+    // Criar mapeamento
+    const mapping = shuffledIndices.map((originalIndex, shuffledIndex) => ({
+      originalIndex,
+      shuffledIndex
+    }));
+
+    // Para cada questão, criar versão com opções embaralhadas
+    const processedExercises = shuffledIndices.map((originalIndex, shuffledIndex) => {
+      const exercise = originalExercises[originalIndex];
+      const optionsCopy = [...exercise.options];
+      
+      // Guardar a resposta correta original
+      const correctAnswer = optionsCopy[exercise.correct];
+      
+      // Embaralhar as opções completamente
+      const shuffledOptions = shuffleArray(optionsCopy);
+      
+      // Encontrar a nova posição da resposta correta
+      const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
+      
+      return {
+        ...exercise,
+        id: `shuffled-${exercise.id}-${shuffledIndex}`,
+        originalId: exercise.id,
+        originalCorrect: exercise.correct,
+        options: shuffledOptions,
+        correct: newCorrectIndex,
+        shuffledIndex: shuffledIndex,
+        originalIndex: originalIndex
+      };
+    });
+
+    return { exercises: processedExercises, mapping };
+  }, [selectedLevel]);
 
   // Calcular score baseado nas respostas
   const calculateScore = useCallback(() => {
-    const currentLevelData = getCurrentLevelData();
-    if (!currentLevelData) return 0;
+    if (shuffledExercises.length === 0) return 0;
     
     return quizState.answers.reduce((score, answer, index) => {
       if (answer === undefined) return score;
-      const exercise = currentLevelData.exercises[index];
+      const exercise = shuffledExercises[index];
       return score + (answer === exercise.correct ? 1 : 0);
     }, 0);
-  }, [quizState.answers, selectedLevel]);
+  }, [quizState.answers, shuffledExercises]);
 
   // Calcular streak
   const calculateStreak = useCallback(() => {
-    const currentLevelData = getCurrentLevelData();
-    if (!currentLevelData) return 0;
+    if (shuffledExercises.length === 0) return 0;
     
     let currentStreak = 0;
     let maxStreak = 0;
@@ -86,7 +159,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
         currentStreak = 0;
         return;
       }
-      const exercise = currentLevelData.exercises[index];
+      const exercise = shuffledExercises[index];
       if (answer === exercise.correct) {
         currentStreak++;
         maxStreak = Math.max(maxStreak, currentStreak);
@@ -96,7 +169,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     });
     
     return maxStreak;
-  }, [quizState.answers, selectedLevel]);
+  }, [quizState.answers, shuffledExercises]);
 
   const score = calculateScore();
   const maxStreak = calculateStreak();
@@ -135,17 +208,30 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     }
   }, [score, totalXP, maxStreak, completedLevels, checkAchievements, unlockAchievement]);
 
+  // Preparar exercícios embaralhados quando um nível é selecionado
+  useEffect(() => {
+    if (selectedLevel && currentView === 'quiz' && !quizState.levelCompleted && !quizState.quizFinished) {
+      const { exercises, mapping } = prepareShuffledExercises();
+      setShuffledExercises(exercises);
+      setExerciseMapping(mapping);
+    }
+  }, [selectedLevel, currentView, quizState.levelCompleted, quizState.quizFinished, prepareShuffledExercises]);
+
   // Funções de navegação
   const goToCadeiras = useCallback(() => {
     onViewChange('cadeiras');
     setSelectedCadeira(null);
     setSelectedLevel(null);
+    setShuffledExercises([]);
+    setExerciseMapping([]);
     resetQuizState();
   }, [onViewChange]);
 
   const goToLevels = useCallback(() => {
     onViewChange('levels');
     setSelectedLevel(null);
+    setShuffledExercises([]);
+    setExerciseMapping([]);
   }, [onViewChange]);
 
   const startLevel = useCallback((levelId) => {
@@ -183,6 +269,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
     const currentExerciseData = getCurrentExerciseData();
     const currentLevelData = getCurrentLevelData();
     const currentCadeiraData = getCurrentCadeiraData();
+    const originalExercise = getOriginalExercise(quizState.currentExercise);
 
     const newAnswers = [...quizState.answers];
     newAnswers[quizState.currentExercise] = selectedIndex;
@@ -193,29 +280,35 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       showSolution: true
     }));
 
-    if (selectedIndex !== currentExerciseData.correct) {
-      const commentKey = `${selectedLevel}-${quizState.currentExercise}`;
+    if (selectedIndex !== currentExerciseData.correct && originalExercise) {
+      const commentKey = `${selectedLevel}-${originalExercise.id}`;
       setMistakes(prev => [...prev, {
         cadeiraId: selectedCadeira,
         cadeiraName: currentCadeiraData.name,
         levelId: selectedLevel,
         levelName: currentLevelData.name,
         exerciseIndex: quizState.currentExercise,
-        question: currentExerciseData.question,
-        code: currentExerciseData.code,
+        originalExerciseId: originalExercise.id,
+        question: originalExercise.question,
+        code: originalExercise.code,
         selectedOption: currentExerciseData.options[selectedIndex],
-        correctOption: currentExerciseData.options[currentExerciseData.correct],
-        explanation: currentExerciseData.explanation,
-        theoryPoints: currentExerciseData.theoryPoints,
+        correctOption: originalExercise.options[originalExercise.correct],
+        shuffledCorrectOption: currentExerciseData.options[currentExerciseData.correct],
+        explanation: originalExercise.explanation,
+        theoryPoints: originalExercise.theoryPoints,
         studentComment: comments[commentKey] || '',
-        timestamp: new Date().toLocaleTimeString('pt-PT')
+        timestamp: new Date().toLocaleTimeString('pt-PT'),
+        wasShuffled: true,
+        originalCorrectPosition: originalExercise.correct,
+        shuffledCorrectPosition: currentExerciseData.correct
       }]);
     }
-  }, [quizState.answers, quizState.currentExercise, selectedCadeira, selectedLevel, comments]);
+  }, [quizState.answers, quizState.currentExercise, selectedCadeira, selectedLevel, comments, shuffledExercises]);
 
   const nextExercise = useCallback(() => {
-    const currentLevelData = getCurrentLevelData();
-    const totalExercisesInLevel = currentLevelData?.exercises.length || 0;
+    const totalExercisesInLevel = shuffledExercises.length > 0 ? 
+      shuffledExercises.length : 
+      (getCurrentLevelData()?.exercises.length || 0);
 
     setQuizState(prev => ({
       ...prev,
@@ -252,7 +345,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
         }
       }
     }
-  }, [quizState.currentExercise, quizState.answers]);
+  }, [quizState.currentExercise, quizState.answers, shuffledExercises]);
 
   const previousExercise = useCallback(() => {
     if (quizState.currentExercise > 0) {
@@ -311,15 +404,20 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
       score: score,
       maxStreak: maxStreak,
       mistakes,
-      totalPossibleScore: currentLevelData?.exercises.length || 0
+      totalPossibleScore: currentLevelData?.exercises.length || 0,
+      shuffledExercises: shuffledExercises,
+      exerciseMapping: exerciseMapping,
+      wasShuffled: true
     };
     downloadReport(sessionData);
-  }, [sessionStartTime, timeSpent, score, maxStreak, mistakes, downloadReport]);
+  }, [sessionStartTime, timeSpent, score, maxStreak, mistakes, downloadReport, shuffledExercises, exerciseMapping]);
 
   const handleResetProgress = useCallback(() => {
     if (window.confirm('⚠️ Tens a certeza? Vais perder todo o progresso no laboratório!')) {
       resetProgress();
       resetQuizState();
+      setShuffledExercises([]);
+      setExerciseMapping([]);
       setSelectedLevel(null);
       setSelectedCadeira(null);
       onViewChange('cadeiras');
@@ -328,9 +426,14 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
 
   const saveComment = useCallback((text) => {
     setCurrentComment(text);
-    const key = `${selectedLevel}-${quizState.currentExercise}`;
-    setComments(prev => ({ ...prev, [key]: text }));
-  }, [selectedLevel, quizState.currentExercise]);
+    const currentExerciseData = getCurrentExerciseData();
+    const originalExercise = getOriginalExercise(quizState.currentExercise);
+    
+    if (originalExercise) {
+      const key = `${selectedLevel}-${originalExercise.id}`;
+      setComments(prev => ({ ...prev, [key]: text }));
+    }
+  }, [selectedLevel, quizState.currentExercise, shuffledExercises]);
 
   // Componentes de UI
   const LoadingScreen = () => (
@@ -443,7 +546,7 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
             level={currentLevelData}
             exercise={currentExerciseData}
             currentExerciseIndex={quizState.currentExercise}
-            totalExercises={currentLevelData.exercises.length}
+            totalExercises={shuffledExercises.length > 0 ? shuffledExercises.length : currentLevelData.exercises.length}
             selectedAnswer={quizState.answers[quizState.currentExercise]}
             showSolution={quizState.showSolution}
             showResults={quizState.showResults}
@@ -464,6 +567,8 @@ const QuizzerIsep = ({ currentView, onViewChange, onProgressUpdate, isDark }) =>
             onSaveComment={saveComment}
             showTheory={showTheory}
             onCloseTheory={() => setShowTheory(false)}
+            // Propriedade para indicar que as opções estão embaralhadas
+            isShuffled={shuffledExercises.length > 0}
           />
         ) : <LoadingScreen />;
 
