@@ -373,7 +373,546 @@ const ex6 = [
       examples: "Controle de reator nuclear: WCET conhecido e garantido\nSistema de frenagem: resposta dentro de 10ms no pior caso\nAvionics: certificação requer análise de pior caso"
     },
     hints: ["O que é mais importante: tempo médio ou pior caso?", "Como garantir que um sistema sempre responda a tempo?"]
-  }
+  },
+  {
+  id: 16,
+  question: "Os sistemas multiprocessador com n processadores assimétricos:",
+  code: "",
+  options: [
+    "partilham o barramento, relógio e memória",
+    "não partilham o barramento, relógio e memória",
+    "podem correr em paralelo até n processos",
+    "são geridos por um único SO central"
+  ],
+  correct: 1,
+  explanation: "Assimétricos (ASMP): um master + slaves especializados; não partilham barramento/relógio/memória uniformemente. Diferem de simétricos (SMP).",
+  theoryPoints: {
+    title: "Multiprocessadores Assimétricos (ASMP)",
+    content: "Master-slave: um processador master controla slaves especializados. Sem partilha uniforme de recursos.",
+    keyPoints: [
+      "Master: coordena/schedule",
+      "Slaves: tarefas específicas",
+      "Não SMP: recursos não uniformes"
+    ],
+    examples: "Master: I/O + scheduling; Slaves: aceleração gráfica."
+  },
+  hints: ["Master-slave?", "Partilha uniforme?"]  
+},
+{
+  id: 17,
+  question: "Sistemas multiprocessador simétricos com n processadores podem correr em paralelo:",
+  code: "",
+  options: [
+    "no máximo n-1 processos",
+    "até n processos",
+    "apenas 1 processo (master)",
+    "ilimitado (com threads)"
+  ],
+  correct: 1,
+  explanation: "Simétricos (SMP): todos os n processadores iguais, partilham memória/barramento; executam n processos em paralelo verdadeiro.",
+  theoryPoints: {
+    title: "SMP (Symmetric Multiprocessing)",
+    content: "Todos processadores idênticos, memória partilhada (UMA/NUMA), um SO único.",
+    keyPoints: [
+      "Paralelismo: até n processos simultâneos",
+      "Escalonamento: SO distribui por todos cores",
+      "Coerência cache obrigatória"
+    ],
+    examples: "Servidor 4-core: 4 threads simultâneos."
+  },
+  hints: ["SMP vs assimétrico?", "Quantos em paralelo?"]  
+},
+{
+  id: 18,
+  question: "Um sistema composto por várias unidades de processamento interligadas por rede de comunicações permite:",
+  code: "",
+  options: [
+    "execução transparente num multiprocessador simétrico",
+    "várias partes do mesmo programa executadas em diferentes máquinas",
+    "execução transparente num multiprocessador assimétrico",
+    "partilha direta de memória física"
+  ],
+  correct: 1,
+  explanation: "Rede → **cluster/MPP** (memória distribuída); programa dividido (MPI), executa partes em nodes separados.",
+  theoryPoints: {
+    title: "Clusters/MPP via Rede",
+    content: "Computadores independentes + rede (Ethernet/InfiniBand); comunicação por mensagens (MPI).",
+    keyPoints: [
+      "Memória distribuída",
+      "Programação paralela: divide et impera",
+      "Não transparente como SMP"
+    ],
+    examples: "MPI_Send/Recv entre nodes."
+  },
+  hints: ["Rede = barramento?", "Como dividir programa?"]  
+},
+{
+  id: 19,
+  question: "Num sistema com 8 CPUs simétricas num chip multicore, qual afirmação é falsa?",
+  code: "",
+  options: [
+    "Pode executar no máximo 8 processos em paralelo",
+    "Pode ter >8 processos concorrentes (intercalados)",
+    "Um CPU pode alterar registos de outro CPU diretamente",
+    "Todos CPUs competem por recursos partilhados"
+  ],
+  correct: 2,
+  explanation: "Em multicore **SMP**, registos são privados por core; não há acesso direto entre eles (proteção SO).",
+  theoryPoints: {
+    title: "Multicore SMP",
+    content: "Cores partilham cache L3/memória, mas registos/PC privados por core.",
+    keyPoints: [
+      "Registos privados: isolamento",
+      ">8 processos: time-sharing",
+      "Contenção: bus/memória"
+    ],
+    examples: "Core0 não lê RAX de Core1."
+  },
+  hints: ["Registos partilhados?", "Como >8 processos?"]  
+},
+{
+  id: 20,
+  question: "Múltiplos processadores que comunicam, partilham dispositivos/memória via barramento comum, mas cada tem memória privada, é:",
+  code: "",
+  options: [
+    "Cluster",
+    "SMP (memória partilhada)",
+    "MPP (memória distribuída)",
+    "Sistema uniprocessador"
+  ],
+  correct: 2,
+  explanation: "**MPP** (Massively Parallel Processor): memória privada por processador, comunicação via interconexão/barramento.",
+  theoryPoints: {
+    title: "MPP vs SMP",
+    content: "MPP: escala milhares, memória distribuída; SMP: dezenas, memória partilhada.",
+    keyPoints: [
+      "Barramento dedicado",
+      "Cada CPU: memória local",
+      "Comunicação: mensagens"
+    ],
+    examples: "Cray T3D, Intel Paragon."
+  },
+  hints: ["Memória privada + barramento?", "MPP ou SMP?"]  
+},
+{
+  id: 21,
+  question: "Sistemas assimétricos vs simétricos: qual diferença chave?",
+  code: "",
+  options: [
+    "Assimétricos partilham todos recursos; simétricos não",
+    "Simétricos têm todos processadores iguais e partilham uniformemente",
+    "Assimétricos escalam melhor",
+    "Simétricos usam rede em vez de barramento"
+  ],
+  correct: 1,
+  explanation: "Simétricos (SMP): todos CPUs iguais, acesso uniforme a memória/recursos. Assimétricos: master especializa slaves.",
+  theoryPoints: {
+    title: "SMP vs ASMP",
+    content: "SMP: escalabilidade limitada (contenção); ASMP: especialização.",
+    keyPoints: [
+      "SMP: um SO, memória UMA/NUMA",
+      "ASMP: master coordena"
+    ],
+    examples: "SMP: desktop multicore; ASMP: embedded master-slave."
+  },
+  hints: ["CPUs iguais?", "Partilha uniforme?"]  
+},
+{
+  id: 22,
+  question: "Num cluster, a computação é coesa como multiprocessador porque:",
+  code: "",
+  options: [
+    "partilha memória física direta",
+    "middleware simula memória partilhada",
+    "usa barramento comum",
+    "todos nodes têm mesmo SO"
+  ],
+  correct: 1,
+  explanation: "Middleware (OpenMPI, SLURM) abstrai rede, dando ilusão de SMP via mensagens.",
+  theoryPoints: {
+    title: "SSI (Single System Image)",
+    content: "Cluster aparece como uma máquina única via software.",
+    keyPoints: [
+      "MPI: programação paralela",
+      "Não partilha hardware"
+    ],
+    examples: "Beowulf clusters."
+  },
+  hints: ["Como cluster simula SMP?", "Middleware?"]  
+},
+{
+  id: 23,
+  question: "Sistemas tempo-real hard vs soft: diferença?",
+  code: "",
+  options: [
+    "Hard: perde deadline = falha; Soft: degrada qualidade",
+    "Hard: mais rápido; Soft: interativo",
+    "Hard: simulações; Soft: controlo",
+    "Hard: multicore; Soft: uniprocessador"
+  ],
+  correct: 0,
+  explanation: "Hard: falha catastrófica (ex: airbag); Soft: aceitável ocasionalmente (ex: vídeo lag).",
+  theoryPoints: {
+    title: "Tipos Tempo-Real",
+    content: "Garantia vs melhor esforço.",
+    keyPoints: [
+      "Hard: análise schedulability",
+      "Soft: QoS degradável"
+    ],
+    examples: "Hard: ABS; Soft: streaming."
+  },
+  hints: ["Consequência deadline?", "Falha ou degradação?"]  
+},
+{
+  id: 24,
+  question: "Processadores em sistemas embarcados tempo-real dominam porque:",
+  code: "",
+  options: [
+    "PCs consomem mais energia",
+    "ubiquidade: carros, electrodomésticos, medicina (>90% produção)",
+    "mais caros que desktop",
+    "usam clusters"
+  ],
+  correct: 1,
+  explanation: "Milhares de milhões/ano em embedded vs milhões em PCs.",
+  theoryPoints: {
+    title: "Embedded Dominância",
+    content: "Microcontroladores baratos/específicos.",
+    keyPoints: [
+      ">50/carros, smart homes",
+      "Baixo custo/consumo"
+    ],
+    examples: "MCU em tudo."
+  },
+  hints: ["Onde mais processadores?", "% produção?"]  
+},
+{
+  id: 25,
+  question: "Sistema com rede: permite programar como SMP porque:",
+  code: "",
+  options: [
+    "transparente (bibliotecas MPI/OpenMP)",
+    "partilha barramento",
+    "memória única",
+    "relógio global"
+  ],
+  correct: 0,
+  explanation: "Bibliotecas abstraem rede; programador escreve paralelo sem saber se SMP/cluster.",
+  theoryPoints: {
+    title: "Programação Paralela Distribuída",
+    content: "MPI para clusters.",
+    keyPoints: [
+      "Send/Recv simula shared mem"
+    ],
+    examples: "HPC apps rodam SMP/cluster."
+  },
+  hints: ["MPI?", "Abstração rede?"]  
+},
+{
+  id: 26,
+  question: "Relativamente ao método de escalonamento Multinível com Realimentação por Filas, podemos afirmar que:",
+  code: "",
+  options: [
+    "O método de escalonamento de curto-prazo em cada fila afeta a performance",
+    "A performance não está relacionada com o método para atribuir processos às filas",
+    "Não está relacionada com escalonamento de curto-prazo em cada fila",
+    "Favorece processos IO-bound"
+  ],
+  correct: 0,
+  explanation: "**Multilevel Feedback Queue**: filas múltiplas; escalonamento por fila (RR, SJF) afeta performance global; realimentação move processos entre filas.",
+  theoryPoints: {
+    title: "MLFQ (Multilevel Feedback Queue)",
+    content: "Filas com prioridades diferentes; processos movem-se para baixo (mais CPU = menor prioridade).",
+    keyPoints: [
+      "Filas: alta prioridade (RR curto), baixa (FCFS)",
+      "Realimentação: degrada prioridade",
+      "Aproxima SJF adaptativo"
+    ],
+    examples: "Linux CFS usa variantes [file:9]."
+  },
+  hints: ["Realimentação?", "Escalonamento por fila?"]  
+},
+
+{
+  id: 27,
+  question: "Qual o estado de um processo após execução de operação IO?",
+  code: "",
+  options: [
+    "Running",
+    "Ready",
+    "Waiting",
+    "New"
+  ],
+  correct: 2,
+  explanation: "**Waiting**: bloqueado aguardando IO completar (interrupt). Depois → Ready.",
+  theoryPoints: {
+    title: "Estados Processo IO",
+    content: "Running → Waiting (bloqueia) → Ready (IO done).",
+    keyPoints: [
+      "Bloqueio voluntário",
+      "Dispatcher agenda outro"
+    ],
+    examples: "read() → sleep até dados."
+  },
+  hints: ["Pós-IO?", "Bloqueado?"]  
+},
+
+{
+  id: 28,
+  question: "Sistema com várias unidades processamento interligadas por rede permite:",
+  code: "",
+  options: [
+    "Programa executado em várias máquinas (cluster/MPP)",
+    "Execução transparente multiprocessador assimétrico",
+    "Execução transparente multiprocessador simétrico",
+    "Partilha memória física direta"
+  ],
+  correct: 0,
+  explanation: "**Rede** → cluster/distribuído; divide programa por nodes (MPI).",
+  theoryPoints: {
+    title: "Clusters MPP",
+    content: "Memória distribuída; comunicação mensagens.",
+    keyPoints: [
+      "Não SMP (sem memória shared)",
+      "Escala milhares nodes"
+    ],
+    examples: "Beowulf [file:9]."
+  },
+  hints: ["Rede vs barramento?", "Dividir programa?"]  
+},
+
+{
+  id: 29,
+  question: "Escalonador que determina próximo processo a executar:",
+  code: "",
+  options: [
+    "Escalonador longo prazo",
+    "Médio prazo",
+    "Curto prazo (CPU dispatcher)",
+    "Todos"
+  ],
+  correct: 2,
+  explanation: "**Curto prazo (short-term)**: escolhe Ready → Running (quantum).",
+  theoryPoints: {
+    title: "Escalonadores",
+    content: "Longo: New → Ready; Médio: suspend/resume; Curto: Ready → Running.",
+    keyPoints: [
+      "Dispatcher: context switch"
+    ],
+    examples: "Linux scheduler."
+  },
+  hints: ["CPU quem escolhe?", "Short-term?"]  
+},
+
+{
+  id: 30,
+  question: "Num SO com escalonamento não-preemptivo, processo requisita IO:",
+  code: "",
+  options: [
+    "Continua Running (CPU idle)",
+    "Sai CPU → Waiting",
+    "Sai CPU → Ready",
+    "Terminado"
+  ],
+  correct: 1,
+  explanation: "**Não-preemptivo**: processo cede CPU voluntariamente (IO block) → Waiting.",
+  theoryPoints: {
+    title: "Não-Preemptivo IO",
+    content: "Processo libera CPU ao bloquear; dispatcher agenda outro.",
+    keyPoints: [
+      "Voluntário: syscall block"
+    ],
+    examples: "read() bloqueia."
+  },
+  hints: ["Não-preemptivo block?", "CPU idle?"]  
+},
+
+{
+  id: 31,
+  question: "Sistemas mono-processador com escalonamento prioridades preemptivo:",
+  code: "",
+  options: [
+    "Processo Running → Ready (prioridade alta chega)",
+    "Ready → Waiting",
+    "Waiting → Running",
+    "Monopoliza CPU"
+  ],
+  correct: 0,
+  explanation: "**Preemptivo**: suspende Running por Ready mais prioritário.",
+  theoryPoints: {
+    title: "Prioridades Preemptivas",
+    content: "Timer/interrupt: checa prioridades.",
+    keyPoints: [
+      "Starvation possível (fix: aging)"
+    ],
+    examples: "Unix nice [file:9]."
+  },
+  hints: ["Preempção?", "Running → Ready?"]  
+},
+
+{
+  id: 32,
+  question: "Sistemas interativos: algoritmo mais adequado:",
+  code: "",
+  options: [
+    "SJF preemptivo",
+    "Prioridades preemptivo",
+    "Round-Robin",
+    "Prioridades não-preemptivo"
+  ],
+  correct: 2,
+  explanation: "**RR**: quantum igual; responsivo para interativo.",
+  theoryPoints: {
+    title: "RR Interativo",
+    content: "Time-sharing: ilusão simultaneidade.",
+    keyPoints: [
+      "Quantum ~10-100ms"
+    ],
+    examples: "Unix [file:9]."
+  },
+  hints: ["Interativo?", "Fairness?"]  
+},
+
+{
+  id: 33,
+  question: "Batch processing: objetivo principal:",
+  code: "",
+  options: [
+    "Interação utilizador",
+    "Fatia equitativa CPU",
+    "Tempo IO dominante",
+    "Todos"
+  ],
+  correct: 2,
+  explanation: "**Batch**: CPU-bound; IO espera permite multiprogramação.",
+  theoryPoints: {
+    title: "Batch Multiprogramado",
+    content: "Jobs sequenciais; overlap CPU/IO.",
+    keyPoints: [
+      "Não interativo"
+    ],
+    examples: "Cobol jobs [file:9]."
+  },
+  hints: ["Batch CPU/IO?", "Overlap?"]  
+},
+
+{
+  id: 34,
+  question: "Processo é:",
+  code: "",
+  options: [
+    "Programa múltiplos fluxos",
+    "Programa em execução",
+    "Programa único fluxo",
+    "Todos"
+  ],
+  correct: 1,
+  explanation: "**Processo**: instância programa em execução (PCB, memória, etc.).",
+  theoryPoints: {
+    title: "Definição Processo",
+    content: "Programa + estado execução.",
+    keyPoints: [
+      "PCB: PID, registos, memória"
+    ],
+    examples: "`ps`: lista processos."
+  },
+  hints: ["Programa vs processo?", "PCB?"]  
+},
+
+{
+  id: 35,
+  question: "Linguagem máquina é:",
+  code: "",
+  options: [
+    "Alto-nível",
+    "Assembly",
+    "Conjunto instruções CPU entende",
+    "Para programador"
+  ],
+  correct: 2,
+  explanation: "**Máquina**: binário específico ISA (x86, ARM).",
+  theoryPoints: {
+    title: "Níveis Linguagem",
+    content: "Máquina → assembly → alto-nível.",
+    keyPoints: [
+      "Opcode + operandos"
+    ],
+    examples: "0xB8 para MOV [file:9]."
+  },
+  hints: ["CPU lê quê?", "Binário?"]  
+},
+{
+  id: 36,
+  question: "Sistemas multiprocessador assimétricos com n processadores:",
+  code: "",
+  options: [
+    "partilham barramento, relógio e memória",
+    "não partilham barramento, relógio e memória",
+    "podem correr em paralelo até n processos",
+    "são geridos por único SO central"
+  ],
+  correct: 1,
+  explanation: "Assimétricos (ASMP): master + slaves especializados; **não partilham uniformemente** barramento/relógio/memória. [file:1][file:8]",
+  theoryPoints: {
+    title: "ASMP Assimétricos",
+    content: "Master coordena; slaves tarefas específicas. Recursos **não uniformes**.",
+    keyPoints: [
+      "Master: scheduling/IO",
+      "Slaves: especializados",
+      "Não SMP"
+    ],
+    examples: "Master I/O + coordenação; slaves aceleração gráfica."
+  },
+  hints: ["Partilha uniforme?", "Master-slave?"]  
+},
+{
+  id: 37,
+  question: "SMP simétricos com n processadores correm em paralelo:",
+  code: "",
+  options: [
+    "máximo n-1 processos",
+    "até n processos",
+    "apenas 1 (master)",
+    "ilimitado (threads)"
+  ],
+  correct: 1,
+  explanation: "**SMP**: todos n processadores iguais, partilham memória; **n processos paralelos**. [file:1][file:8]",
+  theoryPoints: {
+    title: "SMP Simétricos",
+    content: "CPUs idênticas, memória UMA/NUMA, único SO.",
+    keyPoints: [
+      "**Paralelismo: n processos**",
+      "Cache coherence (MESI)",
+      "SO escalona todos cores"
+    ],
+    examples: "Servidor 4-core: 4 threads simultâneos."
+  },
+  hints: ["n ou n-1?", "SMP vs ASMP?"]  
+},
+{
+  id: 38,
+  question: "Múltiplos processadores comunicam/partilham via barramento, memória privada cada: ",
+  code: "",
+  options: [
+    "Cluster",
+    "SMP (memória partilhada)",
+    "MPP (memória distribuída)",
+    "Uniprocessador"
+  ],
+  correct: 2,
+  explanation: "**MPP**: memória privada + barramento/interconexão. Escala milhares. [file:1][file:8]",
+  theoryPoints: {
+    title: "MPP vs SMP",
+    content: "**MPP**: distributed memory; **SMP**: shared memory.",
+    keyPoints: [
+      "Memória local cada CPU",
+      "Comunicação mensagens",
+      "Escala > SMP"
+    ],
+    examples: "Cray T3D, Intel Paragon."
+  },
+  hints: ["Memória privada + barramento?", "MPP?"]  
+}
 ];
 
 export default ex6;

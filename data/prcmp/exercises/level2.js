@@ -10,20 +10,24 @@ const ex2 = [
       "A Unidade Aritmética e Lógica coordena as operações do processador"
     ],
     correct: 1,
-    explanation: "Na arquitetura von Neumann, dados e instruções são armazenados na mesma memória física, diferenciados apenas pela forma como são interpretados pelo processador.",
+    explanation:
+      "Na arquitetura von Neumann, dados e instruções são armazenados na mesma memória física, diferenciados apenas pela forma como são interpretados pelo processador.",
     theoryPoints: {
       title: "Arquitetura de von Neumann",
-      content: "Modelo proposto por John von Neumann em 1945, caracterizado por: 1) Memória única para dados e instruções, 2) Unidade de controle que busca instruções da memória, 3) Execução sequencial de instruções, 4) Computador com programa armazenado.",
+      content:
+        "Modelo proposto por John von Neumann em 1945, caracterizado por: 1) Memória única para dados e instruções, 2) Unidade de controlo que busca instruções da memória, 3) Execução sequencial de instruções, 4) Computador com programa armazenado.",
       keyPoints: [
         "Memória unificada para dados e instruções",
         "CPU com UC (busca/decodifica) e UAL (executa)",
         "Execução sequencial (uma instrução de cada vez)",
         "Programa armazenado na memória (não hardwired)"
       ],
-      examples: "Quase todos os computadores modernos seguem este modelo. Harvard architecture (usada em alguns microcontroladores) tem memórias separadas."
+      examples:
+        "Quase todos os computadores modernos seguem este modelo. Harvard architecture (usada em alguns microcontroladores) tem memórias separadas."
     },
     hints: ["Pense na diferença entre programa e dados", "Como a CPU sabe se um valor na memória é instrução ou dado?"]
   },
+
   {
     id: 2,
     question: "Superscalar é uma técnica de optimização do desempenho de uma CPU em que...",
@@ -35,20 +39,24 @@ const ex2 = [
       "duas ou mais instruções do mesmo programa são executadas simultaneamente em unidades de execução distintas da CPU"
     ],
     correct: 3,
-    explanation: "Arquitetura superscalar permite executar múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução dentro de uma única CPU.",
+    explanation:
+      "Arquitetura superscalar permite executar múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução dentro de uma única CPU.",
     theoryPoints: {
       title: "Arquitetura Superscalar",
-      content: "CPU superscalar pode executar mais de uma instrução por ciclo de clock, explorando paralelismo a nível de instrução (ILP). Requer múltiplas unidades funcionais e lógica de despacho complexa.",
+      content:
+        "CPU superscalar pode executar mais de uma instrução por ciclo de clock, explorando paralelismo a nível de instrução (ILP). Requer múltiplas unidades funcionais e lógica de despacho complexa.",
       keyPoints: [
         "Múltiplas instruções por ciclo de clock",
         "Paralelismo a nível de instrução (ILP)",
         "Múltiplas unidades de execução (ALU, FPU, load/store)",
         "Despacho dinâmico de instruções"
       ],
-      examples: "Processadores Intel Pentium (a partir do P5) e AMD usam superscalar. Pode executar, por exemplo, uma operação inteira e um acesso à memória simultaneamente."
+      examples:
+        "Processadores Intel Pentium (a partir do P5) e AMD usam superscalar. Pode executar, por exemplo, uma operação inteira e um acesso à memória simultaneamente."
     },
     hints: ["Quantas instruções podem ser executadas ao mesmo tempo?", "O que diferencia superscalar de pipeline simples?"]
   },
+
   {
     id: 3,
     question: "Qual é a principal função dos registos de uma CPU num computador?",
@@ -60,23 +68,28 @@ const ex2 = [
       "Armazenar temporariamente dados e instruções durante a execução de programas"
     ],
     correct: 3,
-    explanation: "Registros são pequenas memórias de alta velocidade dentro da CPU usadas para armazenar dados temporários, endereços e resultados intermediários durante a execução.",
+    explanation:
+      "Registos são pequenas memórias de alta velocidade dentro da CPU usadas para armazenar dados temporários, endereços e resultados intermediários durante a execução.",
     theoryPoints: {
-      title: "Registros da CPU",
-      content: "Registros são o nível mais rápido da hierarquia de memória. Tipos incluem: 1) Registros de propósito geral (dados), 2) Registros de endereço (ponteiros), 3) Registros de controle (flags, PC), 4) Registros de segmento.",
+      title: "Registos da CPU",
+      content:
+        "Registos são o nível mais rápido da hierarquia de memória. Tipos incluem: 1) Registos de propósito geral (dados), 2) Registos de endereço (ponteiros), 3) Registos de controlo (flags, PC), 4) Registos de segmento.",
       keyPoints: [
         "Memória mais rápida (acesso em 1 ciclo de clock)",
         "Tamanho limitado (32, 64 bits típicos)",
         "Visíveis ao programador em assembly",
         "PC (Program Counter): endereço da próxima instrução"
       ],
-      examples: "Em x86: EAX/RAX (acumulador), EBX/RBX (base), ECX/RCX (contador), EDX/RDX (dados), ESP/RSP (stack pointer), EBP/RBP (base pointer)"
+      examples:
+        "Em x86: EAX/RAX (acumulador), EBX/RBX (base), ECX/RCX (contador), EDX/RDX (dados), ESP/RSP (stack pointer), EBP/RBP (base pointer)"
     },
     hints: ["Por que a CPU precisa de armazenamento ultrarrápido?", "O que acontece se todos os dados tiverem que vir da RAM?"]
   },
+
   {
     id: 4,
-    question: "É necessário colocar a zero os 16 bits menos significativos de uma palavra de 32 bits, deixando os restantes 16 mais significativos inalterados. Uma solução é aplicar à palavra...",
+    question:
+      "É necessário colocar a zero os 16 bits menos significativos de uma palavra de 32 bits, deixando os restantes 16 mais significativos inalterados. Uma solução é aplicar à palavra...",
     code: "// Palavra original: 0xABCD1234\n// Resultado desejado: 0xABCD0000",
     options: [
       "16 deslocamentos lógicos para a direita seguidos de 16 deslocamentos lógicos para a esquerda",
@@ -85,20 +98,24 @@ const ex2 = [
       "a operação lógica AND com a máscara de bits 0x0000FFFF"
     ],
     correct: 1,
-    explanation: "AND com 0xFFFF0000 mantém os 16 bits superiores (todos 1s nessa parte) e zera os 16 bits inferiores (todos 0s nessa parte).",
+    explanation:
+      "AND com 0xFFFF0000 mantém os 16 bits superiores (AND com 1) e zera os 16 bits inferiores (AND com 0).",
     theoryPoints: {
       title: "Operações Bitwise (AND, OR, XOR, NOT)",
-      content: "Operações lógicas bit-a-bit são fundamentais para manipulação de bits. AND é usado para limpar bits (com máscara de 0s), OR para setar bits (com máscara de 1s), XOR para alternar bits.",
+      content:
+        "Operações lógicas bit-a-bit são fundamentais para manipulação de bits. AND é usado para limpar bits (com máscara de 0s), OR para setar bits (com máscara de 1s), XOR para alternar bits.",
       keyPoints: [
         "AND: bit resultante = 1 se ambos bits de entrada = 1",
         "OR: bit resultante = 1 se pelo menos um bit de entrada = 1",
         "XOR: bit resultante = 1 se bits de entrada diferentes",
         "NOT: inverte cada bit"
       ],
-      examples: "Limpar bits baixos: valor & 0xFFFFFF00\nSetar bits altos: valor | 0xFF000000\nAlternar bits: valor ^ 0x0000FFFF\nMáscara: padrão de bits usado para selecionar bits específicos"
+      examples:
+        "Limpar bits baixos: valor & 0xFFFFFF00\nSetar bits altos: valor | 0xFF000000\nAlternar bits: valor ^ 0x0000FFFF\nMáscara: padrão de bits usado para selecionar bits específicos"
     },
-    hints: ["Qual operação 'preserva' bits quando tem 1 e 'limpa' quando tem 0?", "Que máscara mantém os primeiros 16 bits e limpa os últimos 16?"]
+    hints: ["Qual operação preserva bits quando tem 1 e limpa quando tem 0?", "Que máscara mantém os primeiros 16 bits e limpa os últimos 16?"]
   },
+
   {
     id: 5,
     question: "Quando abordamos os termos arquitectura do conjunto de instruções (ISA) e microarquitectura...",
@@ -110,20 +127,24 @@ const ex2 = [
       "a microarquitectura consiste numa implementação física que atende aos requisitos especificados pela ISA"
     ],
     correct: 3,
-    explanation: "ISA é a interface (o que o processador faz), microarquitetura é a implementação (como é feito fisicamente). Várias microarquiteturas podem implementar a mesma ISA.",
+    explanation:
+      "ISA é a interface (o que o processador faz), microarquitetura é a implementação (como é feito fisicamente). Várias microarquiteturas podem implementar a mesma ISA.",
     theoryPoints: {
       title: "ISA vs Microarquitetura",
-      content: "ISA (Instruction Set Architecture) define: 1) Conjunto de instruções, 2) Modos de endereçamento, 3) Registros visíveis ao programador, 4) Modelo de memória. Microarquitetura define: 1) Pipeline, 2) Cache, 3) Unidades funcionais, 4) Previsão de saltos.",
+      content:
+        "ISA (Instruction Set Architecture) define: 1) Conjunto de instruções, 2) Modos de endereçamento, 3) Registos visíveis ao programador, 4) Modelo de memória. Microarquitetura define: 1) Pipeline, 2) Cache, 3) Unidades funcionais, 4) Previsão de saltos.",
       keyPoints: [
         "ISA: interface software/hardware (ABI)",
         "Microarquitetura: implementação interna",
         "Mesma ISA pode ter múltiplas microarquiteturas",
         "Ex: x86 ISA implementada por Intel e AMD com microarquiteturas diferentes"
       ],
-      examples: "ARM ISA: implementada por Cortex-A, Cortex-M (diferentes microarquiteturas). x86: implementada por Intel (Core, Atom) e AMD (Ryzen, EPYC)."
+      examples:
+        "ARM ISA: implementada por Cortex-A, Cortex-M (diferentes microarquiteturas). x86: implementada por Intel (Core, Atom) e AMD (Ryzen, EPYC)."
     },
     hints: ["Pense em especificação vs implementação", "Por que diferentes CPUs podem executar os mesmos programas?"]
   },
+
   {
     id: 6,
     question: "Na arquitectura de Von Neumann, qual das seguintes afirmações é verdadeira?",
@@ -135,20 +156,24 @@ const ex2 = [
       "o programa é implementado através de ligações eléctricas, estabelecendo a sequência de circuitos aritméticos pretendida"
     ],
     correct: 2,
-    explanation: "Na arquitetura von Neumann, o programa é armazenado na memória como números binários (opcodes), que a CPU busca, decodifica e executa sequencialmente.",
+    explanation:
+      "Na arquitetura von Neumann, o programa é armazenado na memória como números binários (opcodes), que a CPU busca, decodifica e executa sequencialmente.",
     theoryPoints: {
       title: "Programa Armazenado",
-      content: "Conceito fundamental: o programa é armazenado na memória como dados, permitindo: 1) Programas auto-modificáveis, 2) Carregamento dinâmico de programas, 3) Compiladores e sistemas operacionais.",
+      content:
+        "Conceito fundamental: o programa é armazenado na memória como dados, permitindo: 1) Programas auto-modificáveis, 2) Carregamento dinâmico de programas, 3) Compiladores e sistemas operacionais.",
       keyPoints: [
         "Programa = sequência de instruções na memória",
         "CPU busca instrução do endereço apontado por PC",
         "PC é incrementado após cada fetch",
         "Instruções e dados indistinguíveis na memória"
       ],
-      examples: "Computadores anteriores (como ENIAC) eram 'programados' por recabulação física. Von Neumann permitiu programas armazenados."
+      examples:
+        "Computadores anteriores (como ENIAC) eram 'programados' por recabulação física. Von Neumann permitiu programas armazenados."
     },
     hints: ["Como a CPU sabe que um valor na memória é uma instrução?", "O que diferencia arquitetura von Neumann de máquinas programadas por hardware?"]
   },
+
   {
     id: 7,
     question: "No ciclo fetch-decode-execute...",
@@ -160,20 +185,24 @@ const ex2 = [
       "a unidade de controlo incrementa o stack pointer na fase fetch"
     ],
     correct: 2,
-    explanation: "Na fase decode, a CPU interpreta o opcode (código de operação) para determinar que operação executar e quais operandos são necessários.",
+    explanation:
+      "Na fase decode, a CPU interpreta o opcode (código de operação) para determinar que operação executar e quais operandos são necessários.",
     theoryPoints: {
       title: "Ciclo Fetch-Decode-Execute",
-      content: "Ciclo básico de execução de instruções: 1) FETCH: buscar instrução do endereço em PC para IR (Instruction Register), 2) DECODE: decodificar opcode e operandos, 3) EXECUTE: executar operação (UAL, acesso memória, etc.), 4) (opcional) WRITE-BACK: escrever resultado em registrador.",
+      content:
+        "Ciclo básico de execução de instruções: 1) FETCH: buscar instrução do endereço em PC para IR (Instruction Register), 2) DECODE: decodificar opcode e operandos, 3) EXECUTE: executar operação (UAL, acesso memória, etc.), 4) (opcional) WRITE-BACK: escrever resultado em registrador.",
       keyPoints: [
         "PC (Program Counter): aponta para próxima instrução",
         "IR (Instruction Register): guarda instrução atual",
         "Ciclo completo pode levar vários clocks",
         "Pipelining divide ciclo em estágios para execução simultânea de múltiplas instruções"
       ],
-      examples: "Instrução simples (ADD R1, R2): fetch opcode, decode (ADD), execute (soma R1+R2), write-back (resultado em R1)"
+      examples:
+        "Instrução simples (ADD R1, R2): fetch opcode, decode (ADD), execute (soma R1+R2), write-back (resultado em R1)"
     },
     hints: ["Quando a CPU 'entende' o que fazer com uma instrução?", "O que acontece entre buscar a instrução e executá-la?"]
   },
+
   {
     id: 8,
     question: "Multi-core é um termo que designa a tecnologia que permite que...",
@@ -185,20 +214,24 @@ const ex2 = [
       "duas ou mais instruções do mesmo programa são executadas simultaneamente em unidades de execução distintas da CPU"
     ],
     correct: 1,
-    explanation: "Multi-core refere-se a múltiplos núcleos de processamento (cores) independentes num único chip, permitindo execução paralela de múltiplos programas ou threads.",
+    explanation:
+      "Multi-core refere-se a múltiplos núcleos de processamento (cores) independentes num único chip, permitindo execução paralela de múltiplos programas ou threads.",
     theoryPoints: {
       title: "Processadores Multi-core",
-      content: "Cada core é uma CPU independente, com seus próprios registros, UAL e cache L1, mas compartilhando cache L2/L3 e barramento. Permite paralelismo a nível de thread (TLP).",
+      content:
+        "Cada core é uma CPU independente, com seus próprios registos, UAL e cache L1, mas compartilhando cache L2/L3 e barramento. Permite paralelismo a nível de thread (TLP).",
       keyPoints: [
         "Múltiplos cores físicos no mesmo die",
         "Cada core executa threads independentes",
         "Compartilham memória e periféricos",
         "Escalonamento de threads pelo SO"
       ],
-      examples: "Intel Core i7 (4-8 cores), AMD Ryzen (até 16 cores), servidores com 64+ cores. Diferente de hyper-threading (cores lógicos)."
+      examples:
+        "Intel Core i7 (4-8 cores), AMD Ryzen (até 16 cores), servidores com 64+ cores. Diferente de hyper-threading (cores lógicos)."
     },
     hints: ["Qual a diferença entre multi-core e superscalar?", "Como vários programas podem rodar ao mesmo tempo?"]
   },
+
   {
     id: 9,
     question: "Relativamente a uma sistema computacional de 64 bits, qual das seguintes afirmações é falsa?",
@@ -210,20 +243,23 @@ const ex2 = [
       "Permite endereços de memória com largura de 64 bits"
     ],
     correct: 2,
-    explanation: "Sistemas 64-bit podem representar inteiros maiores que 64 bits usando múltiplos registradores (ex: 128-bit com dois registradores). A limitação não é de bits, mas de largura dos registradores.",
+    explanation:
+      "A afirmação é falsa porque o facto de a arquitetura ser 64-bit não impede representar inteiros maiores via software (ex.: múltiplas palavras).",
     theoryPoints: {
       title: "Arquitetura 64-bit",
-      content: "Em arquitetura 64-bit: 1) Registros gerais têm 64 bits, 2) Endereços de memória são 64-bit (teoricamente 16 exabytes), 3) UAL opera em 64 bits por padrão, 4) Pode operar em modos de 32 e 16 bits para compatibilidade.",
+      content:
+        "Em arquitetura 64-bit: registos gerais e operações nativas são de 64 bits, e o modelo de endereçamento usa (conceitualmente) endereços de 64 bits.",
       keyPoints: [
-        "Registros de 64 bits (RAX, RBX, etc.)",
-        "Espaço de endereçamento de 2⁶⁴ bytes",
-        "Operações aritméticas nativas de 64 bits",
-        "Suporte a inteiros de 128+ bits via software"
+        "Registos de 64 bits",
+        "UAL com operações nativas de 64 bits",
+        "Endereçamento com 64 bits (conceitualmente)",
+        "Inteiros maiores que 64 bits podem ser feitos por software"
       ],
-      examples: "x86-64 (AMD64/Intel 64): extensão 64-bit do x86. Diferenças de x86: mais registradores, endereçamento maior, convenções de chamada diferentes."
+      examples: "Big integers em bibliotecas usam múltiplas palavras (ex.: 2×64 bits para 128 bits)."
     },
-    hints: ["64 bits é o tamanho nativo, mas pode representar números maiores?", "Como processadores 8-bit faziam matemática de 16 bits?"]
+    hints: ["64 bits limita o tamanho do registo, não necessariamente o tamanho do inteiro em software.", "Pense em bibliotecas de big integers."]
   },
+
   {
     id: 10,
     question: "Uma CPU com tecnologia (optimização) superescalar permite executar...",
@@ -235,20 +271,23 @@ const ex2 = [
       "múltiplas instruções do mesmo programa, em paralelo, na mesma unidade de execução"
     ],
     correct: 1,
-    explanation: "Superscalar executa múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução (ALU, FPU, etc.) dentro do mesmo core.",
+    explanation:
+      "Superscalar executa múltiplas instruções do mesmo programa em paralelo, usando múltiplas unidades de execução dentro do mesmo core.",
     theoryPoints: {
-      title: "Paralelismo a Nível de Instrução (ILP)",
-      content: "Superscalar explora ILP detectando instruções independentes que podem ser executadas simultaneamente. Requer: 1) Múltiplas unidades funcionais, 2) Despacho fora-de-ordem, 3) Previsão de saltos.",
+      title: "ILP (Instruction-Level Parallelism)",
+      content:
+        "Superscalar explora paralelismo a nível de instruções (ILP), emitindo várias instruções por ciclo para unidades funcionais diferentes (ALU, FPU, load/store).",
       keyPoints: [
-        "Window de instruções: buffer de instruções prontas",
-        "Scoreboarding: controle de dependências",
-        "Tomasulo algorithm: renomeação de registradores",
-        "Commit em ordem para manter semântica sequencial"
+        "Múltiplas instruções por ciclo",
+        "Unidades funcionais paralelas",
+        "Limitado por dependências de dados e controlo",
+        "Pode usar execução fora-de-ordem"
       ],
-      examples: "CPU pode executar: 1 instrução inteira + 1 FP + 1 load/store simultaneamente. Limitado por dependências de dados e controle."
+      examples: "Emitir 1 load + 1 add no mesmo ciclo, se forem independentes."
     },
-    hints: ["Como uma CPU sabe que instruções não dependem umas das outras?", "Por que não podemos executar todas as instruções em paralelo?"]
+    hints: ["É dentro do mesmo core.", "A ideia é ter várias unidades funcionais."]
   },
+
   {
     id: 11,
     question: "A memória principal de um computador permite dois tipos de operações: leitura e escrita. Qual afirmação é verdadeira?",
@@ -260,20 +299,23 @@ const ex2 = [
       "Uma operação de acesso à memória, quer seja de leitura ou de escrita, destrói o conteúdo nos endereços acedidos"
     ],
     correct: 0,
-    explanation: "ROM (Read-Only Memory) é não-volátil e não permite escrita em condições normais. RAM permite leitura e escrita, mas escrita substitui o conteúdo anterior.",
+    explanation:
+      "ROM (Read-Only Memory) é, em condições normais, apenas de leitura; RAM permite escrita, mas escrever substitui o conteúdo anterior.",
     theoryPoints: {
-      title: "Memória: RAM vs ROM",
-      content: "RAM (Random Access Memory): volátil, leitura/escrita rápida, para dados e programas em execução. ROM (Read-Only Memory): não-volátil, apenas leitura (normalmente), para firmware/bootstrap.",
+      title: "RAM vs ROM",
+      content:
+        "RAM é volátil e leitura/escrita; ROM é não volátil e usada para firmware/arranque (normalmente não escrita durante operação normal).",
       keyPoints: [
-        "RAM: DRAM (mais lenta, mais densa) e SRAM (mais rápida, cache)",
-        "ROM: PROM, EPROM, EEPROM, Flash (permite escrita especial)",
-        "Leitura não destrutiva (exceto DRAM que precisa refresh)",
-        "Escrita destrutiva (sobrescreve conteúdo anterior)"
+        "RAM: leitura/escrita, volátil",
+        "ROM: firmware/boot, não volátil",
+        "Escrita substitui conteúdo anterior",
+        "Leitura normalmente não destrutiva"
       ],
-      examples: "BIOS/UEFI em ROM, sistema operacional carregado em RAM. Cache L1/L2 em SRAM, memória principal em DRAM."
+      examples: "BIOS/UEFI em ROM; sistema operativo e programas em RAM."
     },
-    hints: ["O que 'Random Access' significa realmente?", "Por que a RAM perde dados sem energia?"]
+    hints: ["ROM = Read-Only (na operação normal).", "RAM é usada para dados e código em execução."]
   },
+
   {
     id: 12,
     question: "Suponha dois processadores de fabricantes diferentes. Qual afirmação é verdadeira?",
@@ -285,20 +327,23 @@ const ex2 = [
       "Os dois processadores podem implementar a mesma arquitectura do conjunto de instruções (ISA), e apresentar conjuntos de registos diferentes"
     ],
     correct: 1,
-    explanation: "ISA é uma especificação. Diferentes fabricantes podem implementar a mesma ISA com microarquiteturas diferentes (ex: Intel e AMD com x86).",
+    explanation:
+      "ISA é uma especificação (interface). Diferentes fabricantes podem implementar a mesma ISA com microarquiteturas diferentes (ex.: Intel vs AMD em x86).",
     theoryPoints: {
-      title: "Compatibilidade de ISA",
-      content: "ISA define interface binária (ABI). Microarquiteturas diferentes podem: 1) Ter diferentes números de estágios de pipeline, 2) Tamanhos de cache diferentes, 3) Número de unidades funcionais diferentes, 4) Tecnologias de fabrico diferentes.",
+      title: "Compatibilidade por ISA",
+      content:
+        "A compatibilidade binária depende da ISA; a microarquitetura (pipeline, caches, unidades funcionais) pode variar e afeta desempenho/consumo/custo.",
       keyPoints: [
-        "ISA garante compatibilidade binária",
-        "Microarquitetura afeta desempenho, consumo, custo",
-        "Registros visíveis devem ser os mesmos (ou superconjunto)",
-        "Extensões de ISA (MMX, SSE, AVX) podem ser opcionais"
+        "ISA define o que a CPU faz (visível ao software)",
+        "Microarquitetura define como faz (implementação)",
+        "Mesma ISA → executa o mesmo código-máquina",
+        "Caches/pipeline podem diferir"
       ],
-      examples: "x86: Intel Core vs AMD Ryzen. ARM: Apple M1 vs Qualcomm Snapdragon vs Samsung Exynos (todos ARMv8)."
+      examples: "x86: Intel Core vs AMD Ryzen."
     },
-    hints: ["Por que programas compilados para x86 rodam em Intel e AMD?", "O que é mais importante para compatibilidade: ISA ou microarquitetura?"]
+    hints: ["ISA ≠ microarquitetura.", "Compatibilidade vem da ISA."]
   },
+
   {
     id: 13,
     question: "Qual a função principal da memória primária num computador?",
@@ -310,20 +355,23 @@ const ex2 = [
       "Armazenar temporariamente na CPU os dados usados durante a execução de uma instrução"
     ],
     correct: 0,
-    explanation: "Memória primária (RAM) armazena código e dados em execução para acesso rápido pela CPU. É volátil e muito mais rápida que armazenamento secundário.",
+    explanation:
+      "Memória primária (RAM) armazena código e dados em execução para acesso rápido pela CPU.",
     theoryPoints: {
       title: "Hierarquia de Memória",
-      content: "Memória organizada em hierarquia: 1) Registros (CPU), 2) Cache L1/L2/L3, 3) RAM (primária), 4) Armazenamento secundário (SSD/HDD), 5) Armazenamento terciário (fita, cloud). Cada nível é maior, mais lento e mais barato.",
+      content:
+        "A memória organiza-se numa hierarquia (registos, caches, RAM, disco). RAM é o nível principal para execução imediata de programas.",
       keyPoints: [
-        "Princípio da localidade: temporal e espacial",
-        "Cache: reduz latência média de acesso à memória",
-        "RAM: volátil, acesso aleatório, ~100ns de latência",
-        "SSD/HDD: não-volátil, acesso em blocos, ~ms de latência"
+        "RAM: acesso rápido comparado com disco",
+        "Volátil",
+        "Guarda programa e dados em execução",
+        "Cache acelera acessos frequentes"
       ],
-      examples: "Programa carregado do SSD para RAM, instruções/dados usados frequentemente em cache, valores atuais em registradores."
+      examples: "Programa é carregado do SSD para RAM antes de executar."
     },
-    hints: ["O que acontece quando abrimos um programa?", "Por que não rodamos programas diretamente do disco?"]
+    hints: ["Pense no que é necessário para executar já.", "Disco é longo prazo; RAM é execução."]
   },
+
   {
     id: 14,
     question: "Instruction pipelining é uma técnica de optimização do desempenho de uma CPU em que se...",
@@ -335,23 +383,27 @@ const ex2 = [
       "executam as três fases do ciclo fetch-decode-execute em paralelo, para três instruções consecutivas"
     ],
     correct: 3,
-    explanation: "Pipeline divide o ciclo de instrução em estágios, permitindo que múltiplas instruções estejam em diferentes estágios ao mesmo tempo (como uma linha de montagem).",
+    explanation:
+      "Pipeline permite sobrepor as fases do ciclo de instrução em instruções diferentes (linha de montagem).",
     theoryPoints: {
       title: "Pipeline de Instruções",
-      content: "Divide execução de instrução em estágios sequenciais. Cada estágio processa parte de uma instrução diferente a cada ciclo. Aumenta throughput, mas não reduz latência individual.",
+      content:
+        "Divide a execução em estágios e permite que várias instruções estejam em estágios diferentes simultaneamente, aumentando throughput.",
       keyPoints: [
-        "Estágios: Fetch, Decode, Execute, Memory, Write-back",
-        "Throughput ideal: 1 instrução/clock (com pipeline cheio)",
-        "Hazards: estrutural, de dados, de controle (causam stalls)",
-        "Forwarding/By-passing: reduz hazards de dados"
+        "Aumenta throughput (não necessariamente latência)",
+        "Stalls por hazards",
+        "Forwarding reduz hazards de dados",
+        "Branch mispredict afeta hazards de controlo"
       ],
-      examples: "Pipeline clássico de 5 estágios (MIPS). Processadores modernos têm 10-20+ estágios (deep pipeline)."
+      examples: "Com pipeline cheio, idealmente sai 1 instrução por ciclo."
     },
-    hints: ["Como uma fábrica monta vários carros ao mesmo tempo?", "Qual a diferença entre latência e throughput?"]
+    hints: ["Uma instrução está em fetch enquanto outra está em execute.", "Linha de montagem."]
   },
+
   {
     id: 15,
-    question: "Os constituintes básicos de um processador são a Unidade de Controlo, a Unidade Aritmética e Lógica, e os registos. Qual afirmação é verdadeira?",
+    question:
+      "Os constituintes básicos de um processador são a Unidade de Controlo, a Unidade Aritmética e Lógica, e os registos. Qual afirmação é verdadeira?",
     code: "",
     options: [
       "A Unidade Aritmética e Lógica é responsável pelas operações de acesso à memória",
@@ -360,19 +412,275 @@ const ex2 = [
       "A Unidade de Controlo é responsável pela descodificação do código da instrução (opcode) a executar de seguida"
     ],
     correct: 3,
-    explanation: "A Unidade de Controle (UC) decodifica as instruções, gera sinais de controle para outros componentes e coordena o fluxo de dados através da CPU.",
+    explanation:
+      "A Unidade de Controlo decodifica instruções e coordena o fluxo de dados/sinais na CPU.",
     theoryPoints: {
       title: "Componentes da CPU",
-      content: "1) UC (Unidade de Controle): decodifica instruções, gera sinais de controle, controla fluxo de execução. 2) UAL (Unidade Aritmética e Lógica): executa operações aritméticas (+, -, ×, ÷) e lógicas (AND, OR, NOT). 3) Registros: armazenamento temporário rápido.",
+      content:
+        "UC coordena e decodifica; UAL executa operações aritméticas/lógicas; registos guardam operandos/resultados temporários.",
       keyPoints: [
-        "UC: sequenciador, decodificador, controlador",
-        "UAL: operações matemáticas e lógicas",
-        "Registros: dados, endereços, status",
-        "Barramento interno: conecta componentes"
+        "UC: decodifica opcode e gera sinais de controlo",
+        "UAL: operações aritméticas e lógicas",
+        "Registos: armazenamento interno rápido",
+        "Barramentos internos ligam componentes"
       ],
-      examples: "Instrução ADD: UC decodifica, sinaliza UAL para somar, UAL opera, resultado vai para registro. Instrução LOAD: UC sinaliza memória, dado vem para registro."
+      examples: "ADD: UC decodifica e manda UAL somar, resultado vai para um registo."
     },
-    hints: ["Quem 'manda' na CPU?", "O que acontece quando a CPU encontra uma instrução desconhecida?"]
+    hints: ["Quem decodifica o opcode?", "UAL não decodifica; ela executa."]
+  },
+
+  // ====== A partir daqui (16–24) foram substituídas por questões reais de exames ======
+
+  {
+    id: 16,
+    question: "O assembler é uma ferramenta que...",
+    code: "",
+    options: [
+      "traduz um programa numa linguagem de alto-nível para linguagem-máquina",
+      "traduz um programa numa linguagem de alto-nível para assembly",
+      "traduz um programa em assembly para linguagem-máquina",
+      "interpreta e executa linha-a-linha um programa numa linguagem de alto-nível"
+    ],
+    correct: 2,
+    explanation:
+      "Um assembler traduz código em assembly para código-máquina (linguagem-máquina).",
+    theoryPoints: {
+      title: "Assembler",
+      content:
+        "Assembler é um tradutor que converte instruções simbólicas (assembly) em opcodes (código-máquina) para uma ISA específica.",
+      keyPoints: [
+        "Entrada: assembly",
+        "Saída: código-máquina / objeto",
+        "Depende da ISA",
+        "Diferente de compilador (alto nível) e interpretador"
+      ],
+      examples: "Assembly x86 → opcodes x86; Assembly ARM → opcodes ARM."
+    },
+    hints: ["Assembly não é alto nível.", "Assembler produz código-máquina."]
+  },
+
+  {
+    id: 17,
+    question: "Na arquitectura de Von Neumann...",
+    code: "",
+    options: [
+      "os discos fazem parte do subsistema de memória",
+      "o processador pode comunicar com todos os outros subsistemas através de um barramento",
+      "não existe ligação directa entre o subsistema de I/O e o subsistema de memória",
+      "o programa é implementado através de ligações eléctricas, estabelecendo a sequência de circuitos aritméticos pretendida"
+    ],
+    correct: 1,
+    explanation:
+      "Na arquitetura de Von Neumann, a CPU comunica com os restantes subsistemas (memória e I/O) através de barramentos.",
+    theoryPoints: {
+      title: "Barramentos no sistema",
+      content:
+        "O barramento (dados/endereço/controlo) permite a comunicação entre CPU, memória e I/O.",
+      keyPoints: [
+        "CPU ↔ Memória via barramento",
+        "CPU ↔ I/O via barramento",
+        "Conceito central em arquiteturas clássicas",
+        "Base para o ciclo fetch-decode-execute"
+      ],
+      examples: "CPU faz fetch de instruções na memória usando endereço+dados no barramento."
+    },
+    hints: ["A CPU não fala 'direto' com tudo sem interligação.", "Pense em bus."]
+  },
+
+  {
+    id: 18,
+    question: "Uma interface de linha de comando é uma aplicação...",
+    code: "",
+    options: [
+      "que corre no espaço do kernel, executando comandos ordenados pelo utilizador",
+      "que não faz parte do kernel do SO, mas que expõe os serviços do SO ao utilizador",
+      "tornada obsoleta pelas interfaces gráficas do utilizador, nos SO contemporâneos",
+      "que não permite a interacção do computador com o utilizador"
+    ],
+    correct: 1,
+    explanation:
+      "A shell/CLI é uma aplicação em espaço de utilizador que permite invocar serviços do sistema operativo (não é o kernel).",
+    theoryPoints: {
+      title: "Shell / CLI",
+      content:
+        "A shell interpreta comandos e inicia programas, usando chamadas ao sistema (system calls) para pedir serviços ao kernel.",
+      keyPoints: [
+        "Shell é user-space",
+        "Kernel fornece system calls",
+        "CLI continua útil (administração/automação)",
+        "Scripts automatizam tarefas"
+      ],
+      examples: "bash, zsh, fish (Unix)."
+    },
+    hints: ["Kernel ≠ shell.", "A shell usa system calls."]
+  },
+
+  {
+    id: 19,
+    question: "A memória ROM nas suas várias tecnologias...",
+    code: "",
+    options: [
+      "é utilizada pelo SO para carregar o código e os dados dos programas solicitados pelos utilizadores",
+      "existe exclusivamente em sistemas dedicados que executam sempre a mesma função",
+      "deixou de ser utilizada por apresentar tempos de acesso maiores do que a memória RAM",
+      "tem habitualmente o código que arranca o sistema"
+    ],
+    correct: 3,
+    explanation:
+      "ROM contém habitualmente firmware/código de arranque (ex.: BIOS/UEFI), usado para iniciar o sistema.",
+    theoryPoints: {
+      title: "ROM e arranque",
+      content:
+        "ROM é não volátil e guarda firmware necessário para inicialização e bootstrap do sistema.",
+      keyPoints: [
+        "Não volátil",
+        "Firmware de arranque",
+        "BIOS/UEFI",
+        "Início antes do SO"
+      ],
+      examples: "Reset → firmware (ROM) → bootloader → SO."
+    },
+    hints: ["ROM guarda o quê quando o sistema ainda não carregou o SO?", "Pense em BIOS/UEFI."]
+  },
+
+  {
+    id: 20,
+    question: "Um sistema distribuído é composto...",
+    code: "",
+    options: [
+      "por vários processadores que partilham recursos através de um barramento comum",
+      "por vários computadores geridos de uma forma centralizada, que executam cada um parte de uma aplicação e comunicam através de uma rede de comunicações",
+      "por um computador que se conecta aos seus periféricos através de uma rede sem-fios",
+      "por vários computadores que cooperam entre si, executando cada um parte de uma aplicação e comunicando através de uma rede de comunicações"
+    ],
+    correct: 3,
+    explanation:
+      "Um sistema distribuído envolve vários computadores que cooperam e comunicam pela rede para realizar uma aplicação/tarefa.",
+    theoryPoints: {
+      title: "Sistemas distribuídos",
+      content:
+        "Vários nós (computadores) comunicam por rede e cooperam para atingir um objetivo comum (distribuição de processamento/dados).",
+      keyPoints: [
+        "Vários computadores (nós)",
+        "Comunicação por rede",
+        "Cooperação para a aplicação",
+        "Falhas parciais e latência de rede são desafios típicos"
+      ],
+      examples: "Serviços distribuídos (microservices), clusters, sistemas de ficheiros distribuídos."
+    },
+    hints: ["Não é só vários CPUs num mesmo barramento.", "Rede + cooperação."]
+  },
+
+  {
+    id: 21,
+    question: "Os dispositivos de entrada e saída (I/O devices)...",
+    code: "",
+    options: [
+      "nunca podem comunicar directamente com a memória",
+      "são habitualmente tão rápidos quanto os processadores",
+      "têm um controlador incorporado que opera o dispositivo autonomamente do processador",
+      "são controlados directamente pelo processador durante toda a sua operação"
+    ],
+    correct: 2,
+    explanation:
+      "Dispositivos de I/O tipicamente têm um controlador que gere o dispositivo, reduzindo a necessidade de controlo contínuo pela CPU.",
+    theoryPoints: {
+      title: "Controladores de I/O",
+      content:
+        "O controlador (hardware) gere detalhes do dispositivo; a CPU inicia operações e recebe interrupções quando termina (consoante o modelo).",
+      keyPoints: [
+        "Controlador de dispositivo",
+        "CPU não controla cada micro-operação",
+        "Interrupções/DMA podem ser usados",
+        "I/O costuma ser mais lento que CPU"
+      ],
+      examples: "Controlador de disco/SSD, controlador USB."
+    },
+    hints: ["CPU não fica 'a segurar na mão' do dispositivo.", "Existe controlador."]
+  },
+
+  {
+    id: 22,
+    question: "Qual dos seguintes aspectos não é geralmente especificado pela arquitectura do conjunto de instruções (ISA)?",
+    code: "",
+    options: [
+      "O conjunto de instruções suportado pela CPU",
+      "O tamanho e a organização dos registos",
+      "O formato dos códigos de operações (opcodes)",
+      "O número de núcleos presentes no processador"
+    ],
+    correct: 3,
+    explanation:
+      "A ISA especifica instruções/registos/opcodes visíveis ao software, mas não especifica o número de núcleos (isso é decisão de implementação/microarquitetura).",
+    theoryPoints: {
+      title: "O que a ISA especifica",
+      content:
+        "A ISA define a interface entre software e hardware (instruções, registos, formatos), não as escolhas de paralelismo físico como número de cores.",
+      keyPoints: [
+        "ISA: interface software-hardware",
+        "Registos e instruções fazem parte da ISA",
+        "Formato de opcodes faz parte da ISA",
+        "Número de cores é da implementação (microarquitetura/produto)"
+      ],
+      examples: "ARMv8 pode existir em chips com 2, 4, 8+ cores."
+    },
+    hints: ["ISA é o que o programador/compilador vê.", "Nº de cores é decisão de hardware."]
+  },
+
+  {
+    id: 23,
+    question: "Qual a função principal da memória secundária num computador?",
+    code: "",
+    options: [
+      "Armazenar dados (e.g. variáveis) para a execução imediata de programas",
+      "Permitir a comunicação entre diferentes CPU no mesmo computador",
+      "Fornecer armazenamento de longo prazo para dados e programas, mesmo quando o computador está desligado",
+      "Armazenar temporariamente na CPU os dados usados durante a execução de uma instrução"
+    ],
+    correct: 2,
+    explanation:
+      "Memória secundária (SSD/HDD) serve para armazenamento persistente de longo prazo, mesmo sem energia.",
+    theoryPoints: {
+      title: "Memória secundária",
+      content:
+        "Armazenamento não volátil para dados e programas, com maior capacidade e menor custo por byte do que RAM, mas mais lento.",
+      keyPoints: [
+        "Não volátil",
+        "Grande capacidade",
+        "Mais lenta que RAM",
+        "Persistência de dados"
+      ],
+      examples: "SSD, HDD, armazenamento flash."
+    },
+    hints: ["Pense no que guarda dados quando o PC desliga.", "RAM perde; disco não."]
+  },
+
+  {
+    id: 24,
+    question: "É necessário colocar a zero os 16 bits mais significativos de uma palavra de 32 bits. Uma solução é aplicar à palavra...",
+    code: "// Exemplo: palavra = 0xABCD1234\n// Queremos: 0x00001234\n// AND com 0x0000FFFF",
+    options: [
+      "16 deslocamentos lógicos para a direita seguidos de 16 deslocamentos lógicos para a esquerda",
+      "a operação AND com a máscara 0x0000FFFF",
+      "a operação OR com a máscara 0x0000FFFF",
+      "a operação XOR com a máscara 0x0000FFFF"
+    ],
+    correct: 1,
+    explanation:
+      "AND com 0x0000FFFF zera os 16 bits mais significativos e preserva os 16 bits menos significativos.",
+    theoryPoints: {
+      title: "Zerar bits altos com AND",
+      content:
+        "Para limpar bits, usa-se AND com máscara que tenha 0 nos bits a limpar e 1 nos bits a preservar.",
+      keyPoints: [
+        "AND com 0 → força 0",
+        "AND com 1 → preserva",
+        "0x0000FFFF preserva os 16 bits baixos",
+        "Útil para isolar partes de uma palavra"
+      ],
+      examples: "valor & 0x0000FFFF mantém apenas a metade baixa (lower 16 bits)."
+    },
+    hints: ["Máscara tem 0s onde quer limpar.", "0xFFFF são 16 bits a 1 (parte baixa)."]
   }
 ];
 

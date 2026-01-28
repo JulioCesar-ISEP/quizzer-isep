@@ -378,7 +378,201 @@ const ex1 = [
       examples: "CPU única: multiprogramação (concorrência). CPU multi-core: paralelismo verdadeiro."
     },
     hints: ["Quantas CPUs são necessárias para execução simultânea?", "Como dar a ilusão de múltiplos programas rodando juntos?"]
-  }
+  },
+  {
+  id: 16,
+  question: "Qual escalonador determina o próximo processo a executar?",
+  code: "",
+  options: [
+    "Escalonador de curto prazo",
+    "Escalonador de médio prazo",
+    "Escalonador de longo prazo",
+    "Todos os anteriores"
+  ],
+  correct: 0,
+  explanation: "Escalonador curto prazo (CPU scheduler) seleciona próximo da fila Ready para Running.",
+  theoryPoints: {
+    title: "Tipos de Escalonadores",
+    content: "Longo prazo: New ↔ Ready (grau multiprogramação). Médio: Ready ↔ Suspended (swapping). Curto: Ready → Running (frequente).",
+    keyPoints: [
+      "Curto prazo: alta frequência em context switch",
+      "Longo prazo: baixa frequência, admite novos",
+      "Médio prazo: gerencia memória"
+    ],
+    examples: "Context switch → curto prazo."
+  },
+  hints: ["Seleção da Ready?", "Frequência alta?"]
+},
+{
+  id: 17,
+  question: "Desempenho de Multinível com Realimentação depende de?",
+  code: "",
+  options: [
+    "Escalonamento em cada fila",
+    "Atribuição processos às filas",
+    "Ambos",
+    "Nenhum"
+  ],
+  correct: 2,
+  explanation: "Depende do escalonamento interno das filas E da política de realimentação por idade/comportamento.",
+  theoryPoints: {
+    title: "MLFQ (Multilevel Feedback Queue)",
+    content: "Filas decrescentes prioridade; processos movem‑se baseado em uso CPU/IO para adaptar dinamicamente.",
+    keyPoints: [
+      "Topo: quantum curto (IO-bound)",
+      "Base: quantum longo (CPU-bound)",
+      "Realimentação dinâmica"
+    ],
+    examples: "IO-bound sobe; CPU-bound desce."
+  },
+  hints: ["Filas fixas ou adaptativas?", "IO vs CPU?"]
+},
+{
+  id: 18,
+  question: "Swapping remove qual processo para disco?",
+  code: "",
+  options: [
+    "Running",
+    "Só com preemptivo",
+    "Só com não-preemptivo",
+    "Ready"
+  ],
+  correct: 3,
+  explanation: "Escalonador médio prazo swap out processos Ready (baixa prio) quando memória cheia.",
+  theoryPoints: {
+    title: "Gestão Memória Externa",
+    content: "Suspended Ready (memória) → swap out Ready. Victim: prio baixa ou LRU.",
+    keyPoints: [
+      "Não Running (em execução)",
+      "Liberta para novos Ready",
+      "Overhead disco alto"
+    ],
+    examples: "Linux swapper daemon."
+  },
+  hints: ["Running pode ser swap?", "Quando memória cheia?"]
+},
+{
+  id: 19,
+  question: "Não-preemptivo: qual transição NÃO possível?",
+  code: "",
+  options: [
+    "Ready → Running",
+    "Running → Ready",
+    "Running → Waiting",
+    "Waiting → Ready"
+  ],
+  correct: 1,
+  explanation: "Sem preempção: Running não volta a Ready forçadamente; só bloqueia/termina.",
+  theoryPoints: {
+    title: "Não-Preemptivo vs Preemptivo",
+    content: "Não-P: coopera (cede voluntário). Pre: SO força troca.",
+    keyPoints: [
+      "Running → Ready só voluntário",
+      "Risco convoye/starvation",
+      "Simples implementar"
+    ],
+    examples: "Batch jobs antigos."
+  },
+  hints: ["SO força saída Running?", "Só bloqueio/termina?"]
+},
+{
+  id: 20,
+  question: "Sistemas multiprocessador simétricos (n CPUs):",
+  code: "",
+  options: [
+    "Não partilham barramento/memória",
+    "Executam máx n-1 paralelo",
+    "Executam até n paralelo",
+    "Master-slave sempre"
+  ],
+  correct: 2,
+  explanation: "SMP (Symmetric MP): CPUs iguais, partilham tudo, n threads paralelos.",
+  theoryPoints: {
+    title: "Multiprocessadores SMP",
+    content: "Simétricos: escalonamento global. Assimétricos: master especializa slaves.",
+    keyPoints: [
+      "Partilha memória/barramento",
+      "Até n running simultâneo",
+      "Cache coherence desafio"
+    ],
+    examples: "x86 multi-core desktops."
+  },
+  hints: ["n CPUs → n running?", "Partilha total?"]
+},
+{
+  id: 21,
+  question: "Programa monitor de controlo (early OS):",
+  code: "",
+  options: [
+    "Carrega/edita programas",
+    "Comandos execução",
+    "Rotinas I/O reutilizáveis",
+    "Todos"
+  ],
+  correct: 3,
+  explanation: "Monitor residente: gerencia carga jobs, I/O comum, comandos; transição serial→batch.",
+  theoryPoints: {
+    title: "Monitor Systems",
+    content: "Residente memória: lê cartões, carrega, executa sequencial, reutiliza I/O.",
+    keyPoints: [
+      "Precursors SO modernos",
+      "Batch simples sem interacção",
+      "Comandos console"
+    ],
+    examples: "IBM OS/360 initial."
+  },
+  hints: ["Antes SO completo?", "Gestão I/O manual?"]
+},
+{
+  id: 22,
+  question: "Ordem histórica SO: do mais antigo?",
+  code: "",
+  options: [
+    "Batch → Serial → Multiprogramming → Time-sharing",
+    "Serial → Batch → Multiprogramming → Time-sharing",
+    "Time-sharing → Multiprogramming → Batch → Serial",
+    "Multiprogramming → Batch → Serial → Time-sharing"
+  ],
+  correct: 1,
+  explanation: "Serial (um job), Batch (lotes auto), Multiprogramming (vários memória), Time-sharing (interactivo).",
+  theoryPoints: {
+    title: "Evolução SO",
+    content: "Serial (1950s), Batch (1960s), Multiprogramada (1960s), Time-sharing (1960s-70s).",
+    keyPoints: [
+      "Serial: sem overlap",
+      "Batch: auto jobs",
+      "Multi: CPU overlap I/O",
+      "Time-sharing: quantum RR"
+    ],
+    examples: "CTSS → Multics → Unix."
+  },
+  hints: ["Antes overlap?", "Interactivo quando?"]
+},
+{
+  id: 23,
+  question: "Máquina virtual (VM) objetivo:",
+  code: "",
+  options: [
+    "Encapsula HW+SO como HW",
+    "Acesso remoto SO diferente",
+    "Suporte múltiplos CPUs",
+    "Nenhum"
+  ],
+  correct: 0,
+  explanation: "VM abstrai HW+SO host como máquina física para guest OS/apps.",
+  theoryPoints: {
+    title: "Virtual Machines",
+    content: "Hypervisor tipo1 (bare-metal) ou tipo2 (hosted). Isolamento, snapshots, migração.",
+    keyPoints: [
+      "Abstração HW completa",
+      "Multi-OS no mesmo HW",
+      "Segurança isolamento"
+    ],
+    examples: "VMware, KVM, Hyper-V."
+  },
+  hints: ["Abstrai HW ou SW?", "Guest vê host como?"]
+}
+
 ];
 
 export default ex1;

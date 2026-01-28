@@ -373,7 +373,224 @@ const ex5 = [
       examples: "Rede gigabit: NAPI (Linux) usa polling sob alta carga\nGPUs: polling para máxima performance\nTeclado: interrupções (eventos raros)\nDisco: interrupções (operações relativamente infrequentes)"
     },
     hints: ["Qual método gasta mais ciclos de CPU quando não há eventos?", "Quando o overhead de interrupção se justifica?"]
-  }
+  },
+  {
+  id: 16,
+  question: "Numa mudança de contexto (context switch), o que acontece?",
+  code: "",
+  options: [
+    "A CPU deixa de executar um processo e passa a executar outro",
+    "É criado um novo processo e o programa é carregado do disco para a memória",
+    "O processo em execução é movido da RAM para o disco (swap out)",
+    "A CPU trata uma interrupção e volta sempre ao mesmo processo"
+  ],
+  correct: 0,
+  explanation: "Context switch é a troca do processo em execução: o CPU pára um e passa para outro (salvando/restaurando estado).",
+  theoryPoints: {
+    title: "Context switch",
+    content: "Troca controlada pelo SO entre processos, guardando o estado do processo atual e restaurando o do próximo.",
+    keyPoints: [
+      "Implica salvar/restaurar registos/PC no PCB",
+      "Tem overhead (tempo sem executar trabalho útil)",
+      "Pode ocorrer por preempção, bloqueio em I/O, etc."
+    ],
+    examples: "Processo A está Running → SO troca para processo B."
+  },
+  hints: ["Troca de processo?", "A CPU passa a executar outro programa?"]
+},
+{
+  id: 17,
+  question: "O Process Control Block (PCB) mantém registo de:",
+  code: "",
+  options: [
+    "Apenas o identificador do processador (CPU)",
+    "Apenas os ficheiros abertos do processo",
+    "Identificador e controlo do processo + estado do processador na última comutação",
+    "Apenas os dados do programa (heap/stack) em memória"
+  ],
+  correct: 2,
+  explanation: "O PCB guarda informação de gestão do processo e o estado da CPU necessário para retomar a execução após uma comutação.",
+  theoryPoints: {
+    title: "PCB",
+    content: "Estrutura de dados do SO com toda a informação necessária para gerir e retomar um processo.",
+    keyPoints: [
+      "Inclui estado/contador de programa/registos",
+      "Inclui informação de controlo/recursos (ex: ficheiros)",
+      "É usado em mudanças de contexto"
+    ],
+    examples: "Ao trocar de processo, o SO salva registos no PCB."
+  },
+  hints: ["O que é preciso guardar para retomar?", "Registos/PC ficam onde?"]
+},
+{
+  id: 18,
+  question: "Qual escalonador determina o próximo processo a executar na CPU?",
+  code: "",
+  options: [
+    "Escalonador de longo prazo",
+    "Escalonador de médio prazo",
+    "Escalonador de curto prazo",
+    "Nenhum (a CPU escolhe automaticamente)"
+  ],
+  correct: 2,
+  explanation: "O escalonador de curto prazo (CPU scheduler) decide quem executa a seguir entre os processos em Ready.",
+  theoryPoints: {
+    title: "Escalonadores",
+    content: "Curto prazo escolhe o próximo processo para a CPU; longo/médio prazo controlam admissão e swapping.",
+    keyPoints: [
+      "Curto prazo: decisão frequente",
+      "Longo prazo: controla admissão (new → ready)",
+      "Médio prazo: pode suspender/retomar (swap)"
+    ],
+    examples: "Após um time-slice expirar, o curto prazo escolhe o próximo Ready."
+  },
+  hints: ["Quem escolhe o próximo Ready?", "Qual atua mais frequentemente?"]
+},
+{
+  id: 19,
+  question: "Um objetivo de um Sistema Operativo organizado em camadas é:",
+  code: "",
+  options: [
+    "Permitir acesso direto ao hardware por parte das aplicações",
+    "Obrigar aplicações a usar serviços do SO para aceder ao hardware",
+    "Fazer com que cada camada aceda diretamente ao hardware",
+    "Eliminar a necessidade de chamadas ao sistema"
+  ],
+  correct: 1,
+  explanation: "A organização em camadas promove abstração: aplicações usam serviços do SO em vez de tocar no hardware diretamente.",
+  theoryPoints: {
+    title: "SO em camadas",
+    content: "Camadas isolam responsabilidades e escondem detalhes do hardware atrás de interfaces.",
+    keyPoints: [
+      "Abstração e portabilidade",
+      "Controlo e proteção",
+      "Facilita manutenção"
+    ],
+    examples: "Aplicação faz I/O via system calls em vez de manipular o controlador do disco."
+  },
+  hints: ["Quem deve falar com o hardware?", "Abstração/proteção?"]
+},
+{
+  id: 20,
+  question: "Num sistema operativo multitarefa, um programa:",
+  code: "",
+  options: [
+    "É sempre constituído por um único processo",
+    "É sempre constituído por vários processos",
+    "Pode ser constituído por um ou por vários processos",
+    "Nunca pode ser constituído por vários processos"
+  ],
+  correct: 2,
+  explanation: "Um programa pode executar como um único processo ou como vários processos (ex: processo principal + auxiliares).",
+  theoryPoints: {
+    title: "Programa vs processo",
+    content: "Programa é código; processo é uma instância em execução (podendo existir 1 ou vários para o mesmo programa).",
+    keyPoints: [
+      "Um programa pode lançar processos filhos",
+      "Vários processos podem cooperar",
+      "Processos têm isolamento e PCB próprio"
+    ],
+    examples: "Um browser pode ter múltiplos processos (separando separadores)."
+  },
+  hints: ["Programa é sempre 1 processo?", "Pode haver processos filhos?"]
+},
+{
+  id: 21,
+  question: "Um processo é:",
+  code: "",
+  options: [
+    "Um programa com vários fluxos de execução",
+    "Um programa em execução",
+    "Um programa apenas com um fluxo de execução",
+    "Todas as anteriores"
+  ],
+  correct: 1,
+  explanation: "Processo é, genericamente, um programa (ou parte dele) em execução, com estado e recursos associados.",
+  theoryPoints: {
+    title: "Conceito de processo",
+    content: "A unidade de execução gerida pelo SO: inclui código, dados, estado e recursos.",
+    keyPoints: [
+      "Tem estado (Ready/Running/Waiting...)",
+      "Tem recursos (memória, ficheiros, etc.)",
+      "É gerido pelo SO (PCB)"
+    ],
+    examples: "Abrir um editor cria um processo para esse programa."
+  },
+  hints: ["Definição clássica?", "Instância em execução?"]
+},
+{
+  id: 22,
+  question: "Num SO com escalonamento não-preemptivo, qual transição de estado NÃO pode acontecer?",
+  code: "",
+  options: [
+    "Ready → Running",
+    "Running → Ready",
+    "Running → Waiting",
+    "Waiting → Ready"
+  ],
+  correct: 1,
+  explanation: "Em não-preemptivo, o processo em Running não é retirado da CPU para Ready por decisão do escalonador (só sai se bloquear ou terminar).",
+  theoryPoints: {
+    title: "Não-preemptivo",
+    content: "Sem preempção, o processo mantém a CPU até terminar ou bloquear (ex: I/O).",
+    keyPoints: [
+      "Não existe Running → Ready por preempção",
+      "Pode haver Running → Waiting (I/O)",
+      "Pode haver Ready → Running (escalonamento)"
+    ],
+    examples: "Processo pede I/O: Running → Waiting; o SO escolhe outro Ready."
+  },
+  hints: ["Pode tirar o processo da CPU à força?", "Qual transição é típica de preempção?"]
+},
+{
+  id: 23,
+  question: "A linguagem máquina é:",
+  code: "",
+  options: [
+    "Uma linguagem de alto nível",
+    "Uma linguagem assembly",
+    "O conjunto de instruções entendidas por um dado sistema computacional",
+    "O conjunto de instruções entendidas por um dado programador"
+  ],
+  correct: 2,
+  explanation: "Linguagem máquina corresponde ao conjunto de instruções (ISA) executadas diretamente pelo processador.",
+  theoryPoints: {
+    title: "Linguagem máquina",
+    content: "Instruções codificadas em bits, interpretadas diretamente pela CPU.",
+    keyPoints: [
+      "É específica de uma ISA",
+      "É executada diretamente pelo hardware",
+      "Assembly é uma representação simbólica da máquina"
+    ],
+    examples: "x86 e ARM têm linguagens máquina diferentes."
+  },
+  hints: ["Quem executa diretamente?", "É o conjunto de instruções?"]
+},
+{
+  id: 24,
+  question: "O utilitário 'Monitor de Controlo' permite:",
+  code: "",
+  options: [
+    "Carregar programas em memória, editá-los e verificar a execução",
+    "Executar operações necessárias através de comandos do monitor",
+    "Disponibilizar rotinas de I/O reutilizáveis",
+    "Todas as anteriores"
+  ],
+  correct: 3,
+  explanation: "O 'Monitor' agregava funcionalidades de operação/controlo típicas dos sistemas iniciais (carregar/executar/comandos/rotinas).",
+  theoryPoints: {
+    title: "Monitor de controlo",
+    content: "Software de apoio (histórico) que automatiza e facilita a execução/gestão de tarefas e programas.",
+    keyPoints: [
+      "Interface por comandos",
+      "Apoio à carga/execução",
+      "Rotinas utilitárias (ex: I/O)"
+    ],
+    examples: "Execução de jobs e rotinas comuns em sistemas mais antigos."
+  },
+  hints: ["Que tarefas de operação ele centraliza?", "Inclui comandos e rotinas?"]
+}
+
 ];
 
 export default ex5;

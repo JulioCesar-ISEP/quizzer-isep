@@ -374,6 +374,252 @@ const ex3 = [
       examples: "Alternar bit 3: valor ^ (1 << 3)\nChecksum simples: XOR de todos os bytes\nMascaramento: valor ^ máscara inverte bits onde máscara tem 1"
     },
     hints: ["O que XOR faz quando um operando é 1?", "Como inverter um bit específico?"]
+  },
+
+  {
+    id: 16,
+    question: "O número decimal 50,9 é representado em binário como...",
+    code: "// Parte inteira: 50₁₀ = 110010₂\n// Parte fracionária (0,9): multiplicações sucessivas por 2 → 0,11100110011...₂",
+    options: [
+      "110010,1110",
+      "110100,1100",
+      "110100,1110",
+      "110010,1100"
+    ],
+    correct: 0,
+    explanation: "50,9₁₀ = 110010,11100110011...₂, e com 4 bits fracionários a aproximação mais adequada é 110010,1110.",
+    theoryPoints: {
+      title: "Decimal → Binário (fração)",
+      content: "Converte-se a parte inteira por divisões sucessivas por 2 e a parte fracionária por multiplicações sucessivas por 2, recolhendo os bits inteiros.",
+      keyPoints: [
+        "Inteiro: divisões por 2, recolher restos",
+        "Fração: multiplicar por 2, recolher a parte inteira",
+        "Muitas frações decimais geram binário periódico",
+        "Aproximação depende do nº de bits disponíveis"
+      ],
+      examples: "0,9 × 2 = 1,8 → 1; 0,8 × 2 = 1,6 → 1; 0,6 × 2 = 1,2 → 1; 0,2 × 2 = 0,4 → 0; ..."
+    },
+    hints: ["Separe parte inteira e fracionária.", "0,9 em binário é finito ou periódico?"]
+  },
+  {
+    id: 17,
+    question: "O número binário 1010110 representa o decimal...",
+    code: "// 1010110₂ = 1×2⁶ + 0×2⁵ + 1×2⁴ + 0×2³ + 1×2² + 1×2¹ + 0×2⁰",
+    options: [
+      "86",
+      "88",
+      "92",
+      "90"
+    ],
+    correct: 0,
+    explanation: "1010110₂ = 64 + 16 + 4 + 2 = 86.",
+    theoryPoints: {
+      title: "Binário → Decimal",
+      content: "Cada bit vale uma potência de 2, somando apenas as potências onde o bit é 1.",
+      keyPoints: [
+        "MSB define a maior potência",
+        "Somatório de potências de 2",
+        "Conversão exata para inteiros"
+      ],
+      examples: "1010110₂ = 2⁶ + 2⁴ + 2² + 2¹ = 86."
+    },
+    hints: ["Quais posições têm bit 1?", "Some as potências de 2 correspondentes."]
+  },
+  {
+    id: 18,
+    question: "O número -44 codificado em 8-bits em complemento para 2 é...",
+    code: "// +44 = 00101100\n// Inverter bits: 11010011\n// Somar 1:       11010100",
+    options: [
+      "11010100",
+      "00110010",
+      "00101100",
+      "11001110"
+    ],
+    correct: 0,
+    explanation: "Em complemento para 2, -x obtém-se invertendo os bits de +x e somando 1. Logo, -44 = 11010100.",
+    theoryPoints: {
+      title: "Complemento para 2",
+      content: "Para obter o negativo, faz-se o complemento de 1 (NOT) e soma-se 1.",
+      keyPoints: [
+        "Negativo = (~positivo) + 1",
+        "MSB=1 indica negativo",
+        "Zero tem representação única"
+      ],
+      examples: "+44=00101100 → ~00101100=11010011 → +1=11010100."
+    },
+    hints: ["Converta 44 para binário com 8 bits.", "Depois aplique NOT e some 1."]
+  },
+  {
+    id: 19,
+    question: "O número de 8-bits em complemento para dois 00001111 representa...",
+    code: "// MSB=0 → número não-negativo\n// 00001111₂ = 15₁₀",
+    options: [
+      "+34",
+      "-34",
+      "+15",
+      "-15"
+    ],
+    correct: 2,
+    explanation: "Como o MSB é 0, o valor é positivo: 00001111₂ = +15.",
+    theoryPoints: {
+      title: "Interpretar comp2 (positivo)",
+      content: "Em complemento para 2, valores com MSB=0 são interpretados como magnitude normal em binário.",
+      keyPoints: [
+        "MSB=0 → valor ≥ 0",
+        "Converter como binário normal",
+        "MSB=1 → valor < 0"
+      ],
+      examples: "00001111₂ = 8 + 4 + 2 + 1 = 15."
+    },
+    hints: ["Veja o MSB.", "Converta como binário sem sinal se MSB=0."]
+  },
+  {
+    id: 20,
+    question: "O resultado de 25 + 3F (números em hexadecimal) é...",
+    code: "// 0x25 + 0x3F = 0x64 (somando em hex ou convertendo para decimal e voltando)",
+    options: [
+      "64 (hexadecimal)",
+      "E7 (hexadecimal)",
+      "F7 (hexadecimal)",
+      "84 (hexadecimal)"
+    ],
+    correct: 0,
+    explanation: "25₁₆ + 3F₁₆ = 64₁₆.",
+    theoryPoints: {
+      title: "Soma em hexadecimal",
+      content: "Pode somar diretamente em base 16 (com carry) ou converter para decimal, somar e reconverter.",
+      keyPoints: [
+        "Cada dígito hex vale 0..15",
+        "Carry quando soma ≥ 16",
+        "1 dígito hex = 4 bits"
+      ],
+      examples: "0x25=37 e 0x3F=63, 37+63=100=0x64."
+    },
+    hints: ["Some em hex dígito a dígito.", "Verifique o carry do dígito menos significativo."]
+  },
+  {
+    id: 21,
+    question: "O resultado da divisão inteira 71 / 5 (números em octal) é...",
+    code: "// 71₈=57₁₀ e 5₈=5₁₀\n// 57/5=11₁₀\n// 11₁₀ = 13₈",
+    options: [
+      "13 (octal)",
+      "15 (octal)",
+      "12 (octal)",
+      "14 (octal)"
+    ],
+    correct: 0,
+    explanation: "71₈ / 5₈ = 13₈ (divisão inteira).",
+    theoryPoints: {
+      title: "Divisão inteira em octal",
+      content: "É possível converter para decimal, realizar a divisão inteira e depois converter o quociente de volta para octal.",
+      keyPoints: [
+        "Octal usa dígitos 0..7",
+        "71₈ = 7×8 + 1 = 57₁₀",
+        "Divisão inteira descarta o resto"
+      ],
+      examples: "57₁₀/5₁₀=11₁₀ e 11₁₀=13₈."
+    },
+    hints: ["Converta os operandos para decimal.", "No fim, converta o quociente para octal."]
+  },
+  {
+    id: 22,
+    question: "O resultado de 2B XOR D3 (hexadecimal) é...",
+    code: "// 0x2B = 0010 1011\n// 0xD3 = 1101 0011\n// XOR  = 1111 1000 = 0xF8",
+    options: [
+      "FB (hexadecimal)",
+      "F8 (hexadecimal)",
+      "03 (hexadecimal)",
+      "DE (hexadecimal)"
+    ],
+    correct: 1,
+    explanation: "2B XOR D3 = F8 (hex).",
+    theoryPoints: {
+      title: "XOR em hexadecimal",
+      content: "XOR faz 1 quando os bits são diferentes e 0 quando são iguais. Em hex, aplica-se bit a bit (por nibbles).",
+      keyPoints: [
+        "0 XOR 0 = 0",
+        "0 XOR 1 = 1",
+        "1 XOR 0 = 1",
+        "1 XOR 1 = 0"
+      ],
+      examples: "2B^D3: (0010 1011)^(1101 0011) = 1111 1000 = F8."
+    },
+    hints: ["Converta hex para binário por nibbles.", "Aplique XOR bit a bit e volte a hex."]
+  },
+  {
+    id: 23,
+    question: "Assuma que N é uma variável de 8 bits com um valor arbitrário. Para inverter os bits 3, 6 e 7 deve realizar que operação?",
+    code: "// Máscara com bits 7,6,3 a 1: 1000 0000 + 0100 0000 + 0000 1000 = 1100 1000 = 0xC8\n// Operação de toggle: XOR",
+    options: [
+      "N AND 37 (hexadecimal)",
+      "N XOR C8 (hexadecimal)",
+      "N OR C8 (hexadecimal)",
+      "N XOR 37 (hexadecimal)"
+    ],
+    correct: 1,
+    explanation: "Para inverter (toggle) bits específicos usa-se XOR com uma máscara que tenha 1 nesses bits: XOR C8.",
+    theoryPoints: {
+      title: "Toggle de bits",
+      content: "XOR com 1 inverte o bit e XOR com 0 mantém o bit, por isso é ideal para inverter um subconjunto de bits.",
+      keyPoints: [
+        "XOR com 1 → inverte",
+        "XOR com 0 → mantém",
+        "Máscara define os bits afetados",
+        "C8₁₆ = 11001000₂"
+      ],
+      examples: "Se o bit 7 de N é 0, após N XOR 0x80 passa a 1; se é 1, passa a 0."
+    },
+    hints: ["Qual operador alterna bits?", "Construa a máscara com 1 nos bits 3, 6 e 7."]
+  },
+  {
+    id: 24,
+    question: "Uma possível simplificação da expressão lógica ~(A . B) . (~A + B) é:",
+    code: "// ~(A.B) = ~A + ~B\n// (~A + ~B) . (~A + B) = ~A + (~B.B) = ~A",
+    options: [
+      "A",
+      "~A",
+      "A + B",
+      "1"
+    ],
+    correct: 1,
+    explanation: "A expressão simplifica para ~A.",
+    theoryPoints: {
+      title: "Álgebra Booleana",
+      content: "Usa-se De Morgan e a propriedade (X+Y)(X+Z)=X+YZ, além de Y·~Y=0.",
+      keyPoints: [
+        "De Morgan: ~(X·Y)=~X+~Y",
+        "Absorção: X + X·Y = X",
+        "Anulação: Y·~Y = 0",
+        "Identidade: X+0=X"
+      ],
+      examples: "(~A + ~B)·(~A + B) = ~A + (~B·B) = ~A."
+    },
+    hints: ["Aplique De Morgan a ~(A.B).", "Use (X+Y)(X+Z)=X+YZ."]
+  },
+  {
+    id: 25,
+    question: "Uma possível simplificação da expressão lógica ~[ A . (~B + C) . ~(A . C) ] . ~B é:",
+    code: "// ~(A.C) = ~A + ~C\n// A.(~A+~C)=A.~C\n// Dentro []: A.(~B+C).~C = A.~B.~C\n// Negação: ~(A.~B.~C) = ~A + B + C\n// Multiplica por ~B: (~A + B + C).~B = (~A.~B) + (C.~B) = (~A + C).~B",
+    options: [
+      "(A + C) . ~B",
+      "A . ~B",
+      "(~A + C) . ~B",
+      "~A . ~B"
+    ],
+    correct: 2,
+    explanation: "A expressão simplifica para (~A + C) . ~B.",
+    theoryPoints: {
+      title: "De Morgan + distribuição",
+      content: "Simplificações típicas: negar um produto vira soma, e depois fatorizar termos comuns.",
+      keyPoints: [
+        "De Morgan: ~(X·Y·Z)=~X+~Y+~Z",
+        "Distribuição: X·(Y+Z)=X·Y + X·Z",
+        "Fator comum: X·Y + X·Z = X·(Y+Z)",
+        "Anulação: C·~C=0"
+      ],
+      examples: "~[A·(~B+C)·~(A·C)]·~B = (~A + B + C)·~B = (~A + C)·~B."
+    },
+    hints: ["Comece por simplificar ~(A.C).", "No fim, fatorize ~B."]
   }
 ];
 

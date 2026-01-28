@@ -373,7 +373,368 @@ const ex4 = [
       examples: "Contar processos do usuário: ps aux | grep $USER | wc -l\nTop 10 IPs em log: cat access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -10\nMonitorizar logs: tail -f app.log | grep \"ERROR\""
     },
     hints: ["O que acontece com a saída do primeiro comando?", "Como processar dados em múltiplos passos?"]
-  }
+  },
+  {
+  id: 16,
+  question: "O comando `ls` permite visualizar os conteúdos de um directório, sendo possível filtrar resultados pelo nome. Esta afirmação é:",
+  code: "",
+  options: [
+    "Verdadeira - `ls *.txt` filtra .txt",
+    "Falsa - `ls` não filtra nomes",
+    "Verdadeira apenas com `-l`",
+    "Falsa - usa `find` para filtrar"
+  ],
+  correct: 0,
+  explanation: "`ls` aceita wildcards como `*.txt` para filtrar pelo nome/extensão diretamente.",
+  theoryPoints: {
+    title: "Comando ls",
+    content: "`ls [padrão]` lista ficheiros com wildcards (*, ?). Comum para filtrar extensões/nomes.",
+    keyPoints: [
+      "`ls *.txt`: só .txt",
+      "`ls -l`: detalhes",
+      "`ls -a`: ocultos",
+      "`ls dir/*.jpg`: subdir"
+    ],
+    examples: "`ls ~/docs/*.pdf` lista PDFs."
+  },
+  hints: ["Wildcard em `ls`?", "`ls *.sh`?"]  
+},
+{
+  id: 17,
+  question: "Script recebe nomes de contentores Docker, reinicia pela ordem dada, informa sucesso/falha?",
+  code: "",
+  options: [
+    "for nome in \"$@\"; do docker restart \"$nome\" && echo \"OK: $nome\" || echo \"Falha: $nome\"; done",
+    "docker restart $*",
+    "docker restart $(echo $@)",
+    "for i in $@; docker $i;"
+  ],
+  correct: 0,
+  explanation: "`for \"$@\"`: preserva ordem/espaços; `&&` OK se `$?==0`, senão falha.",
+  theoryPoints: {
+    title: "Loop Docker Restart",
+    content: "`$@`: args preservados; verifica `$?` pós-`docker`.",
+    keyPoints: [
+      "`\"$@\"`: nomes com espaços",
+      "`docker restart` reinicia",
+      "`&& ||`: condicional"
+    ],
+    examples: "`./restart.sh app1 app2` → OK/Falha."
+  },
+  hints: ["Loop args?", "`$?`?"]  
+},
+{
+  id: 18,
+  question: "`ps aux | grep [b]ash | wc -l` conta:",
+  code: "",
+  options: [
+    "Processos bash (evita self-match)",
+    "Linhas com 'bash'",
+    "Só grep",
+    "Processos todos"
+  ],
+  correct: 0,
+  explanation: "`[b]ash`: grep não matcha a si; `wc -l`: linhas.",
+  theoryPoints: {
+    title: "Contar Processos",
+    content: "`grep [p]attern`: evita match do grep; comum em pipelines.",
+    keyPoints: [
+      "`pgrep -c bash`: alternativo",
+      "`| wc -l`: count"
+    ],
+    examples: "`ps | grep [a]pp`."
+  },
+  hints: ["Self-match?", "`wc -l`?"]  
+},
+{
+  id: 19,
+  question: "Script renomeia `*.dat` em dir com prefixo sequencial (1-, 2-, ...), informa total?",
+  code: "",
+  options: [
+    "[ $# -ne 1 ] || [ ! -d \"$1\" ] && { echo \"Erro dir\"; exit 1; }; count=0; i=1; for f in \"$1\"/*.dat; do [ -f \"$f\" ] || continue; mv \"$f\" \"${i}-$(basename \"$f\")\"; echo \"Renomeado: ${i}-$(basename $f)\"; ((count++)); ((i++)); done; echo \"$count ficheiros\"",
+    "for f in *.dat; mv $f 1-$f; done",
+    "ls *.dat | rename 1-",
+    "i=1; mv *.dat ${i}-*.dat"
+  ],
+  correct: 0,
+  explanation: "Valida 1 arg/dir; `for *.dat`; `mv` com `${i}-`; conta.",
+  theoryPoints: {
+    title: "Renomear Sequencial",
+    content: "`basename`, loop `for`, `((i++))`; valida args.",
+    keyPoints: [
+      "`[ ! -d \"$1\" ]`: dir?",
+      "`\"${i}-$(basename)\"`: prefixo",
+      "`((count++))`: contador"
+    ],
+    examples: "`./rename.sh /tmp` → 1-xljjrtje.dat."
+  },
+  hints: ["Valida dir?", "`basename`?"]  
+},
+{
+  id: 20,
+  question: "Script `git pull` em dirs de ficheiro (1 dir/linha), valida args?",
+  code: "",
+  options: [
+    "[ $# -ne 1 ] && { echo \"1 arg\"; exit 1; }; while read -r dir; do [ -d \"$dir\" ] && cd \"$dir\" && git pull && echo \"OK: $dir\" || echo \"Erro: $dir\"; done < \"$1\"",
+    "git pull < $1",
+    "xargs < $1 git pull",
+    "for d in $(cat $1); git pull $d"
+  ],
+  correct: 0,
+  explanation: "`while read -r`: linha/por; `cd && git pull`; valida.",
+  theoryPoints: {
+    title: "Batch Git Pull",
+    content: "`read -r dir < file`: dirs; `&&` sucesso.",
+    keyPoints: [
+      "`[ $# -ne 1 ]`: 1 arg",
+      "`cd \"$dir\"`: entra",
+      "`git pull`: atualiza"
+    ],
+    examples: "`./gitall.sh repos.txt`."
+  },
+  hints: ["`read -r`?", "`cd &&`?"]  
+},
+{
+  id: 21,
+  question: "`cat log | sort | uniq -c | sort -rn | head -10` faz?",
+  code: "",
+  options: [
+    "Top 10 linhas mais frequentes",
+    "Ordena log",
+    "Remove duplicados",
+    "Conta linhas únicas"
+  ],
+  correct: 0,
+  explanation: "`sort | uniq -c`: count; `sort -rn`: numérico reverso; `head -10`: top10.",
+  theoryPoints: {
+    title: "Top Frequências",
+    content: "Pipeline comum: `sort`→`uniq -c`→`sort -rn`→`head`.",
+    keyPoints: [
+      "`uniq -c`: count",
+      "`-rn`: reverse num",
+      "`head -n 10`: top"
+    ],
+    examples: "Top erros log."
+  },
+  hints: ["Pipeline top?", "`uniq -c`?"]  
+},
+{
+  id: 22,
+  question: "Script transcodifica ISO-8859-1→UTF-8 em dir, `.old` backup, conta sucessos?",
+  code: "",
+  options: [
+    "[ $# -ne 1 ] || [ ! -d \"$1\" ] && exit 1; count=0; for f in \"$1\"/*; do [ -f \"$f\" ] || continue; mv \"$f\"{,.old}; iconv -f ISO-8859-1 -t UTF-8 \"$f.old\" > \"$f\" && ((count++)); done; echo \"$count\"",
+    "iconv -f ISO \"$1\"/*",
+    "for f in $1/*; iconv $f; done",
+    "find $1 | xargs iconv"
+  ],
+  correct: 0,
+  explanation: "`mv{,.old}`: backup; `iconv > \"$f\"`: overwrite; count.",
+  theoryPoints: {
+    title: "Batch iconv",
+    content: "Transcodifica dir; valida; backup `.old`.",
+    keyPoints: [
+      "`mv f{,.old}`: append",
+      "`iconv -f -t`: charset",
+      "`&& ((count++))`: sucesso"
+    ],
+    examples: "`./transcode.sh /relatorios`."
+  },
+  hints: ["`.old`?", "`iconv`?"]  
+},
+{
+  id: 23,
+  question: "`tail -n 10 log.txt` mostra:",
+  code: "",
+  options: [
+    "10 últimas linhas",
+    "Primeiras 10",
+    "Linhas únicas",
+    "Linhas com números"
+  ],
+  correct: 0,
+  explanation: "`tail -n 10`: últimas N linhas; comum com `grep`.",
+  theoryPoints: {
+    title: "tail/head",
+    content: "`tail`: fim ficheiro; `-f`: follow logs.",
+    keyPoints: [
+      "`-n 10`: últimas 10",
+      "`head -n 10`: primeiras",
+      "`tail -f`: real-time"
+    ],
+    examples: "`tail -f /var/log/syslog`."
+  },
+  hints: ["Últimas?", "`-f`?"]  
+},
+{
+  id: 24,
+  question: "Script conta ficheiros `.dat` renomeados com prefixo numérico em dir?",
+  code: "",
+  options: [
+    "i=1; count=0; for f in \"$1\"/*.dat; do mv ...; ((i++,count++)); echo \"$count\"",
+    "rename 1- *.dat",
+    "ls | sed 's/^/1-/';",
+    "mv *.dat 1-*.dat"
+  ],
+  correct: 0,
+  explanation: "Extraído exame: renomeia `*.dat` → `1-orig.dat`, conta.",
+  theoryPoints: {
+    title: "Renomeio Numérico",
+    content: "`for *.dat`; `${i}-$(basename $f)`; valida dir.",
+    keyPoints: [
+      "`basename`: nome sem path",
+      "`((i++))`: incr",
+      "Echo cada renomeio"
+    ],
+    examples: "3-iubaspeo.dat."
+  },
+  hints: ["Prefixo seq?", "Conta?"]  
+},
+{
+  id: 25,
+  question: "`docker restart containerX` faz:",
+  code: "",
+  options: [
+    "Reinicia contentor Docker",
+    "Para sem restart",
+    "Lista contentores",
+    "Remove contentor"
+  ],
+  correct: 0,
+  explanation: "`docker restart`: stop+start contentor por nome.",
+  theoryPoints: {
+    title: "Docker Comandos",
+    content: "`docker ACCAO CONTAINER`: gerir; `restart` comum em scripts.",
+    keyPoints: [
+      "`docker ps`: lista",
+      "`docker stop/rm`: outros",
+      "Script: `for $@`"
+    ],
+    examples: "`docker restart app`."
+  },
+  hints: ["Restart?", "Args preservados?"]  
+},
+{
+  id: 26,
+  question: "Script reinicia contentores Docker pela ordem dada, informa OK/Falha?",
+  code: "",
+  options: [
+    "for nome in \"$@\"; do docker restart \"$nome\" && echo \"OK: $nome\" || echo \"Falha: $nome\"; done",
+    "docker restart $*",
+    "for i in $@; docker $i;",
+    "docker restart $(echo $@)"
+  ],
+  correct: 0,
+  explanation: "`for \"$@\"`: ordem/ espaços; `&&` sucesso (`$?==0`), `||` falha. [file:29]",
+  theoryPoints: {
+    title: "Docker Restart Script",
+    content: "`docker restart CONTAINER`; `$@` preserva args; `$?` exit code.",
+    keyPoints: [
+      "`\"$@\"`: nomes com espaços",
+      "`&& ||`: condicional status",
+      "`docker restart`: stop+start"
+    ],
+    examples: "`./restart.sh app1 app\\ com\\ espaço`."
+  },
+  hints: ["Args preservados?", "`$?`?"]  
+},
+{
+  id: 27,
+  question: "Script `git pull` dirs de ficheiro (1/linha), valida args?",
+  code: "",
+  options: [
+    "[ $# -ne 1 ] && { echo \"Uso: $0 ficheiro\"; exit 1; }; while read -r dir; do [ -d \"$dir/.git\" ] && cd \"$dir\" && git pull && echo \"OK: $dir\" || echo \"Erro: $dir\"; done < \"$1\"",
+    "git pull < $1",
+    "xargs git pull < $1",
+    "for d in $(cat $1); git pull $d"
+  ],
+  correct: 0,
+  explanation: "`while read -r`: linha/por; valida `1 arg`/`.git`; `cd && git pull`. [file:34]",
+  theoryPoints: {
+    title: "Batch Git Pull",
+    content: "`read -r dir < file`: dirs; verifica repo; atualiza.",
+    keyPoints: [
+      "`[ $# -ne 1 ]`: valida",
+      "`cd \"$dir\"`: entra",
+      "`git pull`: fetch+merge"
+    ],
+    examples: "`./gitall.sh repos.txt`."
+  },
+  hints: ["`read -r`?", "Valida dir?"]  
+},
+{
+  id: 28,
+  question: "Script transcodifica ISO-8859-1→UTF-8 dir, `.old` backup, conta sucessos?",
+  code: "",
+  options: [
+    "[ $# -ne 1 ] || [ ! -d \"$1\" ] && { echo \"Erro: dir inválido\"; exit 1; }; count=0; for f in \"$1\"/*; do [ -f \"$f\" ] || continue; mv \"$f\"{,.old}; iconv -f ISO-8859-1 -t UTF-8 \"$f.old\" > \"$f\" && ((count++)); done; echo \"$count transcodificados\"",
+    "iconv -f ISO \"$1\"/*",
+    "for f in $1/*; iconv $f;",
+    "find $1 | xargs iconv"
+  ],
+  correct: 0,
+  explanation: "`mv{,.old}`: backup; `iconv > \"$f\"`: overwrite; count sucessos. [file:24]",
+  theoryPoints: {
+    title: "Batch iconv",
+    content: "Transcodifica batch; valida dir; `.old` backup.",
+    keyPoints: [
+      "`mv f{,.old}`: append extensão",
+      "`iconv -f -t`: charset",
+      "`&& ((count++))`: só sucessos"
+    ],
+    examples: "`./transcode.sh /relatorios`."
+  },
+  hints: ["Backup `.old`?", "`iconv` args?"]  
+},
+{
+  id: 29,
+  question: "`ps aux | grep [b]ash | wc -l` conta:",
+  code: "",
+  options: [
+    "Processos bash (evita self-match do grep)",
+    "Linhas com 'bash' (inclui grep)",
+    "Só grep próprio",
+    "Processos todos"
+  ],
+  correct: 0,
+  explanation: "`[b]ash`: grep não matcha comando próprio; `wc -l`: nº shells bash. [file:1]",
+  theoryPoints: {
+    title: "Contar Processos",
+    content: "`[p]attern`: truque evita contar grep; comum pipelines.",
+    keyPoints: [
+      "`pgrep -c bash`: melhor",
+      "`ps | grep [a]pp`: padrão"
+    ],
+    examples: "`ps aux | grep [m]yapp`."
+  },
+  hints: ["Evitar self-match?", "`wc -l`?"]  
+},
+{
+  id: 30,
+  question: "`tail -n +10 log.txt` mostra:",
+  code: "",
+  options: [
+    "Linhas 10 ao fim",
+    "Últimas 10",
+    "Primeiras 10",
+    "Linhas com 10"
+  ],
+  correct: 0,
+  explanation: "`tail -n +10`: a partir linha 10; `-10`: últimas 10. [file:1]",
+  theoryPoints: {
+    title: "tail Opções",
+    content: "`tail -n +K`: skip primeiras K-1; `-f`: follow logs.",
+    keyPoints: [
+      "`-n +10`: linha 10+",
+      "`-f`: real-time",
+      "`head -n -10`: remove últimas"
+    ],
+    examples: "`tail -n +100 /var/log/syslog`."
+  },
+  hints: ["`+10`?", "`-f` logs?"]  
+}
+
+
 ];
 
 export default ex4;
