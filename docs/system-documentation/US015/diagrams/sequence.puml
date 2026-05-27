@@ -1,0 +1,46 @@
+@startuml us015-sequence
+' Output: plantuml -tsvg -o ../svg sequence.puml
+title US015 — Survival Mode (Sequência)
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Estudante" as Student
+participant "AprendiFluxoShell" as Shell
+participant "ISurvivalContentPort\n(staticLevelAdapter)" as Content
+participant "ISurvivalSessionPort\n(useSurvivalEngine)" as Engine
+participant "QuizView\n(UI)" as Quiz
+
+Student -> Shell : iniciar Survival\n(subjectType)
+activate Shell
+
+Shell -> Content : getSession(subjectType, options?)
+activate Content
+Content --> Shell : SurvivalSessionPayload
+deactivate Content
+
+Shell -> Engine : iniciar sessão\n(payload)
+activate Engine
+Engine --> Shell : state.phase = active
+deactivate Engine
+
+Shell -> Quiz : renderizar questão\n(state)
+
+loop Por cada questão
+  Student -> Quiz : seleccionar opção
+  Quiz -> Engine : answer(selectedIndex)
+  activate Engine
+  Engine --> Quiz : state (feedback)
+  Engine --> Quiz : state (active | finished)
+  deactivate Engine
+end
+
+opt Terminar antecipadamente
+  Student -> Quiz : abortar
+  Quiz -> Engine : abort()
+  Engine --> Quiz : state.phase = finished
+end
+
+deactivate Shell
+
+@enduml

@@ -1,7 +1,8 @@
 {
-  "name": "quizzer-isep",
+  "name": "aprendifluxo",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Preparação para exames via engenharia reversa de PDFs com IA local",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,7 +24,8 @@
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.0.3",
-    "vite": "^4.5.0"
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^5.6.3",
+    "vite": "^8.0.14"
   }
 }

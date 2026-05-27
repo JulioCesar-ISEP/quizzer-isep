@@ -1,0 +1,30 @@
+@startuml pipeline
+' Output: plantuml -tsvg -o ../svg pipeline.puml
+title Pipeline de PDFs — Actividade (sequencial, imutável)
+
+skinparam shadowing false
+
+start
+
+:Extração de texto\n(PDF → texto bruto);
+
+:Limpeza\n(normalização, ruído);
+
+:Chunking\n(segmentação);
+
+:Embedding\n(vectores);
+
+:Armazenamento\n(ChromaDB);
+
+:Geração dos Jogos\n(SurvivalSessionPayload, …);
+
+stop
+
+note right
+  Cada etapa recebe um DTO de entrada
+  e devolve um DTO de saída — sem
+  efeitos colaterais ocultos (ADR-002).
+  Status: não implementado (Phase 1).
+end note
+
+@enduml

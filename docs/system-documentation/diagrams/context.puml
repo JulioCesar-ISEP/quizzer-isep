@@ -1,0 +1,32 @@
+@startuml context
+' Output: plantuml -tsvg -o ../svg context.puml
+title AprendiFluxo — Contexto (Arquitetura Hexagonal)
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Estudante" as Student
+
+package "AprendiFluxo" {
+  component "adapters/frontend\n(React, shell, vistas)" as Frontend
+  component "ports/\n(contratos, interfaces)" as Ports
+  component "core/\n(domínio puro)" as Core
+}
+
+database "localStorage" as LS
+folder "data/\n(conteúdo estático)" as Data
+cloud "FastAPI + Ollama + ChromaDB\n(Phase 1 — RAG)" as Backend
+
+Student --> Frontend : usa
+Frontend --> Ports
+Ports --> Core
+Ports --> LS : persistência
+Ports --> Data : Phase 0
+Ports ..> Backend : Phase 1
+
+note right of Ports
+  SurvivalSessionPayload,
+  IUserProfileRepository, …
+end note
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml us001-context
+' Output: plantuml -tsvg -o ../svg context.puml
+title US001 — Configurar Perfil Básico (Contexto)
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Estudante" as Student
+
+package "AprendiFluxo" {
+  component "ProfileSetupView\n(UI)" as UI
+  component "IUserProfileService\n(use case)" as Service
+  component "IUserProfileRepository\n(port de saída)" as Repo
+}
+
+database "localStorage\n(aprendifluxo-user-profile)" as LS
+
+Student --> UI : preenche nome,\ncurso, ano
+UI --> Service : upsertProfile /\nhasProfile
+Service --> Repo : load / save / clear
+Repo --> LS
+
+note bottom of Service
+  Sem autenticação.
+  Perfil exposto a minijogos
+  e dashboard (Phase 1+).
+end note
+
+@enduml

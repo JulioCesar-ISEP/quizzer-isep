@@ -1,0 +1,76 @@
+.ape-profile-setup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
+
+.ape-profile-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  border-radius: 12px;
+  background: var(--ape-surface, #1e1e2e);
+  border: 1px solid var(--ape-border, #333);
+}
+
+.ape-profile-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.ape-profile-header h1 {
+  font-size: 1.35rem;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.ape-profile-header p {
+  color: var(--ape-text-muted, #888);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.ape-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ape-profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.ape-profile-field input,
+.ape-profile-field select {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--ape-border, #444);
+  background: var(--ape-input-bg, #2a2a3a);
+  color: inherit;
+}
+
+.ape-profile-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.ape-profile-submit {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.light-theme .ape-profile-card {
+  background: #fff;
+  border-color: #e5e7eb;
+}
+
+.light-theme .ape-profile-field input,
+.light-theme .ape-profile-field select {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
